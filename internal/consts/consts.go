@@ -12,7 +12,7 @@ const (
 	ContextKey               = "ContextKey"  // 上下文变量存储键名，前后端系统共享
 	FileMaxUploadCountMinute = 10            // 同一用户1分钟之内最大上传数量
 
-	//登陆类型：1=验证码，2=密码
-	LOGIN_TYPE_VTF = 1
-	LOGIN_TYPE_PWD = 2
+	//登陆类型：1=密码，2=第三方
+	LOGIN_TYPE_PWD   = 1
+	LOGIN_TYPE_THIRD = 2
 )

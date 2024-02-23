@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-01-16 21:22:22
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
 // ==========================================================================
 
 package internal
@@ -20,50 +20,42 @@ type UserDao struct {
 
 // UserColumns defines and stores column names for table sw_user.
 type UserColumns struct {
-	UserId            string //
-	Username          string //
-	Password          string //
-	PwdSalt           string // 密码盐值
-	PwdEncryNum       string // 密码加密次数
-	FirstName         string //
-	LastName          string //
-	Nickname          string // 昵称
-	Enable            string // 账号是否可用：true=正常，false=停用
-	HeadImg           string //
-	CertificateCode   string // 身份证编号
-	VipLevel          string // vip级别
-	IpRegion          string // Ip属地
-	MobilePhone       string // 手机号
-	PersonalSignature string // 个性签名
-	Birthday          string // 生日
-	Gender            string // 性别：0=未知，1=男，2=女
-	CreateTime        string //
-	UpdateTime        string //
-	IsDelete          string // 是否删除：true=已删除，false=正常
+	UserId      string //
+	Username    string //
+	Password    string //
+	PwdSalt     string // 密码盐值
+	PwdEncryNum string // 密码加密次数
+	PublicKey   string //
+	PrivateKey  string //
+	FirstName   string //
+	LastName    string //
+	Enable      string // 账号是否可用：true=正常，false=停用
+	HeadImg     string //
+	MobilePhone string // 手机号
+	UserAddress string // 用户地址
+	CreateTime  string //
+	UpdateTime  string //
+	IsDelete    string // 是否删除：true=已删除，false=正常
 }
 
 // userColumns holds the columns for table sw_user.
 var userColumns = UserColumns{
-	UserId:            "user_id",
-	Username:          "username",
-	Password:          "password",
-	PwdSalt:           "pwd_salt",
-	PwdEncryNum:       "pwd_encry_num",
-	FirstName:         "first_name",
-	LastName:          "last_name",
-	Nickname:          "nickname",
-	Enable:            "enable",
-	HeadImg:           "head_img",
-	CertificateCode:   "certificate_code",
-	VipLevel:          "vip_level",
-	IpRegion:          "ip_region",
-	MobilePhone:       "mobile_phone",
-	PersonalSignature: "personal_signature",
-	Birthday:          "birthday",
-	Gender:            "gender",
-	CreateTime:        "create_time",
-	UpdateTime:        "update_time",
-	IsDelete:          "is_delete",
+	UserId:      "user_id",
+	Username:    "username",
+	Password:    "password",
+	PwdSalt:     "pwd_salt",
+	PwdEncryNum: "pwd_encry_num",
+	PublicKey:   "public_key",
+	PrivateKey:  "private_key",
+	FirstName:   "first_name",
+	LastName:    "last_name",
+	Enable:      "enable",
+	HeadImg:     "head_img",
+	MobilePhone: "mobile_phone",
+	UserAddress: "user_address",
+	CreateTime:  "create_time",
+	UpdateTime:  "update_time",
+	IsDelete:    "is_delete",
 }
 
 // NewUserDao creates and returns a new DAO object for table data access.

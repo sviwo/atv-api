@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/goflyfox/gtoken/gtoken"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -20,10 +21,11 @@ import (
 	"net/url"
 	"reflect"
 	"strings"
+	"sviwo/internal/consts"
 	rcode "sviwo/internal/logic/biz/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
-	"sviwo/utility/common"
+	"sviwo/utility"
 	ecc "sviwo/utility/encrypt"
 	"sviwo/utility/response"
 )
@@ -53,6 +55,11 @@ func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 		if "required" == rule {
 			response.Json(
 				r, rcode.New(rcode.IllegalArgument.Code(), err.Error()),
+				nil,
+			)
+		} else {
+			response.Json(
+				r, rcode.New(rcode.RequestParamTypeError.Code(), err.Error()),
 				nil,
 			)
 		}
@@ -106,12 +113,29 @@ func (s *sMiddleware) CORS(r *ghttp.Request) {
 
 // use middleware func for router
 func (s *sMiddleware) DecodeData(r *ghttp.Request) {
-	contentType := r.Request.Header.Get("Content-Type")
+	contentType := r.GetHeader("Content-Type")
+	if contentType == "" {
+		panic(gerror.NewCode(rcode.VftCodeError))
+	}
 	isJsonRequest := strings.Contains(contentType, "application/json")
 	isFileRequest := strings.Contains(contentType, "multipart/form-data")
 	isFormUrl := strings.Contains(contentType, "application/x-www-form-urlencoded")
-	//get user private key
-	privateKey := ""
+	//获取请求头的token并解析
+	gfToken := gtoken.GfToken{EncryptKey: g.Cfg().MustGet(r.GetCtx(), "gfToken.encryptKey").Bytes()}
+	gfToken.InitConfig()
+	decryptToken := gfToken.DecryptToken(
+		r.GetCtx(), strings.SplitN(r.Header.Get("Authorization"), " ", 2)[1],
+	)
+	//获取登陆时存入redis的私钥
+	result, err := g.Redis().Get(
+		r.GetCtx(),
+		fmt.Sprintf(consts.RedisUserPrivate, decryptToken.GetString(gtoken.KeyUserKey)),
+	)
+	if err != nil {
+		panic(err)
+	}
+	privateKey := result.String()
+
 	if r.Request.Method == "GET" { //if use get
 
 		parseQuery(r, privateKey)
@@ -145,7 +169,7 @@ func parseQuery(r *ghttp.Request, privateKey string) {
 	var logs []string
 	for k, v := range dataMap {
 		r.SetQuery(k, v) //r.SetForm(key, val)
-		val := common.ToStr(v)
+		val := utility.ToStr(v)
 		args = append(args, fmt.Sprintf("%s=%s", k, url.QueryEscape(val)))
 		logs = append(logs, fmt.Sprintf("%s=%s", k, val))
 	}
@@ -200,7 +224,7 @@ func parseForm(r *ghttp.Request, privateKey string) {
 				panic(err)
 			}
 			for k, v := range mapData {
-				values.Add(k, common.ToStr(v))
+				values.Add(k, utility.ToStr(v))
 			}
 			formData := values.Encode()
 			glog.Infof(r.GetCtx(), " parseForm url:%s md5key:%s,encryptString:%s,decrypt data:%s", r.Request.URL.String(), privateKey, jsonData.EncryptString, formData)
@@ -244,7 +268,7 @@ func parseFile(r *ghttp.Request, privateKey string) {
 					break
 				}
 				for k, v := range formData {
-					val := common.ToStr(v)
+					val := utility.ToStr(v)
 					err = wr.WriteField(k, val)
 					if err != nil {
 						glog.Errorf(r.GetCtx(), "writeFile WriteField :%s=%s, err:%v", k, val, err)

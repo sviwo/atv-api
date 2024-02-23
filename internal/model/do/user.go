@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-01-16 21:22:22
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
 // =================================================================================
 
 package do
@@ -11,25 +11,21 @@ import (
 
 // User is the golang structure of table sw_user for DAO operations like Where/Data.
 type User struct {
-	g.Meta            `orm:"table:sw_user, do:true"`
-	UserId            interface{} //
-	Username          interface{} //
-	Password          interface{} //
-	PwdSalt           interface{} // 密码盐值
-	PwdEncryNum       interface{} // 密码加密次数
-	FirstName         interface{} //
-	LastName          interface{} //
-	Nickname          interface{} // 昵称
-	Enable            interface{} // 账号是否可用：true=正常，false=停用
-	HeadImg           interface{} //
-	CertificateCode   interface{} // 身份证编号
-	VipLevel          interface{} // vip级别
-	IpRegion          interface{} // Ip属地
-	MobilePhone       interface{} // 手机号
-	PersonalSignature interface{} // 个性签名
-	Birthday          *gtime.Time // 生日
-	Gender            interface{} // 性别：0=未知，1=男，2=女
-	CreateTime        *gtime.Time //
-	UpdateTime        *gtime.Time //
-	IsDelete          interface{} // 是否删除：true=已删除，false=正常
+	g.Meta      `orm:"table:sw_user, do:true"`
+	UserId      interface{} //
+	Username    interface{} //
+	Password    interface{} //
+	PwdSalt     interface{} // 密码盐值
+	PwdEncryNum interface{} // 密码加密次数
+	PublicKey   interface{} //
+	PrivateKey  interface{} //
+	FirstName   interface{} //
+	LastName    interface{} //
+	Enable      interface{} // 账号是否可用：true=正常，false=停用
+	HeadImg     interface{} //
+	MobilePhone interface{} // 手机号
+	UserAddress interface{} // 用户地址
+	CreateTime  *gtime.Time //
+	UpdateTime  *gtime.Time //
+	IsDelete    interface{} // 是否删除：true=已删除，false=正常
 }

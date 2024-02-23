@@ -31,7 +31,6 @@ gfToken:
   ServerName: "Sviwo"
   cacheKey: "gfToken:"   #缓存前缀
   timeOut: 24 * 60 * 60 * 1000 * 10         #token超时时间（毫秒）
-  maxRefresh: 24 * 60 * 60 * 1000 * 5       #token自动刷新时间（毫秒）
   multiLogin: true      #是否允许一个账号多人同时登录
   encryptKey: "49c54195e750b04e74a8429b17896586"    #加密key (32位)
   cacheMode: 2          #存储引擎 1 gcache 2 gredis 默认1
@@ -45,21 +44,8 @@ oss:
   accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
   bucket: test-sviwo-car-oss
 
-
-#这个mqtt客户端主要是服务端内部处理消息使用的通道
-mqtt:
-  addr: 127.0.0.1:1883
-  # 最好带上服务名称，变成唯一id
-  clientId: sviwo-iot-open-001
-  deviceLiveDuration: 30
-#  auth:
-#    userName: admin
-#    userPassWorld: 123456
-
-#TDengine配置
-tdengine:
-  type: "taosRestful" #http连接方式，端口是6041
-  dsn: "root:taosdata@http(114.115.135.233:6041)/"
-  dbName: "sviwo_iot"
-  maxOpenConns: 10
-  maxIdleConns: 5
+email:
+  host: smtp.gmail.com
+  port: 587
+  username: gouyichuan@gmail.com
+  password: yzdkzxemdknngznw

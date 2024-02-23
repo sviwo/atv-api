@@ -1,72 +1,57 @@
 package model
 
-import (
-	"github.com/gogf/gf/v2/os/gtime"
-)
-
 type UserInfoBase struct {
-	UserId            uint64      `json:"userId"            description:""`
-	FirstName         string      `json:"firstName"         description:""`
-	LastName          string      `json:"lastName"          description:""`
-	Nickname          string      `json:"nickname"          description:"昵称"`
-	HeadImg           string      `json:"headImg"           description:""`
-	MobilePhone       string      `json:"mobilePhone"       description:"手机号"`
-	PersonalSignature string      `json:"personalSignature" description:"个性签名"`
-	Birthday          *gtime.Time `json:"birthday"          description:"生日"`
-	Gender            int         `json:"gender"            description:"性别：0=未知，1=男，2=女"`
+	UserId      uint64 `json:"userId"            description:""`
+	FirstName   string `json:"firstName"         description:""`
+	LastName    string `json:"lastName"          description:""`
+	HeadImg     string `json:"headImg"           description:""`
+	MobilePhone string `json:"mobilePhone"       description:""`
+	UserAddress string `json:"userAddress"       description:""`
 }
 
 /*
-*用户登陆传参
+*用户登陆
  */
 type LoginInput struct {
 	Username  string `json:"username"     description:"用户名"`
-	VftCode   string `json:"VftCode"     description:"验证码"`
 	Password  string `json:"password"     description:"密码"`
-	LoginType uint8  `json:"LoginType"     description:"登陆类型：1=验证码，2=密码"`
-}
-
-type LogoutInput struct {
-	UserId uint64 `json:"userId"            description:""`
+	LoginType uint8  `json:"LoginType"    description:"登陆类型：1=账号+密码，2=第三方"`
 }
 
 /*
-*用户注册传参
+*用户注册
  */
 type RegisterInput struct {
-	Username        string `json:"username"          description:"用户名"`
-	Password        string `json:"password"          description:"密码"`
-	ConfirmPassword string `json:"confirmPassword"          description:"确认密码"`
-	//MobilePhone       string      `json:"mobilePhone"       description:"手机号"`
+	Username        string `json:"username"          description:""`
+	Password        string `json:"password"          description:""`
+	ConfirmPassword string `json:"confirmPassword"   description:""`
+	EmailVftCode    string `json:"emailVftCode"      description:""`
 }
 
 /*
-获取用户信息传参
+获取用户信息
 */
 type UserInfoInput struct {
-	Username string `json:"username"          description:""`
+	UserId string `json:"userId"          description:""`
 }
 
-/*
-获取用户信息返参
-*/
 type UserInfoOutput struct {
 	Username string `json:"username"          description:""`
-	VipLevel int    `json:"vipLevel"          description:"vip级别"`
-	IpRegion string `json:"ipRegion"          description:"Ip属地"`
 	UserInfoBase
 }
 
 /*
-*用户修改密码传参
+*用户修改密码
  */
 type UpdatePasswordInput struct {
-	UserId   uint64 `json:"userId"       description:""`
-	Password string `json:"password"     description:""`
+	Username        string `json:"username"       description:""`
+	NewPassword     string `json:"newPassword"     description:""`
+	ConfirmPassword string `json:"confirmPassword"     description:""`
+	EmailVftCode    string `json:"emailVftCode"     description:""`
 }
 
 /*
-*编辑用户资料传参
+*编辑用户资料
  */
 type EditInfoInput struct {
 	UserInfoBase

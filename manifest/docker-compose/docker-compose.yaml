@@ -41,16 +41,6 @@ services:
       '--lower-case-table-names=1'
     ]
     privileged: true  #容器将以更高的权限运行
-  sviwo-tdengine:
-    image: tdengine/tdengine:3.1.1.0
-    container_name: sviwo-tdengine
-    restart: always
-    volumes:
-      - "./taos/dnode/data:/var/lib/taos"
-      - "./taos/dnode/log:/var/log/taos"
-    ports:
-      - 6030:6030
-      - 6041:6041
   sviwo-nginx:
     container_name: sviwo-nginx
     image: nginx:1.25.1

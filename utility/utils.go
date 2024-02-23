@@ -2,8 +2,8 @@ package utility
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/encoding/gcharset"
@@ -12,13 +12,17 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
+	"gopkg.in/gomail.v2"
 	"math/rand"
 	"net"
 	"strconv"
 	"strings"
+	rcode "sviwo/internal/logic/biz/enums"
+	"sviwo/utility/config"
 	"time"
 )
 
@@ -339,8 +343,89 @@ func GetRefundNum() (number string) {
 	return
 }
 
-var Node *snowflake.Node
+// 查看数组中是否有对应的值
+func InArray(needle string, haystack []string) bool {
+	for _, v := range haystack {
+		if needle == v {
+			return true
+		}
+	}
+	return false
+}
 
-func init() {
-	Node, _ = snowflake.NewNode(1)
+func ToStr(value interface{}) string {
+	var key string
+	if value == nil {
+		return key
+	}
+
+	switch value.(type) {
+	case float64:
+		ft := value.(float64)
+		key = strconv.FormatFloat(ft, 'f', -1, 64)
+	case float32:
+		ft := value.(float32)
+		key = strconv.FormatFloat(float64(ft), 'f', -1, 64)
+	case int:
+		it := value.(int)
+		key = strconv.Itoa(it)
+	case uint:
+		it := value.(uint)
+		key = strconv.Itoa(int(it))
+	case int8:
+		it := value.(int8)
+		key = strconv.Itoa(int(it))
+	case uint8:
+		it := value.(uint8)
+		key = strconv.Itoa(int(it))
+	case int16:
+		it := value.(int16)
+		key = strconv.Itoa(int(it))
+	case uint16:
+		it := value.(uint16)
+		key = strconv.Itoa(int(it))
+	case int32:
+		it := value.(int32)
+		key = strconv.Itoa(int(it))
+	case uint32:
+		it := value.(uint32)
+		key = strconv.Itoa(int(it))
+	case int64:
+		it := value.(int64)
+		key = strconv.FormatInt(it, 10)
+	case uint64:
+		it := value.(uint64)
+		key = strconv.FormatUint(it, 10)
+	case string:
+		key = value.(string)
+	case []byte:
+		key = string(value.([]byte))
+	case time.Time:
+		it := value.(time.Time)
+		key = it.String()
+	default:
+		newValue, _ := json.Marshal(value)
+		key = string(newValue)
+	}
+
+	return key
+}
+
+// 发送邮件
+func SendEmail(subject, body, to string) error {
+	m := gomail.NewMessage()
+	//发送人
+	m.SetHeader("From", g.Cfg().MustGet(context.TODO(), "email.username").String())
+	//接收人
+	m.SetHeader("To", to)
+	//主题
+	m.SetHeader("Subject", subject)
+	//内容
+	m.SetBody("text/html", body)
+	// 发送邮件
+	if err := config.NewDialer.DialAndSend(m); err != nil {
+		glog.Error(context.Background(), "验证发送失败，错误原因==", err)
+		return gerror.NewCode(rcode.VftCodeSendFailed)
+	}
+	return nil
 }

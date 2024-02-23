@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-01-16 21:22:22
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
 // ==========================================================================
 
 package internal
@@ -21,15 +21,15 @@ type CarDao struct {
 // CarColumns defines and stores column names for table sw_car.
 type CarColumns struct {
 	CarId              string //
-	UserId             string // 用户id
-	CarName            string // 车辆名称（厂家定义）
 	CarNickname        string // 车辆昵称（用户自定义）
-	CarImg             string //
-	CarPosition        string // 车辆定位
-	ResidueElectricity string // 剩余电量
-	ResidueKm          string // 剩余公里数
+	CarFinalPosition   string // 车辆最后定位
+	TravelKm           string // 行驶公里数
 	CarFrameCode       string // 车架编号
 	CarMotorCode       string // 车辆电机编号
+	ResidueElectricity string // 剩余电量
+	ResidueKm          string // 剩余公里数
+	AfterSalesTime     string // 保修日期
+	ActivationTime     string // 激活时间
 	CreateTime         string //
 	UpdateTime         string //
 	IsDelete           string // 是否删除：true=已删除，false=正常
@@ -38,15 +38,15 @@ type CarColumns struct {
 // carColumns holds the columns for table sw_car.
 var carColumns = CarColumns{
 	CarId:              "car_id",
-	UserId:             "user_id",
-	CarName:            "car_name",
 	CarNickname:        "car_nickname",
-	CarImg:             "car_img",
-	CarPosition:        "car_position",
-	ResidueElectricity: "residue_electricity",
-	ResidueKm:          "residue_km",
+	CarFinalPosition:   "car_final_position",
+	TravelKm:           "travel_km",
 	CarFrameCode:       "car_frame_code",
 	CarMotorCode:       "car_motor_code",
+	ResidueElectricity: "residue_electricity",
+	ResidueKm:          "residue_km",
+	AfterSalesTime:     "after_sales_time",
+	ActivationTime:     "activation_time",
 	CreateTime:         "create_time",
 	UpdateTime:         "update_time",
 	IsDelete:           "is_delete",

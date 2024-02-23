@@ -42,8 +42,10 @@ var (
 	UserExists          = New(2002, "此用户已存在")
 	UserNotExists       = New(2003, "此用户不存在")
 	UserAcctFrozen      = New(2004, "此账户已被冻结")
-	TwoPasswordNotEqual = New(2005, "新密码与确认密码不一致")
-	ErrVftCode          = New(2007, "验证码错误")
+	TwoPasswordNotEqual = New(2005, "密码与确认密码不一致")
+	VftCodeError        = New(2007, "验证码错误")
+	VftCodeOverdue      = New(2008, "验证码已过期")
+	VftCodeSendFailed   = New(2009, "验证码发送失败，请检查网络")
 )
 
 func New(code int, message string) gcode.Code {

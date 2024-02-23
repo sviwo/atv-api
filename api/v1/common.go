@@ -9,8 +9,8 @@ import (
 VftCodeReq 获取验证码
 */
 type VftCodeReq struct {
-	g.Meta `path:"/getVftCode" method:"get" tags:"公共接口" summary:"获取验证码"`
-	Email  string `json:"email" v:"required"   dc:"请输入邮箱"`
+	g.Meta       `path:"/getVftCode" method:"get" tags:"公共接口" summary:"获取验证码"`
+	EmailVftCode string `json:"emailVftCode" v:"required"   dc:"请输入邮箱"`
 }
 
 type VftCodeRes struct{}

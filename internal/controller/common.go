@@ -16,7 +16,7 @@ type cCommon struct{}
 GetVftCode 获取邮箱验证码
 */
 func (cCommon) GetVftCode(ctx context.Context, req *v1.VftCodeReq) (res *v1.VftCodeRes, err error) {
-	return res, service.Common().GetVftCode(ctx, req.Email)
+	return res, service.Common().GetVftCode(ctx, req.EmailVftCode)
 }
 
 /*

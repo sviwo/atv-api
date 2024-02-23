@@ -2,33 +2,26 @@ package v1
 
 import (
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type UserInfoBase struct {
-	UserId            uint64      `json:"userId"            description:""`
-	FirstName         string      `json:"firstName"         description:""`
-	LastName          string      `json:"lastName"          description:""`
-	Nickname          string      `json:"nickname"          description:"昵称"`
-	HeadImg           string      `json:"headImg"           description:""`
-	MobilePhone       string      `json:"mobilePhone"       description:"手机号"`
-	PersonalSignature string      `json:"personalSignature" description:"个性签名"`
-	Birthday          *gtime.Time `json:"birthday"          description:"生日"`
-	Gender            int         `json:"gender"            description:"性别：0=未知，1=男，2=女"`
+	UserId      uint64 `json:"userId"            description:""  v:"required"`
+	FirstName   string `json:"firstName"         description:""  v:"max-length:100"`
+	LastName    string `json:"lastName"          description:""  v:"max-length:100"`
+	HeadImg     string `json:"headImg"           description:""`
+	MobilePhone string `json:"mobilePhone"       description:""  v:"integer"`
+	UserAddress string `json:"userAddress"       description:""  v:"max-length:100"`
 }
 
 /*
 RegisterReq 用户注册
 */
 type RegisterReq struct {
-	g.Meta            `path:"/register" method:"post" tags:"用户相关" summary:"用户注册"`
-	Username          string `json:"username"    v:"email"     description:"用户名" v:"required"`
-	Password          string `json:"password"    v:"password3"  description:"密码"`
-	HeadImg           string `json:"headImg"       description:"头像"`
-	UserSalt          string `json:"userSalt"     description:"加密盐 生成密码用"`
-	Gender            int    `json:"gender"          description:"1男 2女"`
-	Enable            int    `json:"enable"       description:"1正常 2拉黑冻结"`
-	PersonalSignature string `json:"personalSignature"         description:"个性签名"`
+	g.Meta          `path:"/register" method:"post" tags:"用户相关" summary:"用户注册"`
+	Username        string `json:"username"         description:"用户名"     v:"required|email"`
+	Password        string `json:"password"         description:"密码"       v:"required|password3"`
+	ConfirmPassword string `json:"confirmPassword"  description:"确认密码"    v:"required|eq:Password"`
+	EmailVftCode    string `json:"emailVftCode"     description:"邮箱验证码"   v:"required|size:6"`
 }
 
 type RegisterRes struct{}
@@ -37,14 +30,12 @@ type RegisterRes struct{}
 UserInfoReq 登陆用户信息
 */
 type UserInfoReq struct {
-	g.Meta   `path:"/user/info" method:"get" tags:"用户相关" summary:"当前登录用户信息"`
-	Username string `json:"username"      v:"required"     description:""`
+	g.Meta `path:"/user/info" method:"get" tags:"用户相关" summary:"当前登录用户信息"`
+	UserId string `json:"userId"           description:"" v:"required"`
 }
 
 type UserInfoRes struct {
 	Username string `json:"username"          description:""`
-	VipLevel int    `json:"vipLevel"          description:"vip级别"`
-	IpRegion string `json:"ipRegion"          description:"Ip属地"`
 	UserInfoBase
 }
 
@@ -52,15 +43,17 @@ type UserInfoRes struct {
 UpdatePasswordReq 修改密码
 */
 type UpdatePasswordReq struct {
-	g.Meta   `path:"/update/password" method:"post" tags:"用户相关" summary:"修改密码"`
-	UserId   uint64 `json:"userId"       v:"required"     description:""`
-	Password string `json:"password"     v:"required"     description:""`
+	g.Meta          `path:"/update/password" method:"post" tags:"用户相关" summary:"修改密码"`
+	Username        string `json:"username"          description:""      v:"required|email"`
+	NewPassword     string `json:"newPassword"       description:""      v:"required|password3"`
+	ConfirmPassword string `json:"confirmPassword"   description:""      v:"required|eq:NewPassword"`
+	EmailVftCode    string `json:"emailVftCode"      description:""      v:"required|size:6"`
 }
 
 type UpdatePasswordRes struct{}
 
 type EditInfoReq struct {
-	g.Meta `path:"/edit/user/info" method:"post" tags:"用户相关" summary:"修改密码"`
+	g.Meta `path:"/edit/user/info" method:"post" tags:"用户相关" summary:"编辑用户信息"`
 	UserInfoBase
 }
 

@@ -49,7 +49,7 @@ func (c cUser) UpdatePassword(ctx context.Context, req *v1.UpdatePasswordReq) (r
 	if err != nil {
 		panic(err)
 	}
-	return nil, service.User().UpdatePassword(ctx, data)
+	return res, service.User().UpdatePassword(ctx, data)
 }
 
 /*
@@ -61,5 +61,5 @@ func (c cUser) EditInfo(ctx context.Context, req *v1.EditInfoReq) (res *v1.EditI
 	if err != nil {
 		panic(err)
 	}
-	return nil, service.User().EditInfo(ctx, data)
+	return res, service.User().EditInfo(ctx, data)
 }

@@ -5,13 +5,14 @@ package consts
  * 例如：user：%s:
  */
 const (
-	UserWebVerify   = "u:%s:web"
-	UserLoginVerify = "u:%s:verify"
-	UserLoginToken  = "u:%s:token"
-	TaskRemindMsg   = "t:%s:msg"
+	RedisUserWebVerify  = "u:%s:web"
+	RedisEmailVftCode   = "eVftCode:%s"
+	RedisUserPrivate    = "u:%s:private"
+	RedisUserLoginToken = "u:%s:token"
+	RedisTaskRemindMsg  = "t:%s:msg"
 
 	/**
 	 * 缓存资源数据
 	 **/
-	MethodUserServiceRedisKey = "method:userService:getvftcode:%s"
+	RedisMethodCommonServiceGetvftcode = "method:commonService:getvftcode:%s"
 )
