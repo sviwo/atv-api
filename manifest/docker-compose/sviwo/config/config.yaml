@@ -1,0 +1,47 @@
+server:
+  address: ":8000"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+logger:
+  level: "all"
+  stdout: true
+
+database:
+  logger:
+    - path: "logs/sql"
+      level: "all"
+      stdout: true
+  default:
+    - link: "mysql:root:gyc1993@tcp(114.115.135.233:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置
+      role: "master"
+      debug: true
+
+redis:
+  default:
+    address: 127.0.0.1:7001 #redis地址
+    db: 1 #db
+    pass: #密码
+  cache:
+    address: 127.0.0.1:7001  #地址
+    db: 1   #db
+    pass:  #密码
+
+gfToken:
+  ServerName: "Sviwo"
+  cacheKey: "gfToken:"   #缓存前缀
+  timeOut: 24 * 60 * 60 * 1000 * 10         #token超时时间（毫秒）
+  maxRefresh: 24 * 60 * 60 * 1000 * 5       #token自动刷新时间（毫秒）
+  multiLogin: true      #是否允许一个账号多人同时登录
+  encryptKey: "49c54195e750b04e74a8429b17896586"    #加密key (32位)
+  cacheMode: 2          #存储引擎 1 gcache 2 gredis 默认1
+  LoginPath: "/login"
+  LogoutPath: "/logout"
+
+oss:
+  fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
+  endpoint: oss-cn-chengdu.aliyuncs.com
+  accessKeyID: LTAI5tLnA6rbeAnmpMtsh6vE
+  accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
+  bucket: test-sviwo-car-oss
+

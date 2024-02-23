@@ -1,0 +1,79 @@
+services:
+  sviwo-redis:
+    image: redis:7.0.11
+    container_name: sviwo-redis
+    restart: always
+    build:
+      context: ./redis #扫描目录
+      dockerfile: dockerfile   #构建类型
+    volumes:
+      - "./redis/conf/redis.conf:/home/sviwo/redis/redis.conf"
+      - "./redis/data:/data"
+      - "./redis/logs:/logs"
+    command: ["redis-server","/home/sviwo/redis/redis.conf"]
+    environment:
+      - TZ=Asia/Shanghai
+    privileged: true    #容器将以更高的权限运行
+    ports:
+      - 16379:6379
+  sviwo-mysql:
+    image: mysql:8.0.25
+    container_name: sviwo-mysql
+    restart: always
+    build: #构建目录  用于配置mysql
+      context: ./mysql #扫描目录
+    environment:
+      MYSQL_ROOT_PASSWORD: 1qaz2wsx
+      MYSQL_DATABASE: sviwo
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/logs:/var/log
+    ports:
+      - "13306:3306"
+    command: [ #设置mysql服务
+      'mysqld',
+      '--innodb-buffer-pool-size=80M',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-time-zone=+8:00',
+      '--lower-case-table-names=1'
+    ]
+    privileged: true  #容器将以更高的权限运行
+  sviwo-tdengine:
+    image: tdengine/tdengine:3.1.1.0
+    container_name: sviwo-tdengine
+    restart: always
+    volumes:
+      - "./taos/dnode/data:/var/lib/taos"
+      - "./taos/dnode/log:/var/log/taos"
+    ports:
+      - 6030:6030
+      - 6041:6041
+  sviwo-nginx:
+    container_name: sviwo-nginx
+    image: nginx:1.25.1
+    restart: always
+    privileged: true
+    ports:
+      - 80:80
+    volumes:
+      - "./nginx/conf/nginx.conf:/etc/nginx/nginx.conf"
+      - "./nginx/logs/:/var/log/nginx/"
+  sviwo-api: # 业务模块  商品服务
+    container_name: sviwo-api # 业务模块  商品服务名
+    build: # 业务模块  商品服务配置
+      context: ./sviwo
+      #dockerfile: dockerfile
+    ports: # 业务模块  商品服务映射端口
+      - "8500:8500"
+      - "8000:8000"
+    depends_on: # 依赖服务
+      - sviwo-redis
+      - sviwo-mysql
+      - sviwo-nginx
+    links: # 需要链接的服务
+      - sviwo-redis
+      - sviwo-mysql
+      - sviwo-nginx

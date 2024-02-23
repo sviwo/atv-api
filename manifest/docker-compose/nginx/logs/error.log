@@ -1,0 +1,39 @@
+2024/02/05 09:39:32 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:33 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:33 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:34 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:35 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:37 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:40 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:47 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:53 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:54 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:55 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:55 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:57 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:39:58 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:40:02 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:40:09 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:40:22 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:40:48 [emerg] 1#1: host not found in upstream "sagoo-iot-open" in /etc/nginx/nginx.conf:64
+2024/02/05 09:43:08 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:09 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:09 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:10 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:11 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:13 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:17 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:24 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:43:37 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:44:03 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:44:55 [emerg] 1#1: no "events" section in configuration
+2024/02/05 09:45:26 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:27 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:27 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:28 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:29 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:31 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:35 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:41 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:45:55 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
+2024/02/05 09:46:21 [emerg] 1#1: host not found in upstream "sviwo" in /etc/nginx/nginx.conf:59
