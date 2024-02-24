@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.6+incompatible
 	github.com/bwmarrin/snowflake v0.3.0
+	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/goflyfox/gtoken v1.5.7
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.6.2
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.6.2
@@ -41,6 +42,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.22.0 // indirect
 	go.opentelemetry.io/otel/trace v1.22.0 // indirect
 	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
