@@ -49,8 +49,29 @@ var (
 					)
 				})
 			})
+
+			//初始化其他组件
+			initTool(ctx)
+
 			s.Run()
 			return nil
 		},
 	}
 )
+
+func initTool(ctx context.Context) {
+
+	// TDengine 初始化
+	if err := service.TSLTable().CreateDatabase(ctx); err != nil {
+		g.Log().Fatal(ctx, "TDengine 数据库创建失败：", err)
+	}
+	if err := service.TdLogTable().CreateStable(ctx); err != nil {
+		g.Log().Fatal(ctx, "TDengine 日志超级表创建失败：", err)
+	}
+
+	//mqtt启动
+	//if err := mqtt.InitSystemMqtt(); err != nil {
+	//	g.Log().Errorf(ctx, "MQTT 初始化mqtt客户端失败,失败原因:%+#v", err)
+	//}
+	//defer mqtt.Close()
+}
