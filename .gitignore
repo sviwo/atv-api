@@ -17,6 +17,7 @@ temp/
 temp.yaml
 bin
 **/config/config.yaml
+*.log
 
 manifest/docker-compose/mysql/data
 manifest/docker-compose/mysql/logs
