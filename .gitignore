@@ -13,11 +13,9 @@ main
 main.exe
 output/
 manifest/output/
-temp/
-temp.yaml
 bin
 **/config/config.yaml
 *.log
 
-manifest/docker-compose/mysql/data
-manifest/docker-compose/mysql/logs
+manifest/docker/mysql/data
+manifest/docker/mysql/logs

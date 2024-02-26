@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sviwo.iml" filepath="$PROJECT_DIR$/.idea/sviwo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/atv-api.iml" filepath="$PROJECT_DIR$/.idea/atv-api.iml" />
     </modules>
   </component>
 </project>

@@ -5,7 +5,7 @@ services:
     restart: always
     build:
       context: ./redis #扫描目录
-      dockerfile: dockerfile   #构建类型
+      dockerfile: redis/Dockerfile   #构建类型
     volumes:
       - "./redis/conf/redis.conf:/home/sviwo/redis/redis.conf"
       - "./redis/data:/data"
@@ -55,7 +55,7 @@ services:
     container_name: sviwo-api # 业务模块  商品服务名
     build: # 业务模块  商品服务配置
       context: ./sviwo
-      #dockerfile: dockerfile
+      #Dockerfile: Dockerfile
     ports: # 业务模块  商品服务映射端口
       - "8500:8500"
       - "8000:8000"
