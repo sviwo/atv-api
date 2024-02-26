@@ -49,3 +49,21 @@ email:
   port: 587
   username: gouyichuan@gmail.com
   password: yzdkzxemdknngznw
+
+#这个mqtt客户端主要是服务端内部处理消息使用的通道
+mqtt:
+  addr: 127.0.0.1:1883
+  # 最好带上服务名称，变成唯一id
+  clientId: sviwo-iot-open-001
+  deviceLiveDuration: 30
+#  auth:
+#    userName: admin
+#    userPassWorld: 123456
+
+#TDengine配置
+tdengine:
+  type: "taosRestful" #http连接方式，端口是6041
+  dsn: "root:taosdata@http(114.115.135.233:6041)/"
+  dbName: "sviwo_iot"
+  maxOpenConns: 10
+  maxIdleConns: 5

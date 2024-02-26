@@ -12,4 +12,5 @@ import (
 	_ "sviwo/internal/logic/middleware"
 	_ "sviwo/internal/logic/user"
 	_ "sviwo/internal/logic/version"
+	_ "sviwo/internal/logic/tdengine"
 )
