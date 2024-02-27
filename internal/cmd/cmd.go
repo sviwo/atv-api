@@ -29,6 +29,7 @@ var (
 				group.Bind(
 					controller.Common.GetVftCode,
 					controller.User.Register,
+					controller.TravelRecord.GetTravelRecordList,
 				)
 				//需要登录鉴权的路由组
 				group.Group("/", func(group *ghttp.RouterGroup) {
