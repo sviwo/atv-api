@@ -38,3 +38,7 @@ type EccPublicKeyRes struct {
 	PublicKey  string `json:"publicKey"    dc:""`
 	PublicCode string `json:"publicCode"    dc:""`
 }
+
+type CommonRes struct {
+	error string `json:"error" dc:"错误信息"`
+}
