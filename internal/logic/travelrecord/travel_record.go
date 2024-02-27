@@ -18,6 +18,10 @@ func New() *sTravelRecord {
 
 type sTravelRecord struct{}
 
+func (s sTravelRecord) Delete(ctx context.Context, in model.TravelRecordInput) {
+	dao.TravelRecord.Ctx(ctx).Data(g.Map{"is_delete": 0}).Where("ravel_record_id", in.TravelRecordId).Update()
+}
+
 func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelRecordQueryInput) (total int, out []*model.TravelRecordOutput, err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		m := dao.TravelRecord.Ctx(ctx)
@@ -27,6 +31,7 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 		if in.CarId != 0 {
 			m = m.Where("car_id", in.CarId)
 		}
+		m.Where("is_delete", 0)
 		total, err = m.Count()
 		if err != nil {
 			panic(err)
