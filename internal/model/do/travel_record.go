@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-26 19:31:45
 // =================================================================================
 
 package do
@@ -13,6 +13,8 @@ import (
 type TravelRecord struct {
 	g.Meta         `orm:"table:sw_travel_record, do:true"`
 	TravelRecordId interface{} //
+	UserId         interface{} // 用户ID
+	CarId          interface{} // 车辆ID
 	StartPoint     interface{} // 起点
 	EndPoint       interface{} // 终点
 	MileageDriven  interface{} // 行驶里程，单位（m）
