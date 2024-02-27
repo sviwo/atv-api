@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/goflyfox/gtoken/gtoken"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -150,12 +149,7 @@ func getRedisEccPrivateKey(r *ghttp.Request) string {
 	var eccPrivateKey string
 	if gstr.HasPrefix(r.URL.Path, "/api") {
 		//获取请求头的token并解析
-		gfToken := gtoken.GfToken{EncryptKey: g.Cfg().MustGet(r.GetCtx(), "gfToken.encryptKey").Bytes()}
-		gfToken.InitConfig()
-		decryptToken := gfToken.DecryptToken(
-			r.GetCtx(), strings.SplitN(r.Header.Get("Authorization"), " ", 2)[1],
-		)
-		eccPrivateKey = decryptToken.GetString(gtoken.KeyUserKey)
+		eccPrivateKey = utility.GfTokenDecryptToken(r.GetCtx(), r.Header.Get("Authorization"))
 	} else {
 		eccPrivateKey = r.GetHeader("publicCode")
 	}

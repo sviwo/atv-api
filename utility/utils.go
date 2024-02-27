@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gogf/gf/v2/crypto/gaes"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/encoding/gbase64"
 	"github.com/gogf/gf/v2/encoding/gcharset"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/encoding/gurl"
@@ -428,4 +430,28 @@ func SendEmail(subject, body, to string) error {
 		return gerror.NewCode(rcode.VftCodeSendFailed)
 	}
 	return nil
+}
+
+/*
+GfTokenDecryptToken GfToken解密
+*/
+func GfTokenDecryptToken(ctx context.Context, token string) string {
+	if token == "" {
+		panic(gerror.NewCode(rcode.IllegalArgument))
+	}
+	parts := strings.SplitN(token, " ", 2)
+	if !(len(parts) == 2 && parts[0] == "Bearer") {
+		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+	} else if parts[1] == "" {
+		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+	}
+	token64, err := gbase64.Decode([]byte(parts[1]))
+	if err != nil {
+		panic(err)
+	}
+	decryptToken, err2 := gaes.Decrypt(token64, g.Cfg().MustGet(ctx, "gfToken.encryptKey").Bytes())
+	if err2 != nil {
+		panic(err2)
+	}
+	return gstr.Split(string(decryptToken), "_")[0]
 }
