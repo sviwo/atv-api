@@ -10,7 +10,8 @@ import (
 	_ "sviwo/internal/logic/common"
 	_ "sviwo/internal/logic/home"
 	_ "sviwo/internal/logic/middleware"
+	_ "sviwo/internal/logic/tdengine"
+	_ "sviwo/internal/logic/travelrecord"
 	_ "sviwo/internal/logic/user"
 	_ "sviwo/internal/logic/version"
-	_ "sviwo/internal/logic/tdengine"
 )
