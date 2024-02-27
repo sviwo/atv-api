@@ -29,12 +29,15 @@ func (c cTravelRecord) GetTravelRecordList(ctx context.Context, req *v1.TravelRe
 	return
 }
 
-func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordReq) (res *v1.CommonRes, err error) {
+func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordDeleteReq) (res *v1.CommonRes, err error) {
 	tData := model.TravelRecordInput{}
 	err = gconv.Struct(req, &tData)
 	if err != nil {
 		panic(err)
 	}
-	service.TravelRecord().Delete(ctx, tData)
+	err = service.TravelRecord().Delete(ctx, tData)
+	if err != nil {
+		panic(err)
+	}
 	return
 }

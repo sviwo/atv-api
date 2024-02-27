@@ -17,6 +17,10 @@ type TravelRecordRes struct {
 	CommonPaginationRes
 }
 
+type TravelRecordDeleteReq struct {
+	g.Meta `path:"/travelRecord/delete" method:"post" tags:"行程相关" summary:"删除行程"`
+	TravelRecordReq
+}
 type TravelRecordReq struct {
 	TravelRecordId int64       `json:"travelRecordId" description:""`
 	UserId         int64       `json:"userId"         description:"用户ID"`

@@ -8,7 +8,7 @@ import (
 type (
 	ITravelRecord interface {
 		GetTravelRecordList(ctx context.Context, in model.TravelRecordQueryInput) (total int, out []*model.TravelRecordOutput, err error)
-		Delete(ctx context.Context, in model.TravelRecordInput)
+		Delete(ctx context.Context, in model.TravelRecordInput) (err error)
 	}
 )
 
