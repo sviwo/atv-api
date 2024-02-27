@@ -32,7 +32,7 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 		if in.CarId != 0 {
 			m = m.Where("car_id", in.CarId)
 		}
-		m = m.Where("is_delete", 1)
+		m = m.Where("is_delete", 0)
 		total, err = m.Count()
 		if err != nil {
 			panic(err)
