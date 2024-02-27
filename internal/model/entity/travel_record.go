@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-26 19:31:45
 // =================================================================================
 
 package entity
@@ -11,7 +11,9 @@ import (
 // TravelRecord is the golang structure for table travel_record.
 type TravelRecord struct {
 	TravelRecordId int64       `json:"travelRecordId" description:""`
-	StartPoint     int         `json:"startPoint"     description:"起点"`
+	UserId         int64       `json:"userId"         description:"用户ID"`
+	CarId          int64       `json:"carId"          description:"车辆ID"`
+	StartPoint     string      `json:"startPoint"     description:"起点"`
 	EndPoint       string      `json:"endPoint"       description:"终点"`
 	MileageDriven  int         `json:"mileageDriven"  description:"行驶里程，单位（m）"`
 	StartTime      *gtime.Time `json:"startTime"      description:"行程开始时间"`
