@@ -21,8 +21,8 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"sviwo/internal/boot"
 	rcode "sviwo/internal/logic/biz/enums"
-	"sviwo/utility/config"
 	"time"
 )
 
@@ -131,7 +131,7 @@ func StrToTimestamp(dateStr string) int64 {
 	return tm.Timestamp()
 }
 
-// GetDbConfig get db config
+// GetDbConfig get db boot
 func GetDbConfig() (cfg *gdb.ConfigNode, err error) {
 	cfg = g.DB().GetConfig()
 	err = ParseDSN(cfg)
@@ -423,7 +423,7 @@ func SendEmail(subject, body, to string) error {
 	//内容
 	m.SetBody("text/html", body)
 	// 发送邮件
-	if err := config.NewDialer.DialAndSend(m); err != nil {
+	if err := boot.NewDialer.DialAndSend(m); err != nil {
 		glog.Error(context.Background(), "验证发送失败，错误原因==", err)
 		return gerror.NewCode(rcode.VftCodeSendFailed)
 	}
