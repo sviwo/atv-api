@@ -31,7 +31,6 @@ var (
 					controller.Common.GetVftCode,
 					controller.Common.GetEccPublicKey,
 					controller.User.Register,
-					controller.TravelRecord.GetTravelRecordList,
 				)
 				//需要登录鉴权的路由组
 				group.Group("/api", func(group *ghttp.RouterGroup) {
@@ -46,6 +45,8 @@ var (
 						controller.User.EditInfo,
 						controller.Common.ImgUpload,
 						controller.Version.GetNewVersion,
+						controller.TravelRecord.GetTravelRecordList,
+						controller.TravelRecord.Delete,
 					)
 				})
 			})
