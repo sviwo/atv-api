@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-26 19:31:45
 // ==========================================================================
 
 package internal
@@ -21,6 +21,8 @@ type TravelRecordDao struct {
 // TravelRecordColumns defines and stores column names for table sw_travel_record.
 type TravelRecordColumns struct {
 	TravelRecordId string //
+	UserId         string // 用户ID
+	CarId          string // 车辆ID
 	StartPoint     string // 起点
 	EndPoint       string // 终点
 	MileageDriven  string // 行驶里程，单位（m）
@@ -36,6 +38,8 @@ type TravelRecordColumns struct {
 // travelRecordColumns holds the columns for table sw_travel_record.
 var travelRecordColumns = TravelRecordColumns{
 	TravelRecordId: "travel_record_id",
+	UserId:         "user_id",
+	CarId:          "car_id",
 	StartPoint:     "start_point",
 	EndPoint:       "end_point",
 	MileageDriven:  "mileage_driven",
