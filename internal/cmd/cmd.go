@@ -74,4 +74,9 @@ func initTool(ctx context.Context) {
 	//	g.Log().Errorf(ctx, "MQTT 初始化mqtt客户端失败,失败原因:%+#v", err)
 	//}
 	//defer mqtt.Close()
+
+	// 启动失败的话请注释掉
+	//if err := network.ReloadNetwork(context.Background()); err != nil {
+	//	g.Log().Errorf(ctx, "载入网络错误,错误原因:%+#v", err)
+	//}
 }
