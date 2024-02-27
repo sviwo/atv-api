@@ -12,6 +12,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/glog"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gutil"
 	"github.com/gogf/gf/v2/util/gvalid"
 	"io"
@@ -113,56 +114,70 @@ func (s *sMiddleware) CORS(r *ghttp.Request) {
 
 // use middleware func for router
 func (s *sMiddleware) DecodeData(r *ghttp.Request) {
-	contentType := r.GetHeader("Content-Type")
-	if contentType == "" {
-		panic(gerror.NewCode(rcode.VftCodeError))
+	if r.Request.Method == "GET" {
+		if r.Request.URL.RawQuery == "" {
+			r.Middleware.Next()
+			return
+		}
+		parseQuery(r, getRedisEccPrivateKey(r))
+	} else if r.Request.Method == "POST" {
+		if r.GetBody() == nil {
+			r.Middleware.Next()
+			return
+		}
+		contentType := r.GetHeader("Content-Type")
+		if contentType == "" {
+			panic(gerror.NewCode(rcode.IllegalArgument))
+		}
+		switch contentType {
+		case "application/json":
+			parseJson(r, getRedisEccPrivateKey(r))
+		case "multipart/form-data":
+			parseForm(r, getRedisEccPrivateKey(r))
+		case "application/x-www-form-urlencoded":
+			parseFile(r, getRedisEccPrivateKey(r))
+		default:
+			panic(gerror.NewCode(rcode.IllegalOperation))
+		}
+	} else {
+		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+		return
 	}
-	isJsonRequest := strings.Contains(contentType, "application/json")
-	isFileRequest := strings.Contains(contentType, "multipart/form-data")
-	isFormUrl := strings.Contains(contentType, "application/x-www-form-urlencoded")
-	//获取请求头的token并解析
-	gfToken := gtoken.GfToken{EncryptKey: g.Cfg().MustGet(r.GetCtx(), "gfToken.encryptKey").Bytes()}
-	gfToken.InitConfig()
-	decryptToken := gfToken.DecryptToken(
-		r.GetCtx(), strings.SplitN(r.Header.Get("Authorization"), " ", 2)[1],
-	)
-	//获取登陆时存入redis的私钥
+	r.Middleware.Next()
+}
+
+func getRedisEccPrivateKey(r *ghttp.Request) string {
+	var eccPrivateKey string
+	if gstr.HasPrefix(r.URL.Path, "/api") {
+		//获取请求头的token并解析
+		gfToken := gtoken.GfToken{EncryptKey: g.Cfg().MustGet(r.GetCtx(), "gfToken.encryptKey").Bytes()}
+		gfToken.InitConfig()
+		decryptToken := gfToken.DecryptToken(
+			r.GetCtx(), strings.SplitN(r.Header.Get("Authorization"), " ", 2)[1],
+		)
+		eccPrivateKey = decryptToken.GetString(gtoken.KeyUserKey)
+	} else {
+		eccPrivateKey = r.GetHeader("publicCode")
+	}
+	//获取存入redis的私钥
 	result, err := g.Redis().Get(
 		r.GetCtx(),
-		fmt.Sprintf(consts.RedisUserPrivate, decryptToken.GetString(gtoken.KeyUserKey)),
+		fmt.Sprintf(consts.RedisEccPrivateKey, eccPrivateKey),
 	)
 	if err != nil {
 		panic(err)
 	}
-	privateKey := result.String()
-
-	if r.Request.Method == "GET" { //if use get
-
-		parseQuery(r, privateKey)
-
-	} else if isJsonRequest { //if use post json
-
-		parseJson(r, privateKey)
-
-	} else if isFormUrl { //if use post form
-
-		parseForm(r, privateKey)
-
-	} else if isFileRequest { //if use file
-
-		parseFile(r, privateKey)
-	}
-	r.Middleware.Next()
+	return result.String()
 }
 
 func parseQuery(r *ghttp.Request, privateKey string) {
 	encryptString := r.Get("data", "").String()
 	if len(encryptString) < 1 {
-		panic(rcode.RequestParamTypeError)
+		panic(gerror.NewCode(rcode.RequestParamTypeError))
 	}
-	queryData, err := ecc.EccDecryptByBase64(encryptString, privateKey)
+	queryData, err := ecc.EccDecryptByHex(encryptString, privateKey)
 	if err != nil {
-		panic(rcode.RequestParamTypeError)
+		panic(gerror.NewCode(rcode.RequestParamTypeError))
 	}
 	dataMap := gjson.New(queryData).Map()
 	var args []string
@@ -190,7 +205,7 @@ func parseJson(r *ghttp.Request, privateKey string) {
 		}
 		payloadText := jsonData.EncryptString
 		if len(payloadText) > 0 {
-			payloadByte, err := ecc.EccDecryptByBase64(payloadText, privateKey)
+			payloadByte, err := ecc.EccDecryptByHex(payloadText, privateKey)
 			if err != nil {
 				glog.Infof(r.GetCtx(), "parseJson GcmDecryptByte err:%v", err)
 				panic(err)
@@ -239,7 +254,7 @@ func parseFile(r *ghttp.Request, privateKey string) {
 	_, params, _ := mime.ParseMediaType(contentType)
 	boundary, ok := params["boundary"]
 	if !ok {
-		panic(rcode.RequestParamTypeError)
+		panic(gerror.NewCode(rcode.RequestParamTypeError))
 	}
 	bodyBuf := &bytes.Buffer{}
 	wr := multipart.NewWriter(bodyBuf)
@@ -301,7 +316,7 @@ func decryptString(privateKey, encryptString string) (map[string]interface{}, er
 	if len(encryptString) < 1 {
 		return formData, nil
 	}
-	plaintext, err := ecc.EccDecryptByBase64(encryptString, privateKey)
+	plaintext, err := ecc.EccDecryptByHex(encryptString, privateKey)
 	if err != nil {
 		return formData, err
 	}

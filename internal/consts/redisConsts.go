@@ -7,9 +7,9 @@ package consts
 const (
 	RedisUserWebVerify  = "u:%s:web"
 	RedisEmailVftCode   = "eVftCode:%s"
-	RedisUserPrivate    = "u:%s:private"
 	RedisUserLoginToken = "u:%s:token"
 	RedisTaskRemindMsg  = "t:%s:msg"
+	RedisEccPrivateKey  = "ecc:%s:private"
 
 	/**
 	 * 缓存资源数据
