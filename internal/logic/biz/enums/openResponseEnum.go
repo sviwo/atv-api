@@ -28,11 +28,12 @@ var (
 	/*
 	   公共异常 1000～1999
 	*/
-	ApiException          = New(1000, "网络开小差了,请稍后再试")
-	IllegalOperation      = New(1001, "非法操作")
-	IllegalArgument       = New(1002, "请求参数缺失")
-	RequestParamTypeError = New(1003, "请求参数错误")
-	TransactionUserError  = New(1004, "用户重复请求或伪造请求")
+	ApiException           = New(1000, "网络开小差了,请稍后再试")
+	IllegalOperation       = New(1001, "非法操作")
+	IllegalArgument        = New(1002, "请求参数缺失")
+	RequestParamTypeError  = New(1003, "请求参数错误")
+	RequestMethodTypeError = New(1004, "请求方式错误")
+	TransactionUserError   = New(1999, "用户重复请求或伪造请求")
 
 	/*
 	   app错误码 2000～2999

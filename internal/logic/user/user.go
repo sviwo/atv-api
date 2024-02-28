@@ -34,8 +34,10 @@ Login 执行登录
 func (s *sUser) Login(ctx context.Context, in model.LoginInput) (err error, userId *uint64) {
 	userInfo := findUserByUsername(ctx, in.Username)
 	if gutil.IsEmpty(userInfo) {
-		return gerror.NewCode(rcode.UserNotExists), nil
-
+		panic(gerror.NewCode(rcode.UserNotExists))
+	}
+	if !userInfo.Enable {
+		panic(gerror.NewCode(rcode.UserAcctFrozen))
 	}
 	//第三方登陆
 	if consts.LOGIN_TYPE_THIRD == in.LoginType {
@@ -50,7 +52,7 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) (err error, user
 }
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
-	err := dao.User.Ctx(ctx).Where("username", username).Scan(&user)
+	err := dao.User.Ctx(ctx).Where("username", username).Where("is_delete", 0).Scan(&user)
 	if err != nil {
 		panic(err)
 	}

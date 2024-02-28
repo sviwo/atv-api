@@ -57,12 +57,12 @@ func loginAfterFunc(r *ghttp.Request, respData gtoken.Resp) {
 		token := respData.GetString(gtoken.KeyToken)
 		r.Response.Header().Set("Authorization", token)
 
-		eccKey, err := ecc.GenerateEccKeyBase64()
+		eccKey, err := ecc.GenerateEccKeyHex()
 		if err != nil {
 			panic(err)
 		}
 		r.Response.Header().Set("PublicKey", eccKey.PublicKey)
-		_, err = g.Redis().Set(r.GetCtx(), fmt.Sprintf(consts.RedisUserPrivate, userKey), eccKey.PrivateKey)
+		_, err = g.Redis().Set(r.GetCtx(), fmt.Sprintf(consts.RedisEccPrivateKey, userKey), eccKey.PrivateKey)
 		if err != nil {
 			panic(err)
 		}

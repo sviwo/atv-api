@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gogf/gf/v2/crypto/gaes"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/encoding/gbase64"
 	"github.com/gogf/gf/v2/encoding/gcharset"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/encoding/gurl"
@@ -21,8 +23,8 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"sviwo/internal/boot"
 	rcode "sviwo/internal/logic/biz/enums"
-	"sviwo/utility/config"
 	"time"
 )
 
@@ -131,7 +133,7 @@ func StrToTimestamp(dateStr string) int64 {
 	return tm.Timestamp()
 }
 
-// GetDbConfig get db config
+// GetDbConfig get db boot
 func GetDbConfig() (cfg *gdb.ConfigNode, err error) {
 	cfg = g.DB().GetConfig()
 	err = ParseDSN(cfg)
@@ -423,9 +425,33 @@ func SendEmail(subject, body, to string) error {
 	//内容
 	m.SetBody("text/html", body)
 	// 发送邮件
-	if err := config.NewDialer.DialAndSend(m); err != nil {
+	if err := boot.NewDialer.DialAndSend(m); err != nil {
 		glog.Error(context.Background(), "验证发送失败，错误原因==", err)
 		return gerror.NewCode(rcode.VftCodeSendFailed)
 	}
 	return nil
+}
+
+/*
+GfTokenDecryptToken GfToken解密
+*/
+func GfTokenDecryptToken(ctx context.Context, token string) string {
+	if token == "" {
+		panic(gerror.NewCode(rcode.IllegalArgument))
+	}
+	parts := strings.SplitN(token, " ", 2)
+	if !(len(parts) == 2 && parts[0] == "Bearer") {
+		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+	} else if parts[1] == "" {
+		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+	}
+	token64, err := gbase64.Decode([]byte(parts[1]))
+	if err != nil {
+		panic(err)
+	}
+	decryptToken, err2 := gaes.Decrypt(token64, g.Cfg().MustGet(ctx, "gfToken.encryptKey").Bytes())
+	if err2 != nil {
+		panic(err2)
+	}
+	return gstr.Split(string(decryptToken), "_")[0]
 }
