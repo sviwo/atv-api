@@ -8,11 +8,11 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
-	"github.com/wumansgy/goEncrypt/ecc"
 	"sviwo/internal/consts"
 	rcode "sviwo/internal/logic/biz/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
+	ecc "sviwo/utility/encrypt"
 	"sviwo/utility/response"
 )
 
