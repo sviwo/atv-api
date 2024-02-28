@@ -3,6 +3,7 @@ package travelrecord
 import (
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
+	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
@@ -19,20 +20,20 @@ func New() *sTravelRecord {
 type sTravelRecord struct{}
 
 func (s sTravelRecord) Delete(ctx context.Context, in model.TravelRecordInput) (err error) {
-	_, err = dao.TravelRecord.Ctx(ctx).Data(g.Map{"is_delete": 0}).Where("travel_record_id", in.TravelRecordId).Update()
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+	_, err = dao.TravelRecord.Ctx(ctx).Data(g.Map{"is_delete": 0}).Where(g.Map{"travel_record_id": in.TravelRecordId, "user_id": userId}).Update()
 	return
 }
 
 func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelRecordQueryInput) (total int, out []*model.TravelRecordOutput, err error) {
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	err = g.Try(ctx, func(ctx context.Context) {
 		m := dao.TravelRecord.Ctx(ctx)
-		if in.UserId != 0 {
-			m = m.Where("user_id", in.UserId)
-		}
+		m = m.Where("user_id", userId)
 		if in.CarId != 0 {
 			m = m.Where("car_id", in.CarId)
 		}
-		m = m.Where("is_delete", 1)
+		m = m.Where("is_delete", 0)
 		total, err = m.Count()
 		if err != nil {
 			panic(err)

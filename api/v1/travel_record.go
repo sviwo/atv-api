@@ -7,7 +7,7 @@ import (
 
 type TravelRecordQueryReq struct {
 	g.Meta `path:"/travelRecord/list/get" method:"get" tags:"行程相关" summary:"获取行程列表"`
-	UserId int64 `json:"userId"         description:"用户ID"     v:"required"`
+	UserId int64 `json:"userId"         description:"用户ID"     `
 	CarId  int64 `json:"carId"         description:"车辆ID"     `
 	CommonPaginationReq
 }
