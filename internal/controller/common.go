@@ -7,11 +7,11 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/util/gconv"
-	"github.com/wumansgy/goEncrypt/ecc"
 	"sviwo/api/v1"
 	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/service"
+	ecc "sviwo/utility/encrypt"
 	"sviwo/utility/file"
 )
 
