@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/container/gmap"
 	"sviwo/internal/model"
 
-	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 )
 
@@ -12,7 +12,7 @@ type (
 	IBizCtx interface {
 		Init(r *ghttp.Request, customCtx *model.Context)
 		Get(ctx context.Context) *model.Context
-		SetData(ctx context.Context, data g.Map)
+		SetData(ctx context.Context, data *gmap.Map)
 	}
 )
 

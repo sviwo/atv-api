@@ -7,9 +7,9 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"github.com/qiniu/x/log"
-	"github.com/wumansgy/goEncrypt/hash"
 	"math/big"
 	"runtime"
+	"sviwo/utility/hash"
 )
 
 func eccSign(msg []byte, priKey []byte) (rSign []byte, sSign []byte, err error) {

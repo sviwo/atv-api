@@ -52,7 +52,7 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) (err error, user
 }
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
-	err := dao.User.Ctx(ctx).Where("username", username).Where("is_delete", 1).Scan(&user)
+	err := dao.User.Ctx(ctx).Where("username", username).Where("is_delete", 0).Scan(&user)
 	if err != nil {
 		panic(err)
 	}

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -12,6 +13,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/text/gstr"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
 	"github.com/gogf/gf/v2/util/gvalid"
 	"io"
@@ -95,8 +97,16 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 // 自定义上下文对象
 func (s *sMiddleware) Ctx(r *ghttp.Request) {
 	// 初始化，务必最开始执行
+	m := gmap.New()
+	//获取登陆后的token并解析出userId存入上下文。
+	if gstr.HasPrefix(r.URL.Path, "/api") {
+		authorization := r.Header.Get("Authorization")
+		if authorization != "" {
+			m.Set(consts.ContextKeyUserId, utility.GfTokenDecryptToken(r.GetCtx(), authorization))
+		}
+	}
 	customCtx := &model.Context{
-		Data: make(g.Map),
+		Data: m,
 	}
 	service.BizCtx().Init(r, customCtx)
 	// 将自定义的上下文对象传递到模板变量中使用
@@ -146,17 +156,18 @@ func (s *sMiddleware) DecodeData(r *ghttp.Request) {
 }
 
 func getRedisEccPrivateKey(r *ghttp.Request) string {
-	var eccPrivateKey string
+	var privateKeyCode string
 	if gstr.HasPrefix(r.URL.Path, "/api") {
+		privateKeyCode = gconv.String(service.BizCtx().Get(r.GetCtx()).Data.Get(consts.ContextKeyUserId))
 		//获取请求头的token并解析
-		eccPrivateKey = utility.GfTokenDecryptToken(r.GetCtx(), r.Header.Get("Authorization"))
+		//eccPrivateKey = utility.GfTokenDecryptToken(r.GetCtx(), r.Header.Get("Authorization"))
 	} else {
-		eccPrivateKey = r.GetHeader("publicCode")
+		privateKeyCode = r.GetHeader("publicCode")
 	}
 	//获取存入redis的私钥
 	result, err := g.Redis().Get(
 		r.GetCtx(),
-		fmt.Sprintf(consts.RedisEccPrivateKey, eccPrivateKey),
+		fmt.Sprintf(consts.RedisEccPrivateKey, privateKeyCode),
 	)
 	if err != nil {
 		panic(err)
@@ -182,7 +193,8 @@ func parseQuery(r *ghttp.Request, privateKey string) {
 		args = append(args, fmt.Sprintf("%s=%s", k, url.QueryEscape(val)))
 		logs = append(logs, fmt.Sprintf("%s=%s", k, val))
 	}
-	glog.Infof(r.GetCtx(), "parseQuery  url:%s, md5key:%s, encryptString:%s, decrypt data:%s", r.Request.URL.String(), privateKey, encryptString, strings.Join(logs, "&"))
+	glog.Infof(r.GetCtx(), "parseQuery  url:%s, md5key:%s, encryptString:%s, decrypt data:%s",
+		r.Request.URL.String(), privateKey, encryptString, strings.Join(logs, "&"))
 	r.Request.URL.RawQuery = strings.Join(args, "&")
 }
 
@@ -191,7 +203,8 @@ func parseJson(r *ghttp.Request, privateKey string) {
 	///解密body数据 请求的json是{"encryptString":{value}} value含有gcm的12字节nonce,实际长度大于32
 	if payload != nil && len(payload) > 20 {
 		var jsonData encryptJson
-		glog.Infof(r.GetCtx(), "parseJson url:%s md5key:%s,old data:%s,", r.Request.URL.String(), privateKey, string(payload))
+		glog.Infof(r.GetCtx(), "parseJson url:%s md5key:%s,old data:%s,", r.Request.URL.String(), privateKey,
+			string(payload))
 		err := json.Unmarshal(payload, &jsonData)
 		if err != nil {
 			glog.Infof(r.GetCtx(), "parseJson Unmarshal err:%v", err)
@@ -205,7 +218,8 @@ func parseJson(r *ghttp.Request, privateKey string) {
 				panic(err)
 			}
 			payload = payloadByte
-			glog.Infof(r.GetCtx(), "parseJson url:%s md5key:%s,encryptString:%s,decrypt data:%s", r.Request.URL.String(), privateKey, jsonData.EncryptString, string(payload))
+			glog.Infof(r.GetCtx(), "parseJson url:%s md5key:%s,encryptString:%s,decrypt data:%s",
+				r.Request.URL.String(), privateKey, jsonData.EncryptString, string(payload))
 		}
 		r.Request.Body = io.NopCloser(bytes.NewBuffer(payload))
 	}
@@ -219,7 +233,8 @@ func parseForm(r *ghttp.Request, privateKey string) {
 	payload := r.GetBody() // 把body再写回去,不然别的地方取不到
 	if payload != nil && len(payload) > 20 {
 		var jsonData encryptJson
-		glog.Infof(r.GetCtx(), "parseForm url:%s md5key:%s,old data:%s,", r.Request.URL.String(), privateKey, string(payload))
+		glog.Infof(r.GetCtx(), "parseForm url:%s md5key:%s,old data:%s,", r.Request.URL.String(), privateKey,
+			string(payload))
 		values, err := url.ParseQuery(string(payload))
 		if err != nil {
 			glog.Errorf(r.GetCtx(), "parseForm ParseQuery err:%v", err)
@@ -236,7 +251,8 @@ func parseForm(r *ghttp.Request, privateKey string) {
 				values.Add(k, utility.ToStr(v))
 			}
 			formData := values.Encode()
-			glog.Infof(r.GetCtx(), " parseForm url:%s md5key:%s,encryptString:%s,decrypt data:%s", r.Request.URL.String(), privateKey, jsonData.EncryptString, formData)
+			glog.Infof(r.GetCtx(), " parseForm url:%s md5key:%s,encryptString:%s,decrypt data:%s",
+				r.Request.URL.String(), privateKey, jsonData.EncryptString, formData)
 			payload = []byte(formData)
 		}
 	}

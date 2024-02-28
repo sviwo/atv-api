@@ -2,7 +2,7 @@ package ctx
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"sviwo/internal/consts"
 	"sviwo/internal/model"
@@ -37,6 +37,6 @@ func (s *sBizCtx) Get(ctx context.Context) *model.Context {
 }
 
 // SetData 将上下文信息设置到上下文请求中，注意是完整覆盖
-func (s *sBizCtx) SetData(ctx context.Context, data g.Map) {
+func (s *sBizCtx) SetData(ctx context.Context, data *gmap.Map) {
 	s.Get(ctx).Data = data
 }
