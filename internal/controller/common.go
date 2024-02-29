@@ -31,6 +31,9 @@ ImgUpload 图片上传
 */
 func (cCommon) ImgUpload(ctx context.Context, req *v1.ImgUploadReq) (res *v1.ImgUploadRes, err error) {
 	uri, err := file.UploadFile(req.File)
+	if err != nil {
+		panic(err)
+	}
 	res = new(v1.ImgUploadRes)
 	res = &v1.ImgUploadRes{Uri: uri}
 	return

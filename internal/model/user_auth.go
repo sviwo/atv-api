@@ -3,10 +3,10 @@ package model
 import "github.com/gogf/gf/v2/os/gtime"
 
 type UserAuthInput struct {
-	AuthFirstName       string `json:"authFirstName"       description:""`
-	AuthLastName        string `json:"authLastName"        description:""`
-	CertificateFrontImg string `json:"certificateFrontImg" description:"证件正面照片"`
-	CertificateBackImg  string `json:"certificateBackImg"  description:"证件背面照片"`
+	AuthFirstName       string  `json:"authFirstName"       description:""`
+	AuthLastName        string  `json:"authLastName"        description:""`
+	CertificateFrontImg *string `json:"certificateFrontImg" description:"证件正面照片"`
+	CertificateBackImg  *string `json:"certificateBackImg"  description:"证件背面照片"`
 }
 
 type UserAuthOutput struct {

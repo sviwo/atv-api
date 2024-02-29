@@ -2,10 +2,12 @@ package controller
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/api/v1"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
+	"sviwo/utility/file"
 )
 
 var User = cUser{}
@@ -50,9 +52,16 @@ func (c cUser) UpdatePassword(ctx context.Context, req *v1.UpdatePasswordReq) (r
 EditInfo 编辑用户信息
 */
 func (c cUser) EditInfo(ctx context.Context, req *v1.EditInfoReq) (res *v1.EmptyFieldRes, err error) {
-	data := model.EditInfoInput{}
+	data := model.EditInfoInput{UpdateTime: gtime.Now()}
 	if err = gconv.Struct(req, &data); err != nil {
 		panic(err)
+	}
+	if req.HeadImg != nil {
+		uri, err2 := file.UploadFile(req.HeadImg)
+		if err2 != nil {
+			panic(err2)
+		}
+		data.HeadImg = &uri
 	}
 	service.User().EditInfo(ctx, data)
 	return

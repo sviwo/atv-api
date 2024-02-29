@@ -143,9 +143,9 @@ func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 EditInfo 编辑用户资料
 */
 func (s *sUser) EditInfo(ctx context.Context, in model.EditInfoInput) {
-	if _, err := dao.User.Ctx(ctx).Where(
-		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).Update(in); err != nil {
+	if _, err := dao.User.Ctx(ctx).OmitNilData().Update(
+		in, "user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+	); err != nil {
 		panic(err)
 	}
 }

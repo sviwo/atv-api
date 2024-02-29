@@ -6,6 +6,7 @@ import (
 	"sviwo/api/v1"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
+	"sviwo/utility/file"
 )
 
 var UserAuth = cUserAuth{}
@@ -30,6 +31,16 @@ func (c cUserAuth) SubmitUserAuth(ctx context.Context, req *v1.SubmitUserAuthReq
 	if err = gconv.Struct(req, &data); err != nil {
 		panic(err)
 	}
+	certificateFrontImgUri, e := file.UploadFile(req.CertificateFrontImg)
+	if e != nil {
+		panic(e)
+	}
+	certificateBackImgUri, e := file.UploadFile(req.CertificateBackImg)
+	if e != nil {
+		panic(e)
+	}
+	data.CertificateFrontImg = &certificateFrontImgUri
+	data.CertificateBackImg = &certificateBackImgUri
 	service.UserAuth().SubmitUserAuth(ctx, data)
 	return
 }
