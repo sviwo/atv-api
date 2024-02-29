@@ -1,17 +1,15 @@
-// =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
-// =================================================================================
-
-package entity
+package v1
 
 import (
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
-// UserAuth is the golang structure for table user_auth.
-type UserAuth struct {
-	AuthId              int64       `json:"authId"              description:""`
-	UserId              int64       `json:"userId"              description:""`
+type GetUserAuthReq struct {
+	g.Meta `path:"get/user/auth" method:"get" tags:"用户实名相关" summary:"获取用户实名信息"`
+}
+
+type GetUserAuthRes struct {
 	AuthFirstName       string      `json:"authFirstName"       description:""`
 	AuthLastName        string      `json:"authLastName"        description:""`
 	CertificateFrontImg string      `json:"certificateFrontImg" description:"证件正面照片"`
@@ -20,6 +18,12 @@ type UserAuth struct {
 	AuthFailReason      string      `json:"authFailReason"      description:"认证失败原因"`
 	AuthTime            *gtime.Time `json:"authTime"            description:"认证时间"`
 	VerifyTime          *gtime.Time `json:"verifyTime"          description:"审核时间"`
-	CreateTime          *gtime.Time `json:"createTime"          description:""`
-	UpdateTime          *gtime.Time `json:"updateTime"          description:""`
+}
+
+type SubmitUserAuthReq struct {
+	g.Meta              `path:"submit/user/auth" method:"post" tags:"用户实名相关" summary:"提交用户实名信息"`
+	AuthFirstName       string `json:"authFirstName"       description:""`
+	AuthLastName        string `json:"authLastName"        description:""`
+	CertificateFrontImg string `json:"certificateFrontImg" description:"证件正面照片"`
+	CertificateBackImg  string `json:"certificateBackImg"  description:"证件背面照片"`
 }

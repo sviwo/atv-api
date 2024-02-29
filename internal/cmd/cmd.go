@@ -43,6 +43,8 @@ var (
 						controller.User.Info,
 						controller.User.UpdatePassword,
 						controller.User.EditInfo,
+						controller.UserAuth.GetUserAuthInfo,
+						controller.UserAuth.SubmitUserAuth,
 						controller.Common.ImgUpload,
 						controller.Version.GetNewVersion,
 						controller.TravelRecord.GetTravelRecordList,

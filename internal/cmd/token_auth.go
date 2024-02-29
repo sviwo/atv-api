@@ -41,10 +41,7 @@ func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 		response.JsonExit(r, rcode.IllegalArgument, nil)
 	}
 	input := model.LoginInput{Username: username, Password: password, LoginType: loginType}
-	err, userId := service.User().Login(r.GetCtx(), input)
-	if err != nil {
-		panic(err)
-	}
+	userId := service.User().Login(r.GetCtx(), input)
 	return gconv.String(userId), nil
 }
 

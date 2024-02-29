@@ -1,7 +1,6 @@
 package model
 
 type UserInfoBase struct {
-	UserId      uint64 `json:"userId"            description:""`
 	FirstName   string `json:"firstName"         description:""`
 	LastName    string `json:"lastName"          description:""`
 	HeadImg     string `json:"headImg"           description:""`
@@ -31,10 +30,6 @@ type RegisterInput struct {
 /*
 获取用户信息
 */
-type UserInfoInput struct {
-	UserId string `json:"userId"          description:""`
-}
-
 type UserInfoOutput struct {
 	Username string `json:"username"          description:""`
 	UserInfoBase

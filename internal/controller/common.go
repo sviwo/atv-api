@@ -22,7 +22,7 @@ type cCommon struct{}
 /*
 GetVftCode 获取邮箱验证码
 */
-func (cCommon) GetVftCode(ctx context.Context, req *v1.VftCodeReq) (res *v1.VftCodeRes, err error) {
+func (cCommon) GetVftCode(ctx context.Context, req *v1.VftCodeReq) (res *v1.EmptyFieldRes, err error) {
 	return res, service.Common().GetVftCode(ctx, req.Email)
 }
 
@@ -45,13 +45,13 @@ func (cCommon) GetEccPublicKey(ctx context.Context, req *v1.EccPublicKeyReq) (re
 		panic(err)
 	}
 	publicCode := boot.GID.Generate().String()
-	err = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisEccPrivateKey, publicCode), key.PrivateKey, 120)
-	if err != nil {
+	if err = g.Redis().SetEX(
+		ctx, fmt.Sprintf(consts.RedisEccPrivateKey, publicCode), key.PrivateKey, 120,
+	); err != nil {
 		panic(err)
 	}
 	publicKey := key.PublicKey
 	res = &v1.EccPublicKeyRes{PublicKey: publicKey, PublicCode: publicCode}
-
 	text, _ := ecc.EccEncryptToHex(gconv.Bytes("{\"email\":\"821317143@qq.com\"}"), publicKey)
 	glog.Info(ctx, "text=====", text)
 	return

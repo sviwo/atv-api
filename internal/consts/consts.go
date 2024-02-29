@@ -16,4 +16,10 @@ const (
 	//登陆类型：1=密码，2=第三方
 	LOGIN_TYPE_PWD   = 1
 	LOGIN_TYPE_THIRD = 2
+
+	//认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败
+	USER_AUTH_STATUS_NOT     = 0
+	USER_AUTH_STATUS_IN      = 1
+	USER_AUTH_STATUS_SUCCESS = 2
+	USER_AUTH_STATUS_FAIL    = 3
 )

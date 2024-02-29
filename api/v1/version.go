@@ -4,9 +4,6 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-/*
-VersionReq 最新版本信息
-*/
 type VersionReq struct {
 	g.Meta `path:"/version/info" method:"get" tags:"版本相关" summary:"获取最新版本信息"`
 }

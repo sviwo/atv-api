@@ -3,11 +3,13 @@ package user
 import (
 	"context"
 	"fmt"
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
+	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/logic/biz/enums"
@@ -31,7 +33,7 @@ type sUser struct{}
 /*
 Login 执行登录
 */
-func (s *sUser) Login(ctx context.Context, in model.LoginInput) (err error, userId *uint64) {
+func (s *sUser) Login(ctx context.Context, in model.LoginInput) *uint64 {
 	userInfo := findUserByUsername(ctx, in.Username)
 	if gutil.IsEmpty(userInfo) {
 		panic(gerror.NewCode(rcode.UserNotExists))
@@ -45,10 +47,10 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) (err error, user
 	} else {
 		encryptPassword := utility.EncryptPassword(in.Password, userInfo.PwdSalt, userInfo.PwdEncryNum)
 		if encryptPassword != userInfo.Password {
-			return gerror.NewCode(rcode.UserLoginFailed), nil
+			panic(gerror.NewCode(rcode.UserLoginFailed))
 		}
 	}
-	return nil, &userInfo.UserId
+	return &userInfo.UserId
 }
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
@@ -62,19 +64,31 @@ func findUserByUsername(ctx context.Context, username string) (user *entity.User
 /*
 Register 用户注册
 */
-func (s *sUser) Register(ctx context.Context, in model.RegisterInput) error {
+func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 	if !gutil.IsEmpty(findUserByUsername(ctx, in.Username)) {
-		return gerror.NewCode(rcode.UserExists)
+		panic(gerror.NewCode(rcode.UserExists))
 	}
 	checkVftCode(ctx, in.Username, in.EmailVftCode)
 	userInfo := entity.User{Username: in.Username, Enable: true, CreateTime: gtime.Now(), IsDelete: false}
 	operatePwd(&userInfo, in.Password)
-	//插入用户数据返回用户id
-	_, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
+
+	err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
+		//插入用户数据返回用户id
+		userId, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
+		if err != nil {
+			panic(err)
+		}
+		userAuth := entity.UserAuth{AuthId: boot.GID.Generate().Int64(), UserId: userId, CreateTime: gtime.Now()}
+		//初始化用户实名认证信息
+		_, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert()
+		if err != nil {
+			panic(err)
+		}
+		return nil
+	})
 	if err != nil {
 		panic(err)
 	}
-	return nil
 }
 
 // 检查验证码
@@ -103,10 +117,10 @@ func operatePwd(userInfo *entity.User, password string) {
 /*
 UpdatePassword 修改密码
 */
-func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput) error {
+func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput) {
 	userInfo := findUserByUsername(ctx, in.Username)
 	if gutil.IsEmpty(userInfo) {
-		return gerror.NewCode(rcode.UserNotExists)
+		panic(gerror.NewCode(rcode.UserNotExists))
 	}
 	checkVftCode(ctx, in.Username, in.EmailVftCode)
 	operatePwd(userInfo, in.NewPassword)
@@ -114,12 +128,12 @@ func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput
 	if err != nil {
 		panic(err)
 	}
-	return nil
 }
 
-func (s *sUser) Info(ctx context.Context, in model.UserInfoInput) (out *model.UserInfoOutput) {
-	err := dao.User.Ctx(ctx).Where("user_id", in.UserId).Scan(&out)
-	if err != nil {
+func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
+	if err := dao.User.Ctx(ctx).Where(
+		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+	).Where("is_delete", 0).Scan(&out); err != nil {
 		panic(err)
 	}
 	return
@@ -128,10 +142,10 @@ func (s *sUser) Info(ctx context.Context, in model.UserInfoInput) (out *model.Us
 /*
 EditInfo 编辑用户资料
 */
-func (s *sUser) EditInfo(ctx context.Context, in model.EditInfoInput) error {
-	_, err := dao.User.Ctx(ctx).Where("user_id", in.UserId).Update(in)
-	if err != nil {
+func (s *sUser) EditInfo(ctx context.Context, in model.EditInfoInput) {
+	if _, err := dao.User.Ctx(ctx).Where(
+		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+	).Update(in); err != nil {
 		panic(err)
 	}
-	return nil
 }
