@@ -44,12 +44,12 @@ func (s sUserAuth) SubmitUserAuth(ctx context.Context, in model.UserAuthInput) {
 	if userAuth == nil {
 		panic(gerror.NewCode(rcode.UserNotExists))
 	}
-	if consts.USER_AUTH_STATUS_IN == userAuth.AuthStatus {
+	if consts.UserAuthStatusIn == userAuth.AuthStatus {
 		panic(gerror.NewCode(rcode.IllegalOperation))
 	}
 	if _, err := dao.UserAuth.Ctx(ctx).Where(
 		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).Where("auth_status", consts.USER_AUTH_STATUS_IN).
+	).Where("auth_status", consts.UserAuthStatusIn).
 		Where("auth_time", gtime.Now()).Update(in); err != nil {
 		panic(err)
 	}

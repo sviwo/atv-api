@@ -7,7 +7,7 @@ import (
 
 type (
 	IHome interface {
-		GetHomeData(ctx context.Context, in model.QueryHomeDataInput) (out *model.HomeDataOutput)
+		GetHomeData(ctx context.Context) (out *model.HomeDataOutput)
 	}
 )
 

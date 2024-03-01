@@ -14,12 +14,28 @@ const (
 	FileMaxUploadCountMinute = 10                 // 同一用户1分钟之内最大上传数量
 
 	//登陆类型：1=密码，2=第三方
-	LOGIN_TYPE_PWD   = 1
-	LOGIN_TYPE_THIRD = 2
+	LoginTypePwd   = 1
+	LoginTypeThird = 2
 
 	//认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败
-	USER_AUTH_STATUS_NOT     = 0
-	USER_AUTH_STATUS_IN      = 1
-	USER_AUTH_STATUS_SUCCESS = 2
-	USER_AUTH_STATUS_FAIL    = 3
+	UserAuthStatusNot     = 0
+	UserAuthStatusIn      = 1
+	UserAuthStatusSuccess = 2
+	UserAuthStatusFail    = 3
+
+	//删除状态：true(1)=已删除，false(0)=正常
+	DeleteYes = true
+	DeleteOn  = false
+
+	//车辆是否选定：false=未选定，true=已选定
+	CarSelectYes = true
+	CarSelectNo  = false
+
+	//手机钥匙开关：false=关，true=开
+	CarMobileKeyYes = true
+	CarMobileKeyNo  = false
+
+	//速度限制开关：false=关，true=开
+	CarSpeedLimitYes = true
+	CarSpeedLimitNo  = false
 )

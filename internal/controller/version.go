@@ -18,5 +18,5 @@ func (c cVersion) GetNewVersion(ctx context.Context, req *v1.VersionReq) (res []
 	if err = gconv.Structs(service.Version().GetNewVersion(ctx), &res); err != nil {
 		panic(err)
 	}
-	return res, err
+	return
 }

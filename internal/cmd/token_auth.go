@@ -37,7 +37,7 @@ func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 	if gutil.IsEmpty(username) || gutil.IsEmpty(loginType) {
 		response.JsonExit(r, rcode.IllegalArgument, nil)
 	}
-	if consts.LOGIN_TYPE_PWD == loginType && gutil.IsEmpty(password) {
+	if consts.LoginTypePwd == loginType && gutil.IsEmpty(password) {
 		response.JsonExit(r, rcode.IllegalArgument, nil)
 	}
 	input := model.LoginInput{Username: username, Password: password, LoginType: loginType}

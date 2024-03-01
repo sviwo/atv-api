@@ -23,8 +23,8 @@ type TravelRecordDeleteReq struct {
 }
 type TravelRecordReq struct {
 	TravelRecordId int64       `json:"travelRecordId" dc:""`
-	UserId         int64       `json:"userId"         dc:"用户ID"`
-	CarId          int64       `json:"carId"          dc:"车辆ID"`
+	UserId         string      `json:"userId"         dc:"用户ID"`
+	CarId          string      `json:"carId"          dc:"车辆ID"`
 	StartPoint     string      `json:"startPoint"     dc:"起点"`
 	EndPoint       string      `json:"endPoint"       dc:"终点"`
 	MileageDriven  int         `json:"mileageDriven"  dc:"行驶里程，单位（m）"`

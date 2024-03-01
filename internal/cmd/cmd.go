@@ -40,6 +40,7 @@ var (
 					}
 					//需要登录鉴权的接口放到这里
 					group.Bind(
+						controller.Home.GetHomeData,
 						controller.User.Info,
 						controller.User.UpdatePassword,
 						controller.User.EditInfo,
@@ -49,6 +50,11 @@ var (
 						controller.Version.GetNewVersion,
 						controller.TravelRecord.GetTravelRecordList,
 						controller.TravelRecord.Delete,
+						controller.Car.GetCarList,
+						controller.Car.BindingCar,
+						controller.Car.DelCar,
+						controller.Car.EnabledMobileKey,
+						controller.Car.EnabledSpeedLimit,
 					)
 				})
 			})

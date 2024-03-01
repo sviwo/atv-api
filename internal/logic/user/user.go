@@ -42,7 +42,7 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) *uint64 {
 		panic(gerror.NewCode(rcode.UserAcctFrozen))
 	}
 	//第三方登陆
-	if consts.LOGIN_TYPE_THIRD == in.LoginType {
+	if consts.LoginTypeThird == in.LoginType {
 		//todo 后面完善相关逻辑
 	} else {
 		encryptPassword := utility.EncryptPassword(in.Password, userInfo.PwdSalt, userInfo.PwdEncryNum)
@@ -54,7 +54,7 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) *uint64 {
 }
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
-	err := dao.User.Ctx(ctx).Where("username", username).Where("is_delete", 0).Scan(&user)
+	err := dao.User.Ctx(ctx).Where("username", username).Where("is_delete", consts.DeleteOn).Scan(&user)
 	if err != nil {
 		panic(err)
 	}
@@ -80,8 +80,7 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 		}
 		userAuth := entity.UserAuth{AuthId: boot.GID.Generate().Int64(), UserId: userId, CreateTime: gtime.Now()}
 		//初始化用户实名认证信息
-		_, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert()
-		if err != nil {
+		if _, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert(); err != nil {
 			panic(err)
 		}
 		return nil
@@ -133,7 +132,7 @@ func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput
 func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 	if err := dao.User.Ctx(ctx).Where(
 		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).Where("is_delete", 0).Scan(&out); err != nil {
+	).Where("is_delete", consts.DeleteOn).Scan(&out); err != nil {
 		panic(err)
 	}
 	return

@@ -47,6 +47,7 @@ var (
 	VftCodeError        = New(2007, "验证码错误")
 	VftCodeOverdue      = New(2008, "验证码已过期")
 	VftCodeSendFailed   = New(2009, "验证码发送失败，请检查网络")
+	CarNotExists        = New(1010, "此车辆不存在")
 )
 
 func New(code int, message string) gcode.Code {

@@ -2,6 +2,8 @@ package home
 
 import (
 	"context"
+	"sviwo/internal/consts"
+	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
 )
@@ -16,6 +18,21 @@ func New() *sHome {
 
 type sHome struct{}
 
-func (s sHome) GetHomeData(ctx context.Context, in model.QueryHomeDataInput) (out *model.HomeDataOutput) {
-	panic("implement me")
+func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
+	out = new(model.HomeDataOutput)
+	one, err := dao.UserCar.Ctx(ctx).Where(
+		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+	).Where("is_select", consts.CarSelectYes).One()
+	if err != nil {
+		panic(err)
+	}
+	if !one.IsEmpty() {
+		if err := dao.Car.Ctx(ctx).Where("car_id", one.GMap().Get("carId")).
+			Where("is_delete", consts.DeleteOn).Scan(&out); err != nil {
+			panic(err)
+		}
+	}
+	//todo 等待调用mqtt电量数据
+	out.Version = service.Version().GetNewVersion(ctx)
+	return
 }

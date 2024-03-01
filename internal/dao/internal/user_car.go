@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-01 17:48:00
 // ==========================================================================
 
 package internal
@@ -23,8 +23,9 @@ type UserCarColumns struct {
 	UserCarId       string //
 	CarId           string //
 	UserId          string //
-	MobileKey       string // 手机钥匙开关：0=关，1=开
-	SpeedLimit      string // 速度限制开关：0=关，1=开
+	IsSelect        string // 是否选定：false=未选定，true=已选定
+	MobileKey       string // 手机钥匙开关：false=关，true=开
+	SpeedLimit      string // 速度限制开关：false=关，true=开
 	DrivingModeType string // 驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式，3=脱困模式
 	CreateTime      string //
 }
@@ -34,6 +35,7 @@ var userCarColumns = UserCarColumns{
 	UserCarId:       "user_car_id",
 	CarId:           "car_id",
 	UserId:          "user_id",
+	IsSelect:        "is_select",
 	MobileKey:       "mobile_key",
 	SpeedLimit:      "speed_limit",
 	DrivingModeType: "driving_mode_type",
