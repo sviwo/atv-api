@@ -7,7 +7,7 @@ import (
 )
 
 type GetUserAuthReq struct {
-	g.Meta `path:"user/get/auth" method:"get" tags:"用户实名相关" summary:"获取用户实名信息"`
+	g.Meta `path:"/user/get/auth" method:"get" tags:"用户实名相关" summary:"获取用户实名信息"`
 }
 
 type GetUserAuthRes struct {
@@ -22,7 +22,7 @@ type GetUserAuthRes struct {
 }
 
 type SubmitUserAuthReq struct {
-	g.Meta              `path:"user/submit/auth" method:"post" tags:"用户实名相关" summary:"提交用户实名信息"`
+	g.Meta              `path:"/user/submit/auth" method:"post" tags:"用户实名相关" summary:"提交用户实名信息"`
 	AuthFirstName       string            `json:"authFirstName"       dc:""                      v:"required"`
 	AuthLastName        string            `json:"authLastName"        dc:""                      v:"required"`
 	CertificateFrontImg *ghttp.UploadFile `json:"certificateFrontImg" type:"file"   dc:"证件正面"  v:"required"`

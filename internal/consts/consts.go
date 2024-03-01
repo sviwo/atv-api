@@ -38,4 +38,14 @@ const (
 	//速度限制开关：false=关，true=开
 	CarSpeedLimitYes = true
 	CarSpeedLimitNo  = false
+
+	//驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式
+	drivingModeECO    = 0
+	drivingModeSports = 1
+	drivingModeRage   = 2
+
+	//动能回收类型：0=无，1=中，2=强
+	energyRecoveryNot    = 0
+	energyRecoveryMedium = 1
+	energyRecoveryStrong = 2
 )

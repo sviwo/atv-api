@@ -18,9 +18,13 @@ type (
 		*/
 		ControlCarHorn(ctx context.Context, carId int64)
 		/*
-			ControlCarSwitchMode 切换模式
+			ControlCarSwitchMode 切换驾驶模式
 		*/
-		ControlCarSwitchMode(ctx context.Context, in model.ControlCarSwitchModeInput)
+		ControlCarSwitchDriveMode(ctx context.Context, in model.ControlCarSwitchDMInput)
+		/*
+			ControlCarSwitchEnergyRecoveryType 切换动能回收模式
+		*/
+		ControlCarSwitchEnergyRecoveryType(ctx context.Context, in model.ControlCarSwitchERTypeInput)
 		/*
 			EnabledMobileKey 开启/关闭蓝牙钥匙
 		*/

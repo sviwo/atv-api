@@ -55,6 +55,10 @@ var (
 						controller.Car.DelCar,
 						controller.Car.EnabledMobileKey,
 						controller.Car.EnabledSpeedLimit,
+						controller.Car.ControlCarLamp,
+						controller.Car.ControlCarHorn,
+						controller.Car.ControlCarSwitchDriveMode,
+						controller.Car.ControlCarSwitchEnergyRecoveryType,
 					)
 				})
 			})

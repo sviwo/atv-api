@@ -58,7 +58,10 @@ func (s sCar) ControlCarLamp(ctx context.Context, carId int64) {
 func (s sCar) ControlCarHorn(ctx context.Context, carId int64) {
 }
 
-func (s sCar) ControlCarSwitchMode(ctx context.Context, in model.ControlCarSwitchModeInput) {
+func (s sCar) ControlCarSwitchDriveMode(ctx context.Context, in model.ControlCarSwitchDMInput) {
+}
+
+func (s sCar) ControlCarSwitchEnergyRecoveryType(ctx context.Context, in model.ControlCarSwitchERTypeInput) {
 }
 
 func (s sCar) EnabledMobileKey(ctx context.Context, carId int64) {

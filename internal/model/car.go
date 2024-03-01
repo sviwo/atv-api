@@ -17,10 +17,12 @@ type QueryCarOutput struct {
 	*UserCarOutput
 }
 
-/*
-控制车辆切换模式
-*/
-type ControlCarSwitchModeInput struct {
+type ControlCarSwitchDMInput struct {
 	CarId           int64 `json:"carId"              description:""`
-	DrivingModeType int   `json:"drivingModeType"    description:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式，3=脱困模式"`
+	DrivingModeType int   `json:"drivingModeType"    description:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
+}
+
+type ControlCarSwitchERTypeInput struct {
+	CarId           int64 `json:"carId"              description:""`
+	DrivingModeType int   `json:"drivingModeType"    description:"动能回收类型：0=无，1=中，2=强"`
 }
