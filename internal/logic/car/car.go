@@ -8,8 +8,8 @@ import (
 	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/boot"
 	"sviwo/internal/consts"
+	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
-	rcode "sviwo/internal/logic/biz/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/model/do"
 	"sviwo/internal/model/entity"
@@ -84,7 +84,7 @@ func findUserCar(ctx context.Context, carId int64) entity.UserCar {
 		panic(err)
 	}
 	if gutil.IsEmpty(userCar) {
-		panic(gerror.NewCode(rcode.IllegalOperation))
+		panic(gerror.NewCode(enums.IllegalOperation))
 	}
 	return userCar
 }
@@ -107,7 +107,7 @@ func (s sCar) BindingCar(ctx context.Context, carFrameCode string) {
 		panic(err)
 	}
 	if gutil.IsEmpty(car) {
-		panic(gerror.NewCode(rcode.CarNotExists))
+		panic(gerror.NewCode(enums.CarNotExists))
 	}
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	count, err := dao.UserCar.Ctx(ctx).Count("user_id", userId)

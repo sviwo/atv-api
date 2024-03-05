@@ -24,7 +24,7 @@ import (
 	"reflect"
 	"strings"
 	"sviwo/internal/consts"
-	rcode "sviwo/internal/logic/biz/enums"
+	"sviwo/internal/consts/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
 	"sviwo/utility"
@@ -56,16 +56,16 @@ func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 		rule, err := gvalidErr.FirstRule()
 		if "required" == rule {
 			response.Json(
-				r, rcode.New(rcode.IllegalArgument.Code(), err.Error()),
+				r, enums.New(enums.IllegalArgument.Code(), err.Error()),
 				nil,
 			)
 		} else {
 			response.Json(
-				r, rcode.New(rcode.RequestParamTypeError.Code(), err.Error()),
+				r, enums.New(enums.RequestParamTypeError.Code(), err.Error()),
 				nil,
 			)
 		}
-	} else if reflect.TypeOf(err.(gerror.ICode).Code()).Name() == reflect.TypeOf(rcode.OpenResponseEnum{}).Name() {
+	} else if reflect.TypeOf(err.(gerror.ICode).Code()).Name() == reflect.TypeOf(enums.OpenResponseEnum{}).Name() {
 		response.Json(r, err.(gerror.ICode).Code(), nil)
 	} else {
 		response.FailMsg(r)
@@ -86,7 +86,7 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 	)
 	if err != nil {
 		if code == gcode.CodeNil {
-			code = rcode.ApiException
+			code = enums.ApiException
 		}
 		response.JsonExit(r, code, nil)
 	} else {
@@ -136,7 +136,7 @@ func (s *sMiddleware) DecodeData(r *ghttp.Request) {
 		}
 		contentType := r.GetHeader("Content-Type")
 		if contentType == "" {
-			panic(gerror.NewCode(rcode.IllegalArgument))
+			panic(gerror.NewCode(enums.IllegalArgument))
 		}
 		switch contentType {
 		case "application/json":
@@ -146,10 +146,10 @@ func (s *sMiddleware) DecodeData(r *ghttp.Request) {
 		case "application/x-www-form-urlencoded":
 			parseFile(r, getRedisEccPrivateKey(r))
 		default:
-			panic(gerror.NewCode(rcode.IllegalOperation))
+			panic(gerror.NewCode(enums.IllegalOperation))
 		}
 	} else {
-		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+		panic(gerror.NewCode(enums.RequestMethodTypeError))
 		return
 	}
 	r.Middleware.Next()
@@ -178,11 +178,11 @@ func getRedisEccPrivateKey(r *ghttp.Request) string {
 func parseQuery(r *ghttp.Request, privateKey string) {
 	encryptString := r.Get("data", "").String()
 	if len(encryptString) < 1 {
-		panic(gerror.NewCode(rcode.RequestParamTypeError))
+		panic(gerror.NewCode(enums.RequestParamTypeError))
 	}
 	queryData, err := ecc.EccDecryptByHex(encryptString, privateKey)
 	if err != nil {
-		panic(gerror.NewCode(rcode.RequestParamTypeError))
+		panic(gerror.NewCode(enums.RequestParamTypeError))
 	}
 	dataMap := gjson.New(queryData).Map()
 	var args []string
@@ -264,7 +264,7 @@ func parseFile(r *ghttp.Request, privateKey string) {
 	_, params, _ := mime.ParseMediaType(contentType)
 	boundary, ok := params["boundary"]
 	if !ok {
-		panic(gerror.NewCode(rcode.RequestParamTypeError))
+		panic(gerror.NewCode(enums.RequestParamTypeError))
 	}
 	bodyBuf := &bytes.Buffer{}
 	wr := multipart.NewWriter(bodyBuf)

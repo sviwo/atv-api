@@ -9,7 +9,7 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
-	rcode "sviwo/internal/logic/biz/enums"
+	"sviwo/internal/consts/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
 	ecc "sviwo/utility/encrypt"
@@ -35,10 +35,10 @@ func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 	password := r.Get("password").String()
 	loginType := r.Get("loginType").Uint8()
 	if gutil.IsEmpty(username) || gutil.IsEmpty(loginType) {
-		response.JsonExit(r, rcode.IllegalArgument, nil)
+		response.JsonExit(r, enums.IllegalArgument, nil)
 	}
 	if consts.LoginTypePwd == loginType && gutil.IsEmpty(password) {
-		response.JsonExit(r, rcode.IllegalArgument, nil)
+		response.JsonExit(r, enums.IllegalArgument, nil)
 	}
 	input := model.LoginInput{Username: username, Password: password, LoginType: loginType}
 	userId := service.User().Login(r.GetCtx(), input)
@@ -48,7 +48,7 @@ func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 // 自定义的登录返回方法
 func loginAfterFunc(r *ghttp.Request, respData gtoken.Resp) {
 	if !respData.Success() {
-		response.JsonExit(r, rcode.UserLoginFailed, nil)
+		response.JsonExit(r, enums.UserLoginFailed, nil)
 	} else {
 		userKey := respData.GetString(gtoken.KeyUserKey)
 		token := respData.GetString(gtoken.KeyToken)
@@ -63,7 +63,7 @@ func loginAfterFunc(r *ghttp.Request, respData gtoken.Resp) {
 		if err != nil {
 			panic(err)
 		}
-		response.SuccessMsg(r, userKey)
+		response.SuccessMsg(r, nil)
 	}
 }
 

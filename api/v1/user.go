@@ -6,11 +6,10 @@ import (
 )
 
 type UserInfoBase struct {
-	FirstName   string            `json:"firstName"            dc:""  v:"max-length:100"`
-	LastName    string            `json:"lastName"             dc:""  v:"max-length:100"`
-	HeadImg     *ghttp.UploadFile `json:"headImg" type:"file"  dc:"头像，请选择上传文件"`
-	MobilePhone string            `json:"mobilePhone"          dc:""  v:"integer"`
-	UserAddress string            `json:"userAddress"          dc:""  v:"max-length:100"`
+	FirstName   string `json:"firstName"            dc:""  v:"max-length:100"`
+	LastName    string `json:"lastName"             dc:""  v:"max-length:100"`
+	MobilePhone string `json:"mobilePhone"          dc:""  v:"integer"`
+	UserAddress string `json:"userAddress"          dc:""  v:"max-length:100"`
 }
 
 type RegisterReq struct {
@@ -28,6 +27,7 @@ type UserInfoReq struct {
 type UserInfoRes struct {
 	Username string `json:"username"          dc:""`
 	UserInfoBase
+	HeadImg string `json:"headImg"           description:""`
 }
 
 type UpdatePasswordReq struct {
@@ -41,4 +41,5 @@ type UpdatePasswordReq struct {
 type EditInfoReq struct {
 	g.Meta `path:"/user/edit/info" method:"post" tags:"用户相关" summary:"编辑用户信息"`
 	UserInfoBase
+	HeadImg *ghttp.UploadFile `json:"headImg" type:"file"  dc:"头像，请选择上传文件"`
 }

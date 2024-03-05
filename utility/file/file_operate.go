@@ -10,7 +10,7 @@ import (
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
-	rcode "sviwo/internal/logic/biz/enums"
+	"sviwo/internal/consts/enums"
 	"sync"
 )
 
@@ -60,7 +60,7 @@ UploadFile 上传文件
 */
 func UploadFile(file *ghttp.UploadFile) (uri string, err error) {
 	if gutil.IsEmpty(file.Filename) {
-		return "", gerror.NewCode(rcode.IllegalArgument)
+		return "", gerror.NewCode(enums.IllegalArgument)
 	}
 	open, err := file.Open()
 	if err != nil {
@@ -79,7 +79,7 @@ DeleteFile 删除文件
 */
 func DeleteFile(fileName string) error {
 	if gutil.IsEmpty(fileName) {
-		return gerror.NewCode(rcode.IllegalArgument)
+		return gerror.NewCode(enums.IllegalArgument)
 	}
 	err := getInstance().DeleteObject(fileName)
 	if err != nil {

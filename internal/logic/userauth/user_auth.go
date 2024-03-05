@@ -6,8 +6,8 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/internal/consts"
+	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
-	rcode "sviwo/internal/logic/biz/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
@@ -42,10 +42,10 @@ func findUserAuthByUserId(ctx context.Context) (userAuth *entity.UserAuth) {
 func (s sUserAuth) SubmitUserAuth(ctx context.Context, in model.UserAuthInput) {
 	userAuth := findUserAuthByUserId(ctx)
 	if userAuth == nil {
-		panic(gerror.NewCode(rcode.UserNotExists))
+		panic(gerror.NewCode(enums.UserNotExists))
 	}
 	if consts.UserAuthStatusIn == userAuth.AuthStatus {
-		panic(gerror.NewCode(rcode.IllegalOperation))
+		panic(gerror.NewCode(enums.IllegalOperation))
 	}
 	if _, err := dao.UserAuth.Ctx(ctx).Where(
 		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),

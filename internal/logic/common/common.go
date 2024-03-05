@@ -7,7 +7,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/grand"
 	"sviwo/internal/consts"
-	"sviwo/internal/logic/biz/enums"
+	"sviwo/internal/consts/enums"
 	"sviwo/internal/service"
 	"sviwo/utility"
 )
@@ -54,7 +54,7 @@ func restrictFrequentRequest(ctx context.Context, email string) {
 		panic(err)
 	}
 	if !value.IsEmpty() {
-		panic(gerror.NewCode(rcode.IllegalOperation))
+		panic(gerror.NewCode(enums.IllegalOperation))
 	}
 	err = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisMethodCommonServiceGetvftcode, email), email, 60)
 	if err != nil {
