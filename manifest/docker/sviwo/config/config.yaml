@@ -39,7 +39,7 @@ gfToken:
   ServerName: "Sviwo"
   cacheKey: "gfToken:"   #缓存前缀
   timeOut: 24 * 60 * 60 * 1000 * 10         #token超时时间（毫秒）
-  multiLogin: true      #是否允许一个账号多人同时登录
+  multiLogin: false      #是否允许一个账号多人同时登录
   encryptKey: "49c54195e750b04e74a8429b17896586"    #加密key (32位)
   cacheMode: 2          #存储引擎 1 gcache 2 gredis 默认1
   LoginPath: "/login"

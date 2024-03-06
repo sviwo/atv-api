@@ -3,6 +3,7 @@ package response
 import (
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"sviwo/internal/consts/enums"
 )
@@ -24,7 +25,7 @@ func Json(r *ghttp.Request, gc gcode.Code, data ...interface{}) {
 	}
 	r.Response.WriteJson(JsonRes{
 		Code:    gc.Code(),
-		Message: gc.Message(),
+		Message: gi18n.T(r.GetCtx(), gc.Message()),
 		Data:    responseData,
 	})
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/text/gstr"
@@ -40,6 +41,38 @@ func init() {
 
 func New() *sMiddleware {
 	return &sMiddleware{}
+}
+
+func (s *sMiddleware) CORSHandler(r *ghttp.Request) {
+	r.Response.CORSDefault()
+	r.Middleware.Next()
+}
+
+// 自定义上下文对象
+func (s *sMiddleware) CtxHandler(r *ghttp.Request) {
+	// 初始化，务必最开始执行
+	m := gmap.New()
+	//获取登陆后的token并解析出userId存入上下文。
+	if gstr.HasPrefix(r.URL.Path, "/api") {
+		authorization := r.Header.Get("Authorization")
+		if authorization != "" {
+			m.Set(consts.ContextKeyUserId, utility.GfTokenDecryptToken(r.GetCtx(), authorization))
+		}
+	}
+	customCtx := &model.Context{
+		Data: m,
+	}
+	service.BizCtx().Init(r, customCtx)
+	// 将自定义的上下文对象传递到模板变量中使用
+	r.Assigns(g.Map{
+		"Context": customCtx,
+	})
+	r.Middleware.Next()
+}
+
+func (s *sMiddleware) I18NHandler(r *ghttp.Request) {
+	r.SetCtx(gi18n.WithLanguage(r.Context(), r.Header.Get("language")))
+	r.Middleware.Next()
 }
 
 func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
@@ -94,35 +127,8 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 	}
 }
 
-// 自定义上下文对象
-func (s *sMiddleware) Ctx(r *ghttp.Request) {
-	// 初始化，务必最开始执行
-	m := gmap.New()
-	//获取登陆后的token并解析出userId存入上下文。
-	if gstr.HasPrefix(r.URL.Path, "/api") {
-		authorization := r.Header.Get("Authorization")
-		if authorization != "" {
-			m.Set(consts.ContextKeyUserId, utility.GfTokenDecryptToken(r.GetCtx(), authorization))
-		}
-	}
-	customCtx := &model.Context{
-		Data: m,
-	}
-	service.BizCtx().Init(r, customCtx)
-	// 将自定义的上下文对象传递到模板变量中使用
-	r.Assigns(g.Map{
-		"Context": customCtx,
-	})
-	r.Middleware.Next()
-}
-
-func (s *sMiddleware) CORS(r *ghttp.Request) {
-	r.Response.CORSDefault()
-	r.Middleware.Next()
-}
-
 // use middleware func for router
-func (s *sMiddleware) DecodeData(r *ghttp.Request) {
+func (s *sMiddleware) DecodeDataHandler(r *ghttp.Request) {
 	if r.Request.Method == "GET" {
 		if r.Request.URL.RawQuery == "" {
 			r.Middleware.Next()
