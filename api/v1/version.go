@@ -5,7 +5,7 @@ import (
 )
 
 type VersionReq struct {
-	g.Meta `path:"/version/info" method:"get" tags:"版本相关" summary:"获取最新版本信息"`
+	g.Meta `path:"/version/info" method:"get" tags:"版本相关" sm:"获取最新版本信息"`
 }
 
 type VersionRes struct {

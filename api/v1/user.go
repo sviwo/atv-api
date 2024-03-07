@@ -13,7 +13,7 @@ type UserInfoBase struct {
 }
 
 type RegisterReq struct {
-	g.Meta          `path:"/user/register" method:"post" tags:"用户相关" summary:"用户注册"`
+	g.Meta          `path:"/user/register" method:"post" tags:"用户相关" sm:"用户注册"`
 	Username        string `json:"username"         dc:"用户名"     v:"required|email"`
 	Password        string `json:"password"         dc:"密码"       v:"required|password3"`
 	ConfirmPassword string `json:"confirmPassword"  dc:"确认密码"    v:"required|eq:Password"`
@@ -21,7 +21,7 @@ type RegisterReq struct {
 }
 
 type UserInfoReq struct {
-	g.Meta `path:"/user/info" method:"get" tags:"用户相关" summary:"当前登录用户信息"`
+	g.Meta `path:"/user/info" method:"get" tags:"用户相关" sm:"当前登录用户信息"`
 }
 
 type UserInfoRes struct {
@@ -31,7 +31,7 @@ type UserInfoRes struct {
 }
 
 type UpdatePasswordReq struct {
-	g.Meta          `path:"/user/update/password" method:"post" tags:"用户相关" summary:"修改密码"`
+	g.Meta          `path:"/user/update/password" method:"post" tags:"用户相关" sm:"修改密码"`
 	Username        string `json:"username"          dc:""      v:"required|email"`
 	NewPassword     string `json:"newPassword"       dc:""      v:"required|password3"`
 	ConfirmPassword string `json:"confirmPassword"   dc:""      v:"required|eq:NewPassword"`
@@ -39,7 +39,7 @@ type UpdatePasswordReq struct {
 }
 
 type EditInfoReq struct {
-	g.Meta `path:"/user/edit/info" method:"post" tags:"用户相关" summary:"编辑用户信息"`
+	g.Meta `path:"/user/edit/info" method:"post" tags:"用户相关" sm:"编辑用户信息"`
 	UserInfoBase
 	HeadImg *ghttp.UploadFile `json:"headImg" type:"file"  dc:"头像，请选择上传文件"`
 }

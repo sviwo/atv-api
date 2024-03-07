@@ -5,7 +5,7 @@ import (
 )
 
 type HomeDataReq struct {
-	g.Meta `path:"/home/get/data" method:"get" tags:"首页相关" summary:"获取首页数据"`
+	g.Meta `path:"/home/get/data" method:"get" tags:"首页相关" sm:"获取首页数据"`
 }
 
 type HomeDataRes struct {

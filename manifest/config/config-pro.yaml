@@ -1,13 +1,11 @@
 server:
-  address: ":8000"
-  openapiPath: "/api.json"
-  swaggerPath: "/swagger"
+  address: ":8008"
   clientMaxBodySize: "10MB"
 
 logger:
   path: "./logs/server/"          # 日志文件路径。默认为空，表示关闭，仅输出到终端
   file: "{Y-m-d}.log"             # 日志文件格式。默认为"{Y-m-d}.log"
-  level: "all"                    # 日志输出级别
+  level: "PROD"                   # 日志输出级别
   stdout: true                    # 日志是否同时输出到终端。默认true
   rotateSize: "100M"              # 按照日志文件大小对文件进行滚动切分。默认为0，表示关闭滚动切分特性
   rotateBackupLimit: 10           # 按照切分的文件数量清理切分文件，当滚动切分特性开启时有效。默认为0，表示不备份，切分则删除
@@ -18,22 +16,22 @@ logger:
 database:
   logger:
     - path: "./logs/sql"
-      level: "all"
-      stdout: true
+      level: "PROD"
+      stdout: false
   default:
     - link: "mysql:root:gyc1993@tcp(192.168.0.76:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置
       role: "master"
-      debug: true
+      debug: false
 
 redis:
   default:
     address: 192.168.0.76:7001 #redis地址
     db: 1 #db
-    pass: sviwo #密码
+    pass: sviwo-987dfsdrf6g46sd7q9we4sd6a5 #密码
   cache:
     address: 192.168.0.76:7001  #地址
     db: 1   #db
-    pass: sviwo #密码
+    pass: sviwo-987dfsdrf6g46sd7q9we4sd6a5 #密码
 
 gfToken:
   ServerName: "Sviwo"
@@ -46,17 +44,17 @@ gfToken:
   LogoutPath: "/logout"
 
 oss:
-  fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
-  endpoint: oss-cn-chengdu.aliyuncs.com
-  accessKeyID: LTAI5tLnA6rbeAnmpMtsh6vE
-  accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
-  bucket: test-sviwo-car-oss
+  fileUrlPrefix: xxx
+  endpoint: xxx
+  accessKeyID: xxx
+  accessKeySecret: xxx
+  bucket: xxx
 
 email:
   host: smtp.gmail.com
   port: 587
-  username: gouyichuan@gmail.com
-  password: yzdkzxemdknngznw
+  username: xxx@gmail.com
+  password: xxx
 
 #这个mqtt客户端主要是服务端内部处理消息使用的通道
 mqtt:
@@ -71,7 +69,7 @@ mqtt:
 #TDengine配置
 tdengine:
   type: "taosRestful" #http连接方式，端口是6041
-  dsn: "root:taosdata@http(114.115.135.233:6041)/"
+  dsn: "root:taosdata@http(192.168.0.76:6041)/"
   dbName: "sviwo_iot"
   maxOpenConns: 10
   maxIdleConns: 5

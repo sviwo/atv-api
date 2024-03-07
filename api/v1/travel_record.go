@@ -6,7 +6,7 @@ import (
 )
 
 type TravelRecordQueryReq struct {
-	g.Meta `path:"/travelRecord/list/get" method:"get" tags:"行程相关" summary:"获取行程列表"`
+	g.Meta `path:"/travelRecord/list/get" method:"get" tags:"行程相关" sm:"获取行程列表"`
 	UserId int64 `json:"userId"         dc:"用户ID"     `
 	CarId  int64 `json:"carId"         dc:"车辆ID"     `
 	CommonPaginationReq
@@ -18,7 +18,7 @@ type TravelRecordRes struct {
 }
 
 type TravelRecordDeleteReq struct {
-	g.Meta `path:"/travelRecord/delete" method:"post" tags:"行程相关" summary:"删除行程"`
+	g.Meta `path:"/travelRecord/delete" method:"post" tags:"行程相关" sm:"删除行程"`
 	TravelRecordReq
 }
 type TravelRecordReq struct {

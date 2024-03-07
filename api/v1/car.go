@@ -6,7 +6,7 @@ import (
 )
 
 type GetCarInfoReq struct {
-	g.Meta `path:"/car/get/list" method:"get" tags:"车辆相关" summary:"获取车辆列表"`
+	g.Meta `path:"/car/get/list" method:"get" tags:"车辆相关" sm:"获取车辆列表"`
 }
 
 type CarInfo struct {
@@ -32,41 +32,41 @@ type GetCarInfoRes struct {
 }
 
 type BindingCarReq struct {
-	g.Meta       `path:"/car/binding" method:"post" tags:"车辆相关" summary:"绑定车辆"`
+	g.Meta       `path:"/car/binding" method:"post" tags:"车辆相关" sm:"绑定车辆"`
 	CarFrameCode string `json:"carFrameCode"       dc:"车架号"          v:"required"`
 }
 
 type DelCarReq struct {
-	g.Meta `path:"/car/del" method:"post" tags:"车辆相关" summary:"删除（解绑）车辆"`
+	g.Meta `path:"/car/del" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
 type EnabledMobileKeyReq struct {
-	g.Meta `path:"/car/enabled/mobileKey" method:"post" tags:"车辆相关" summary:"开启/关闭蓝牙钥匙"`
+	g.Meta `path:"/car/enabled/mobileKey" method:"post" tags:"车辆相关" sm:"开启/关闭蓝牙钥匙"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
 type EnabledSpeedLimitReq struct {
-	g.Meta `path:"/car/enabled/speedLimit" method:"post" tags:"车辆相关" summary:"开启/关闭速度限制"`
+	g.Meta `path:"/car/enabled/speedLimit" method:"post" tags:"车辆相关" sm:"开启/关闭速度限制"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
 type ControlCarLampReq struct {
-	g.Meta `path:"/car/control/lamp" method:"post" tags:"车辆相关" summary:"控制车灯"`
+	g.Meta `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
 type ControlCarHornReq struct {
-	g.Meta `path:"/car/control/horn" method:"post" tags:"车辆相关" summary:"控制喇叭"`
+	g.Meta `path:"/car/control/horn" method:"post" tags:"车辆相关" sm:"控制喇叭"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
 type ControlCarSwitchDriveModeReq struct {
-	g.Meta `path:"/car/control/switch/driveMode" method:"post" tags:"车辆相关" summary:"切换驾驶模式"`
+	g.Meta `path:"/car/control/switch/driveMode" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
 type ControlCarSwitchEnergyRecoveryTypeReq struct {
-	g.Meta `path:"/car/Control/switch/energyRecoveryType" method:"post" tags:"车辆相关" summary:"切换动能回收模式"`
+	g.Meta `path:"/car/Control/switch/energyRecoveryType" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }

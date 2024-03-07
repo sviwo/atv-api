@@ -5,6 +5,7 @@
 package logic
 
 import (
+	_ "sviwo/internal/logic/apptext"
 	_ "sviwo/internal/logic/biz/ctx"
 	_ "sviwo/internal/logic/car"
 	_ "sviwo/internal/logic/common"

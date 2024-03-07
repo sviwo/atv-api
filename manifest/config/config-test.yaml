@@ -1,7 +1,5 @@
 server:
   address: ":8000"
-  openapiPath: "/api.json"
-  swaggerPath: "/swagger"
   clientMaxBodySize: "10MB"
 
 logger:
@@ -29,7 +27,7 @@ redis:
   default:
     address: 192.168.0.76:7001 #redis地址
     db: 1 #db
-    pass: #密码
+    pass: sviwo #密码
   cache:
     address: 192.168.0.76:7001  #地址
     db: 1   #db
@@ -55,8 +53,8 @@ oss:
 email:
   host: smtp.gmail.com
   port: 587
-  username: gouyichuan@gmail.com
-  password: yzdkzxemdknngznw
+  username: xxx@gmail.com
+  password: xxx
 
 #这个mqtt客户端主要是服务端内部处理消息使用的通道
 mqtt:
@@ -71,7 +69,7 @@ mqtt:
 #TDengine配置
 tdengine:
   type: "taosRestful" #http连接方式，端口是6041
-  dsn: "root:taosdata@http(114.115.135.233:6041)/"
+  dsn: "root:taosdata@http(192.168.0.76:6041)/"
   dbName: "sviwo_iot"
   maxOpenConns: 10
   maxIdleConns: 5
