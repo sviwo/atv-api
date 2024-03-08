@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"mime"
 	"mime/multipart"
+	"net/http"
 	"net/url"
 	"reflect"
 	"strings"
@@ -85,6 +86,7 @@ func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 	r.Response.ClearBuffer()
 	var gvalidErr gvalid.Error
 	errors.As(err, &gvalidErr)
+	r.Response.Status = http.StatusOK
 	if !gutil.IsEmpty(gvalidErr) {
 		rule, err := gvalidErr.FirstRule()
 		if "required" == rule {
@@ -101,6 +103,7 @@ func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 	} else if reflect.TypeOf(err.(gerror.ICode).Code()).Name() == reflect.TypeOf(enums.OpenResponseEnum{}).Name() {
 		response.Json(r, err.(gerror.ICode).Code(), nil)
 	} else {
+		r.Response.Status = http.StatusInternalServerError
 		response.FailMsg(r)
 	}
 }
@@ -119,7 +122,7 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 	)
 	if err != nil {
 		if code == gcode.CodeNil {
-			code = enums.ApiException
+			code = enums.Fail
 		}
 		response.JsonExit(r, code, nil)
 	} else {

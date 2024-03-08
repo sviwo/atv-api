@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
+	"net/http"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/model"
@@ -26,6 +27,7 @@ func StartGToken(ctx context.Context) *gtoken.GfToken {
 	gToken.LoginBeforeFunc = loginBeforeFunc
 	gToken.LoginAfterFunc = loginAfterFunc
 	gToken.LogoutAfterFunc = logoutAfterFunc
+	gToken.AuthAfterFunc = AuthAfterFunc
 	return gToken
 }
 
@@ -72,6 +74,16 @@ func logoutAfterFunc(r *ghttp.Request, respData gtoken.Resp) {
 	if respData.Success() {
 		response.SuccessMsg(r, nil)
 	} else {
-		r.Response.WriteJson(respData)
+		response.FailMsg(r)
+	}
+}
+
+// 自定义认证返回方法
+func AuthAfterFunc(r *ghttp.Request, respData gtoken.Resp) {
+	if respData.Success() {
+		r.Middleware.Next()
+	} else {
+		r.Response.Status = http.StatusUnauthorized
+		response.JsonExit(r, enums.LoginOverdue, nil)
 	}
 }

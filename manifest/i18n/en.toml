@@ -7,6 +7,7 @@
 "请求方式错误" = "Request method error"
 "用户重复请求或伪造请求" = "Repeated or forged requests from users"
 "登录失败，用户名或密码错误" = "Login failed, username or password incorrect"
+"登录过期，请重新登录" = "Login expired, please log in again"
 "此用户已存在" = "This user already exists"
 "此用户不存在" = "This user does not exist"
 "此账户已被冻结" = "This account has been frozen"
