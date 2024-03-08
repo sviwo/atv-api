@@ -2,6 +2,7 @@ package version
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/container/glist"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
@@ -20,8 +21,12 @@ func New() *sAppText {
 
 type sAppText struct{}
 
-func (s sAppText) GetAppTextList(ctx context.Context) (out []*model.AppTextListOutput) {
-	if err := dao.AppText.Ctx(ctx).Where("is_delete", consts.DeleteOn).Scan(&out); err != nil {
+func (s sAppText) GetAppTextTree(ctx context.Context) (out []*model.AppTextListOutput) {
+	if err := dao.AppText.Ctx(ctx).
+		Where("enable", consts.EnableDisplay).
+		Where("is_delete", consts.DeleteOn).
+		OrderAsc("orders").
+		Scan(&out); err != nil {
 		panic(err)
 	}
 	if err := gconv.Structs(gutil.Values(buildTree(out)), &out); err != nil {
@@ -30,25 +35,28 @@ func (s sAppText) GetAppTextList(ctx context.Context) (out []*model.AppTextListO
 	return
 }
 
-func buildTree(allMenus []*model.AppTextListOutput) map[int64]*model.AppTextListOutput {
-	temp := map[int64]*model.AppTextListOutput{}
-	result := map[int64]*model.AppTextListOutput{}
-	for _, menu := range allMenus {
-		temp[menu.TextId] = menu
+func buildTree(array []*model.AppTextListOutput) (outputs []*model.AppTextListOutput) {
+	temp := map[interface{}]*model.AppTextListOutput{}
+	list := glist.New()
+	for _, data := range array {
+		temp[data.TextId] = data
+		list.PushBack(data.TextId)
 	}
-	for _, node := range temp {
-		if temp[node.ParentId] == nil {
-			result[node.TextId] = node
+	for range temp {
+		output := temp[list.PopFront()]
+		if temp[output.ParentId] == nil {
+			outputs = append(outputs, output)
 		} else {
-			temp[node.ParentId].Children = append(temp[node.ParentId].Children, node)
+			temp[output.ParentId].Children = append(temp[output.ParentId].Children, output)
 		}
 	}
-	return result
+	return
 }
 
 func (s sAppText) GetAppTextDetail(ctx context.Context, textId int64) (out *model.AppTextDetailOutput) {
 	if err := dao.AppText.Ctx(ctx).
 		Where("text_id", textId).
+		Where("enable", consts.EnableDisplay).
 		Where("is_delete", consts.DeleteOn).
 		Scan(&out); err != nil {
 		panic(err)

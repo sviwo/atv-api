@@ -48,4 +48,8 @@ const (
 	energyRecoveryNot    = 0
 	energyRecoveryMedium = 1
 	energyRecoveryStrong = 2
+
+	//显示或屏蔽：true=显示，false=屏蔽
+	EnableDisplay = true
+	EnableShield  = false
 )

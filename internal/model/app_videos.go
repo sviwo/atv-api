@@ -1,9 +1,11 @@
 package model
 
-type AppVideos struct {
-	VideosId   int64  `json:"videosId"   description:""`
-	VideosName string `json:"videosName" description:"视频名称"`
-	VideosDesc string `json:"videosDesc" description:"视频简介"`
-	VideosType int    `json:"videosType" description:"视频类型：0=充电，1=车辆驾驶，2=控制和设置，3=锁定和解锁，4=账户"`
-	VideosUrl  string `json:"videosUrl"  description:"视频链接"`
+type AppVideosListOutput struct {
+	VideosId    int64                  `json:"videosId"    description:""`
+	ParentId    int64                  `json:"parentId"    description:""`
+	VideosTitle string                 `json:"videosTitle" description:"视频标题"`
+	SmallImg    string                 `json:"smallImg"    description:"缩略图"`
+	VideosDesc  string                 `json:"videosDesc"  description:"视频简介"`
+	VideosUrl   string                 `json:"videosUrl"   description:"视频链接"`
+	Children    []*AppVideosListOutput `json:"children"    description:""`
 }

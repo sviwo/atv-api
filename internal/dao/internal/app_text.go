@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-07 16:22:32
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:01
 // ==========================================================================
 
 package internal
@@ -22,8 +22,10 @@ type AppTextDao struct {
 type AppTextColumns struct {
 	TextId      string //
 	ParentId    string //
+	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
 	TextTitle   string // 文本标题
 	TextContent string // 文本内容
+	Orders      string // 排序
 	CreateTime  string //
 	UpdateTime  string //
 	IsDelete    string // 是否删除：true=已删除，false=正常
@@ -33,8 +35,10 @@ type AppTextColumns struct {
 var appTextColumns = AppTextColumns{
 	TextId:      "text_id",
 	ParentId:    "parent_id",
+	Enable:      "enable",
 	TextTitle:   "text_title",
 	TextContent: "text_content",
+	Orders:      "orders",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 	IsDelete:    "is_delete",

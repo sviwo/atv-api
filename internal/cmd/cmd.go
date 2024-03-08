@@ -51,6 +51,7 @@ var (
 						controller.TravelRecord,
 						controller.Car,
 						controller.AppText,
+						controller.AppVideos,
 					)
 				})
 			})

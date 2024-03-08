@@ -7,7 +7,7 @@ import (
 
 type (
 	IAppText interface {
-		GetAppTextList(ctx context.Context) (out []*model.AppTextListOutput)
+		GetAppTextTree(ctx context.Context) (out []*model.AppTextListOutput)
 		GetAppTextDetail(ctx context.Context, textId int64) (out *model.AppTextDetailOutput)
 	}
 )

@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:11
 // ==========================================================================
 
 package internal
@@ -20,26 +20,32 @@ type AppVideosDao struct {
 
 // AppVideosColumns defines and stores column names for table sw_app_videos.
 type AppVideosColumns struct {
-	VideosId   string //
-	VideosName string // 视频名称
-	VideosDesc string // 视频简介
-	VideosType string // 视频类型：0=充电，1=车辆驾驶，2=控制和设置，3=锁定和解锁，4=账户
-	VideosUrl  string // 视频链接
-	CreateTime string //
-	UpdateTime string //
-	IsDelete   string // 是否删除：true=已删除，false=正常
+	VideosId    string //
+	ParentId    string //
+	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
+	VideosTitle string // 视频标题
+	SmallImg    string // 缩略图
+	VideosDesc  string // 视频简介
+	VideosUrl   string // 视频链接
+	Orders      string // 排序
+	CreateTime  string //
+	UpdateTime  string //
+	IsDelete    string // 是否删除：true=已删除，false=正常
 }
 
 // appVideosColumns holds the columns for table sw_app_videos.
 var appVideosColumns = AppVideosColumns{
-	VideosId:   "videos_id",
-	VideosName: "videos_name",
-	VideosDesc: "videos_desc",
-	VideosType: "videos_type",
-	VideosUrl:  "videos_url",
-	CreateTime: "create_time",
-	UpdateTime: "update_time",
-	IsDelete:   "is_delete",
+	VideosId:    "videos_id",
+	ParentId:    "parent_id",
+	Enable:      "enable",
+	VideosTitle: "videos_title",
+	SmallImg:    "small_img",
+	VideosDesc:  "videos_desc",
+	VideosUrl:   "videos_url",
+	Orders:      "orders",
+	CreateTime:  "create_time",
+	UpdateTime:  "update_time",
+	IsDelete:    "is_delete",
 }
 
 // NewAppVideosDao creates and returns a new DAO object for table data access.

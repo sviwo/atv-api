@@ -12,10 +12,10 @@ var AppText = cAppText{}
 type cAppText struct{}
 
 /*
-GetAppTextList 获取app文本标题列表
+GetAppTextTree 获取app文本标题树
 */
-func (c cAppText) GetAppTextList(ctx context.Context, req *v1.AppTextListReq) (res []*v1.AppTextListRes, err error) {
-	if err = gconv.Structs(service.AppText().GetAppTextList(ctx), &res); err != nil {
+func (c cAppText) GetAppTextTree(ctx context.Context, req *v1.AppTextTreeReq) (res []*v1.AppTextTreeRes, err error) {
+	if err = gconv.Structs(service.AppText().GetAppTextTree(ctx), &res); err != nil {
 		panic(err)
 	}
 	return
