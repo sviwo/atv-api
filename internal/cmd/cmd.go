@@ -20,8 +20,9 @@ var (
 			s := g.Server()
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(
-					service.Middleware().CORS,
-					service.Middleware().Ctx,
+					service.Middleware().CORSHandler,
+					service.Middleware().CtxHandler,
+					service.Middleware().I18NHandler,
 					service.Middleware().ResponseHandler,
 					service.Middleware().ErrorHandler,
 					//service.Middleware().DecodeData,
@@ -40,13 +41,16 @@ var (
 					}
 					//需要登录鉴权的接口放到这里
 					group.Bind(
+						controller.Common.ImgUpload,
 						controller.User.Info,
 						controller.User.UpdatePassword,
 						controller.User.EditInfo,
-						controller.Common.ImgUpload,
-						controller.Version.GetNewVersion,
-						controller.TravelRecord.GetTravelRecordList,
-						controller.TravelRecord.Delete,
+						controller.Home,
+						controller.UserAuth,
+						controller.Version,
+						controller.TravelRecord,
+						controller.Car,
+						controller.AppText,
 					)
 				})
 			})

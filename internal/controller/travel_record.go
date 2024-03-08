@@ -29,7 +29,7 @@ func (c cTravelRecord) GetTravelRecordList(ctx context.Context, req *v1.TravelRe
 	return
 }
 
-func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordDeleteReq) (res *v1.CommonRes, err error) {
+func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordDeleteReq) (res *v1.EmptyFieldRes, err error) {
 	tData := model.TravelRecordInput{}
 	err = gconv.Struct(req, &tData)
 	if err != nil {

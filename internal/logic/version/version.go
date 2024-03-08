@@ -2,6 +2,7 @@ package version
 
 import (
 	"context"
+	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
@@ -24,7 +25,7 @@ func (s sVersion) GetNewVersion(ctx context.Context) (out []*model.VersionOutput
 			dao.Version.Ctx(ctx).
 				Fields("MAX(version_number)").
 				Where("version_status", 1).
-				Where("is_delete", 1).
+				Where("is_delete", consts.DeleteOn).
 				Group("version_type"),
 		).Limit(2).Scan(&out)
 	if err != nil {

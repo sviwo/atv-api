@@ -9,7 +9,3 @@ type VersionOutput struct {
 	VersionUrl        string `json:"versionUrl"        description:"版本链接"`
 	VersionDesc       string `json:"versionDesc"       description:"版本描述，用于app显示的新版本信息"`
 }
-
-//type VersionOutput struct {
-//	Version *VersionBase `json:"version"         description:""`
-//}

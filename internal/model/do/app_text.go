@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-07 16:22:32
 // =================================================================================
 
 package do
@@ -13,8 +13,8 @@ import (
 type AppText struct {
 	g.Meta      `orm:"table:sw_app_text, do:true"`
 	TextId      interface{} //
-	TextName    interface{} // 文本名称
-	TextType    interface{} // 文本类型：0=账户，1=车辆功能和充电，2=售后服务和维修保养，3=其他
+	ParentId    interface{} //
+	TextTitle   interface{} // 文本标题
 	TextContent interface{} // 文本内容
 	CreateTime  *gtime.Time //
 	UpdateTime  *gtime.Time //

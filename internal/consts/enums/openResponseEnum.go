@@ -1,4 +1,4 @@
-package rcode
+package enums
 
 import "github.com/gogf/gf/v2/errors/gcode"
 
@@ -23,7 +23,7 @@ func (c OpenResponseEnum) Detail() interface{} {
 }
 
 var (
-	Fail    = New(0, "System error, please contact the administrator")
+	Fail    = New(0, "系统错误，请联系管理员")
 	Success = New(1, "SUCCESS")
 	/*
 	   公共异常 1000～1999
@@ -38,15 +38,14 @@ var (
 	/*
 	   app错误码 2000～2999
 	*/
-	UserLoginFailed     = New(2000, "登录失败，用户名或密码错误")
-	LoginOverdue        = New(2001, "登录过期，请重新登录")
-	UserExists          = New(2002, "此用户已存在")
-	UserNotExists       = New(2003, "此用户不存在")
-	UserAcctFrozen      = New(2004, "此账户已被冻结")
-	TwoPasswordNotEqual = New(2005, "密码与确认密码不一致")
-	VftCodeError        = New(2007, "验证码错误")
-	VftCodeOverdue      = New(2008, "验证码已过期")
-	VftCodeSendFailed   = New(2009, "验证码发送失败，请检查网络")
+	UserLoginFailed   = New(2000, "登录失败，用户名或密码错误")
+	UserExists        = New(2001, "此用户已存在")
+	UserNotExists     = New(2002, "此用户不存在")
+	UserAcctFrozen    = New(2003, "此账户已被冻结")
+	VftCodeError      = New(2004, "验证码错误")
+	VftCodeOverdue    = New(2005, "验证码已过期")
+	VftCodeSendFailed = New(2006, "验证码发送失败，请检查网络")
+	CarNotExists      = New(2007, "此车辆不存在")
 )
 
 func New(code int, message string) gcode.Code {

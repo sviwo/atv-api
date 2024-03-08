@@ -5,7 +5,7 @@ services:
     restart: always
     build:
       context: ./redis #扫描目录
-      dockerfile: redis/Dockerfile   #构建类型
+      dockerfile: Dockerfile   #构建类型
     volumes:
       - "./redis/conf/redis.conf:/home/sviwo/redis/redis.conf"
       - "./redis/data:/data"
@@ -15,15 +15,16 @@ services:
       - TZ=Asia/Shanghai
     privileged: true    #容器将以更高的权限运行
     ports:
-      - 16379:6379
+      - 7001:6379
   sviwo-mysql:
     image: mysql:8.0.25
     container_name: sviwo-mysql
     restart: always
     build: #构建目录  用于配置mysql
       context: ./mysql #扫描目录
+      dockerfile: Dockerfile   #构建类型
     environment:
-      MYSQL_ROOT_PASSWORD: 1qaz2wsx
+      MYSQL_ROOT_PASSWORD: gyc1993
       MYSQL_DATABASE: sviwo
     volumes:
       - ./mysql/conf:/etc/mysql/conf.d
@@ -31,7 +32,7 @@ services:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/logs:/var/log
     ports:
-      - "13306:3306"
+      - "3306:3306"
     command: [ #设置mysql服务
       'mysqld',
       '--innodb-buffer-pool-size=80M',
@@ -55,7 +56,7 @@ services:
     container_name: sviwo-api # 业务模块  商品服务名
     build: # 业务模块  商品服务配置
       context: ./sviwo
-      #Dockerfile: Dockerfile
+      dockerfile: Dockerfile
     ports: # 业务模块  商品服务映射端口
       - "8500:8500"
       - "8000:8000"

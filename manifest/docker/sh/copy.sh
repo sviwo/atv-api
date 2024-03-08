@@ -6,11 +6,11 @@ mkdir -p ../sviwo/bin
 
 # 复制sql文件
 echo "begin copy sql "
-cp ../../../sql/*.sql ../mysql/db
+cp ../../../../atv-api/manifest/sql/*.sql ../mysql/db
 echo "end copy sql "
 
 # 复制jar文件
 echo "begin copy bin "
-cp ../../config/config.yaml ../sviwo/config
-cp ../../../../sviwo/sviwo-api ../sviwo/bin
+cp ../../config/config-pro.yaml ../sviwo/config/config.yaml
+cp ../../../../atv-api/linux_amd64/sviwo-api ../sviwo/bin
 echo "end copy bin "

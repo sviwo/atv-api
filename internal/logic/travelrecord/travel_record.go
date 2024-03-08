@@ -21,7 +21,7 @@ type sTravelRecord struct{}
 
 func (s sTravelRecord) Delete(ctx context.Context, in model.TravelRecordInput) (err error) {
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-	_, err = dao.TravelRecord.Ctx(ctx).Data(g.Map{"is_delete": 0}).Where(g.Map{"travel_record_id": in.TravelRecordId, "user_id": userId}).Update()
+	_, err = dao.TravelRecord.Ctx(ctx).Data(g.Map{"is_delete": consts.DeleteOn}).Where(g.Map{"travel_record_id": in.TravelRecordId, "user_id": userId}).Update()
 	return
 }
 
@@ -33,7 +33,7 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 		if in.CarId != 0 {
 			m = m.Where("car_id", in.CarId)
 		}
-		m = m.Where("is_delete", 0)
+		m = m.Where("is_delete", consts.DeleteOn)
 		total, err = m.Count()
 		if err != nil {
 			panic(err)

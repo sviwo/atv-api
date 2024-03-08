@@ -7,11 +7,11 @@ import (
 
 type (
 	IUser interface {
-		Login(ctx context.Context, in model.LoginInput) (err error, userId *uint64)
-		Register(ctx context.Context, in model.RegisterInput) error
-		Info(ctx context.Context, in model.UserInfoInput) (out *model.UserInfoOutput)
-		UpdatePassword(ctx context.Context, in model.UpdatePasswordInput) error
-		EditInfo(ctx context.Context, in model.EditInfoInput) error
+		Login(ctx context.Context, in model.LoginInput) *uint64
+		Register(ctx context.Context, in model.RegisterInput)
+		Info(ctx context.Context) (out *model.UserInfoOutput)
+		UpdatePassword(ctx context.Context, in model.UpdatePasswordInput)
+		EditInfo(ctx context.Context, in model.EditInfoInput)
 	}
 )
 

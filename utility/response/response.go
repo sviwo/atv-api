@@ -3,8 +3,9 @@ package response
 import (
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/net/ghttp"
-	"sviwo/internal/logic/biz/enums"
+	"sviwo/internal/consts/enums"
 )
 
 // JsonRes 数据返回通用JSON数据结构
@@ -24,7 +25,7 @@ func Json(r *ghttp.Request, gc gcode.Code, data ...interface{}) {
 	}
 	r.Response.WriteJson(JsonRes{
 		Code:    gc.Code(),
-		Message: gc.Message(),
+		Message: gi18n.T(r.GetCtx(), gc.Message()),
 		Data:    responseData,
 	})
 }
@@ -36,9 +37,9 @@ func JsonExit(r *ghttp.Request, gc gcode.Code, data interface{}) {
 }
 
 func SuccessMsg(r *ghttp.Request, data interface{}) {
-	Json(r, rcode.Success, data)
+	Json(r, enums.Success, data)
 }
 
 func FailMsg(r *ghttp.Request) {
-	Json(r, rcode.Fail)
+	Json(r, enums.Fail)
 }

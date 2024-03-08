@@ -1,12 +1,13 @@
 package model
 
+import "github.com/gogf/gf/v2/os/gtime"
+
 type UserInfoBase struct {
-	UserId      uint64 `json:"userId"            description:""`
-	FirstName   string `json:"firstName"         description:""`
-	LastName    string `json:"lastName"          description:""`
-	HeadImg     string `json:"headImg"           description:""`
-	MobilePhone string `json:"mobilePhone"       description:""`
-	UserAddress string `json:"userAddress"       description:""`
+	FirstName   string  `json:"firstName"         description:""`
+	LastName    string  `json:"lastName"          description:""`
+	HeadImg     *string `json:"headImg"           description:""`
+	MobilePhone string  `json:"mobilePhone"       description:""`
+	UserAddress string  `json:"userAddress"       description:""`
 }
 
 /*
@@ -31,10 +32,6 @@ type RegisterInput struct {
 /*
 获取用户信息
 */
-type UserInfoInput struct {
-	UserId string `json:"userId"          description:""`
-}
-
 type UserInfoOutput struct {
 	Username string `json:"username"          description:""`
 	UserInfoBase
@@ -55,4 +52,5 @@ type UpdatePasswordInput struct {
  */
 type EditInfoInput struct {
 	UserInfoBase
+	UpdateTime *gtime.Time
 }

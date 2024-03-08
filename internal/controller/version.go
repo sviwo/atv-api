@@ -15,9 +15,8 @@ type cVersion struct{}
 GetNewVersion 获取最新版本信息
 */
 func (c cVersion) GetNewVersion(ctx context.Context, req *v1.VersionReq) (res []*v1.VersionRes, err error) {
-	err = gconv.Structs(service.Version().GetNewVersion(ctx), &res)
-	if err != nil {
+	if err = gconv.Structs(service.Version().GetNewVersion(ctx), &res); err != nil {
 		panic(err)
 	}
-	return res, err
+	return
 }

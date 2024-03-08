@@ -24,7 +24,7 @@ import (
 	"strconv"
 	"strings"
 	"sviwo/internal/boot"
-	rcode "sviwo/internal/logic/biz/enums"
+	"sviwo/internal/consts/enums"
 	"time"
 )
 
@@ -427,7 +427,7 @@ func SendEmail(subject, body, to string) error {
 	// 发送邮件
 	if err := boot.NewDialer.DialAndSend(m); err != nil {
 		glog.Error(context.Background(), "验证发送失败，错误原因==", err)
-		return gerror.NewCode(rcode.VftCodeSendFailed)
+		return gerror.NewCode(enums.VftCodeSendFailed)
 	}
 	return nil
 }
@@ -437,13 +437,13 @@ GfTokenDecryptToken GfToken解密
 */
 func GfTokenDecryptToken(ctx context.Context, token string) string {
 	if token == "" {
-		panic(gerror.NewCode(rcode.IllegalArgument))
+		panic(gerror.NewCode(enums.IllegalArgument))
 	}
 	parts := strings.SplitN(token, " ", 2)
 	if !(len(parts) == 2 && parts[0] == "Bearer") {
-		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+		panic(gerror.NewCode(enums.RequestMethodTypeError))
 	} else if parts[1] == "" {
-		panic(gerror.NewCode(rcode.RequestMethodTypeError))
+		panic(gerror.NewCode(enums.RequestMethodTypeError))
 	}
 	token64, err := gbase64.Decode([]byte(parts[1]))
 	if err != nil {

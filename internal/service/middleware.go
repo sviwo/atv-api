@@ -6,11 +6,12 @@ import (
 
 type (
 	IMiddleware interface {
-		ErrorHandler(r *ghttp.Request)
+		CORSHandler(r *ghttp.Request)
+		CtxHandler(r *ghttp.Request)
+		I18NHandler(r *ghttp.Request)
 		ResponseHandler(r *ghttp.Request)
-		Ctx(r *ghttp.Request)
-		CORS(r *ghttp.Request)
-		DecodeData(r *ghttp.Request)
+		ErrorHandler(r *ghttp.Request)
+		DecodeDataHandler(r *ghttp.Request)
 	}
 )
 

@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-07 16:22:32
 // ==========================================================================
 
 package internal
@@ -21,8 +21,8 @@ type AppTextDao struct {
 // AppTextColumns defines and stores column names for table sw_app_text.
 type AppTextColumns struct {
 	TextId      string //
-	TextName    string // 文本名称
-	TextType    string // 文本类型：0=账户，1=车辆功能和充电，2=售后服务和维修保养，3=其他
+	ParentId    string //
+	TextTitle   string // 文本标题
 	TextContent string // 文本内容
 	CreateTime  string //
 	UpdateTime  string //
@@ -32,8 +32,8 @@ type AppTextColumns struct {
 // appTextColumns holds the columns for table sw_app_text.
 var appTextColumns = AppTextColumns{
 	TextId:      "text_id",
-	TextName:    "text_name",
-	TextType:    "text_type",
+	ParentId:    "parent_id",
+	TextTitle:   "text_title",
 	TextContent: "text_content",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",

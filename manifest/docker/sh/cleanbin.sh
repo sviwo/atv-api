@@ -2,7 +2,7 @@
 
 # 删除jar文件
 echo "开始清理bin文件"
-rm -f ../../../../sviwo/sviwo-api
-cd ../../../../sviwo
-go build -o sviwo-api
+rm -f ../../../../atv-api/linux_amd64/sviwo-api
+cd ../../../../atv-api
+gf build -s linux
 echo "清理完成"

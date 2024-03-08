@@ -14,8 +14,9 @@ main.exe
 output/
 manifest/output/
 bin
-**/config/config.yaml
 *.log
 
-manifest/docker/mysql/data
-manifest/docker/mysql/logs
+./manifest/docker/mysql/data/
+./manifest/docker/mysql/logs/
+
+*.binlog
