@@ -5,6 +5,8 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/frame/g"
 	"gopkg.in/gomail.v2"
+	"sviwo/internal/mqtt"
+	"sviwo/internal/network"
 	"sviwo/internal/service"
 )
 
@@ -49,15 +51,15 @@ func initTDengine(ctx context.Context) {
 	}
 
 	//mqtt启动
-	//if err := mqtt.InitSystemMqtt(); err != nil {
-	//	g.Log().Errorf(ctx, "MQTT 初始化mqtt客户端失败,失败原因:%+#v", err)
-	//}
-	//defer mqtt.Close()
+	if err := mqtt.InitSystemMqtt(); err != nil {
+		g.Log().Errorf(ctx, "MQTT 初始化mqtt客户端失败,失败原因:%+#v", err)
+	}
+	defer mqtt.Close()
 
-	// 启动失败的话请注释掉
-	//if err := network.ReloadNetwork(context.Background()); err != nil {
-	//	g.Log().Errorf(ctx, "载入网络错误,错误原因:%+#v", err)
-	//}
+	//启动失败的话请注释掉
+	if err := network.ReloadNetwork(context.Background()); err != nil {
+		g.Log().Errorf(ctx, "载入网络错误,错误原因:%+#v", err)
+	}
 }
 
 func initSnowflake() {
