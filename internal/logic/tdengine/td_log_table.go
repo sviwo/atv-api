@@ -38,7 +38,7 @@ func (s *sTdLogTable) CreateStable(ctx context.Context) (err error) {
 		return
 	}
 
-	sql := "CREATE STABLE device_log (ts TIMESTAMP, type VARCHAR(20), content VARCHAR(1000)) TAGS (device VARCHAR(255))"
+	sql := "CREATE STABLE device_log (ts TIMESTAMP, type VARCHAR(20), content VARCHAR(1000)) TAGS (version VARCHAR(10),type VARCHAR(10),country VARCHAR(50),clientId VARCHAR(50),vehicheModel VARCHAR(50),device VARCHAR(255))"
 	_, err = taos.Exec(sql)
 
 	return

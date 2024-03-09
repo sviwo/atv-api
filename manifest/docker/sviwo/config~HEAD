@@ -1,0 +1,69 @@
+server:
+  address: ":8000"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+logger:
+  level: "all"
+  stdout: true
+
+database:
+  logger:
+    - path: "logs/sql"
+      level: "all"
+      stdout: true
+  default:
+    - link: "mysql:root:gyc1993@tcp(114.115.135.233:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置
+      role: "master"
+      debug: true
+
+redis:
+  default:
+    address: 127.0.0.1:7001 #redis地址
+    db: 1 #db
+    pass: #密码
+  cache:
+    address: 127.0.0.1:7001  #地址
+    db: 1   #db
+    pass:  #密码
+
+gfToken:
+  ServerName: "Sviwo"
+  cacheKey: "gfToken:"   #缓存前缀
+  timeOut: 24 * 60 * 60 * 1000 * 10         #token超时时间（毫秒）
+  multiLogin: true      #是否允许一个账号多人同时登录
+  encryptKey: "49c54195e750b04e74a8429b17896586"    #加密key (32位)
+  cacheMode: 2          #存储引擎 1 gcache 2 gredis 默认1
+  LoginPath: "/login"
+  LogoutPath: "/logout"
+
+oss:
+  fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
+  endpoint: oss-cn-chengdu.aliyuncs.com
+  accessKeyID: LTAI5tLnA6rbeAnmpMtsh6vE
+  accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
+  bucket: test-sviwo-car-oss
+
+email:
+  host: smtp.gmail.com
+  port: 587
+  username: gouyichuan@gmail.com
+  password: yzdkzxemdknngznw
+
+#这个mqtt客户端主要是服务端内部处理消息使用的通道
+mqtt:
+  addr: iot-060aapw2.mqtt.iothub.aliyuncs.com:1883
+  # 最好带上服务名称，变成唯一id
+  clientId: sviwo-iot
+  deviceLiveDuration: 30
+  auth:
+    userName: sviwo_atv&k0ugjmf1ois
+    userPassWorld: 9766e001f2ca125ed07aa9fe1e038580d8cf6b778d8717e66567b91bc9a8333d
+
+#TDengine配置
+tdengine:
+  type: "taosRestful" #http连接方式，端口是6041
+  dsn: "root:taosdata@http(114.115.135.233:6041)/"
+  dbName: "sviwo_iot"
+  maxOpenConns: 10
+  maxIdleConns: 5

@@ -18,3 +18,5 @@ bin
 
 ./manifest/docker/mysql/data/
 ./manifest/docker/mysql/logs/
+
+*.binlog

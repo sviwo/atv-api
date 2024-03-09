@@ -2,10 +2,16 @@ package boot
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha1"
+	"encoding/base64"
+	"fmt"
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/frame/g"
 	"gopkg.in/gomail.v2"
 	"sviwo/internal/service"
+	"sviwo/pkg/amqp"
+	"time"
 )
 
 /*
@@ -37,6 +43,7 @@ func Boot(ctx context.Context) {
 	initSnowflake()
 	initTDengine(ctx)
 	initSendEmail(ctx)
+	go initAmqp(ctx)
 }
 
 func initTDengine(ctx context.Context) {
@@ -48,13 +55,13 @@ func initTDengine(ctx context.Context) {
 		g.Log().Fatal(ctx, "TDengine 日志超级表创建失败：", err)
 	}
 
-	//mqtt启动
+	////mqtt启动
 	//if err := mqtt.InitSystemMqtt(); err != nil {
 	//	g.Log().Errorf(ctx, "MQTT 初始化mqtt客户端失败,失败原因:%+#v", err)
 	//}
 	//defer mqtt.Close()
 
-	// 启动失败的话请注释掉
+	//启动失败的话请注释掉
 	//if err := network.ReloadNetwork(context.Background()); err != nil {
 	//	g.Log().Errorf(ctx, "载入网络错误,错误原因:%+#v", err)
 	//}
@@ -75,4 +82,33 @@ func initSendEmail(ctx context.Context) {
 		g.Cfg().MustGet(ctx, "email.username").String(),
 		g.Cfg().MustGet(ctx, "email.password").String(),
 	)
+}
+
+func initAmqp(ctx context.Context) {
+	accessKey := g.Cfg().MustGet(ctx, "aliyun.accessKeyID").String()
+	accessSecret := g.Cfg().MustGet(ctx, "aliyun.accessKeySecret").String()
+	host := g.Cfg().MustGet(ctx, "aliyun.amqp.host").String()
+	clientId := g.Cfg().MustGet(ctx, "aliyun.amqp.clientId").String()
+	iotInstanceId := g.Cfg().MustGet(ctx, "aliyun.amqp.iotInstanceId").String()
+	consumerGroupId := g.Cfg().MustGet(ctx, "aliyun.amqp.consumerGroupId").String()
+	address := "amqps://" + host + ":5671"
+	timestamp := time.Now().Nanosecond() / 1000000
+	//userName组装方法，请参见AMQP客户端接入说明文档。
+	userName := fmt.Sprintf("%s|authMode=aksign,signMethod=Hmacsha1,consumerGroupId=%s,authId=%s,iotInstanceId=%s,timestamp=%d|",
+		clientId, consumerGroupId, accessKey, iotInstanceId, timestamp)
+	stringToSign := fmt.Sprintf("authId=%s&timestamp=%d", accessKey, timestamp)
+	hmacKey := hmac.New(sha1.New, []byte(accessSecret))
+	hmacKey.Write([]byte(stringToSign))
+	//计算签名，password组装方法，请参见AMQP客户端接入说明文档。
+	password := base64.StdEncoding.EncodeToString(hmacKey.Sum(nil))
+
+	amqpManager := &amqp.AmqpManager{
+		Address:  address,
+		UserName: userName,
+		Password: password,
+	}
+
+	//如果需要做接受消息通信或者取消操作，从Background衍生context。
+	ctx = context.Background()
+	amqpManager.StartReceiveMessage(ctx)
 }

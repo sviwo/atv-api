@@ -29,19 +29,19 @@ func getInstance() *singleBucket {
 				// 创建OSSClient实例。
 				ctx := gctx.GetInitCtx()
 				ct, err := oss.New(
-					g.Cfg().MustGet(ctx, "oss.endpoint").String(),
-					g.Cfg().MustGet(ctx, "oss.accessKeyID").String(),
-					g.Cfg().MustGet(ctx, "oss.accessKeySecret").String(),
+					g.Cfg().MustGet(ctx, "aliyun.oss.endpoint").String(),
+					g.Cfg().MustGet(ctx, "aliyun.accessKeyID").String(),
+					g.Cfg().MustGet(ctx, "aliyun.accessKeySecret").String(),
 				)
 				if err != nil {
 					panic(err)
 				}
 				// 设置存储空间的读写权限为公共读。
-				err = ct.SetBucketACL(g.Cfg().MustGet(ctx, "oss.bucket").String(), oss.ACLPublicRead)
+				err = ct.SetBucketACL(g.Cfg().MustGet(ctx, "aliyun.oss.bucket").String(), oss.ACLPublicRead)
 				if err != nil {
 					panic(err)
 				}
-				bt, err := ct.Bucket(g.Cfg().MustGet(ctx, "oss.bucket").String())
+				bt, err := ct.Bucket(g.Cfg().MustGet(ctx, "aliyun.oss.bucket").String())
 				if err != nil {
 					panic(err)
 				}

@@ -75,3 +75,19 @@ tdengine:
   dbName: "sviwo_iot"
   maxOpenConns: 10
   maxIdleConns: 5
+
+#阿里云
+aliyun:
+  accessKeyID: LTAI5tLnA6rbeAnmpMtsh6vE
+  accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
+  oss:
+    fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
+    endpoint: oss-cn-chengdu.aliyuncs.com
+    bucket: test-sviwo-car-oss
+  amqp:
+    clientId: "sviwo-001" #实例ID
+    iotInstanceId: "iot-060aapw2" #实例ID
+    host: "iot-060aapw2.amqp.iothub.aliyuncs.com"
+    consumerGroupId: "4szfGy4iu2TZyCkRvO4J000100"
+  iotApi:
+    host: "iot.cn-shanghai.aliyuncs.com"
