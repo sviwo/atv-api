@@ -216,7 +216,7 @@ func (s *sTSLTable) CreateDatabase(ctx context.Context) (err error) {
 		_, err = g.Redis().Do(ctx, "DEL", lockKey)
 	}()
 
-	taos, err := service.TdEngine().GetConn(ctx, "")
+	taos, err := service.TdEngine().GetConn(ctx, dbName)
 	if err != nil {
 		err = gerror.New("获取链接失败")
 		return

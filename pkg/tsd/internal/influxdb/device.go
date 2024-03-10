@@ -1,7 +1,7 @@
 package influxdb
 
 import (
-	"sagooiot/pkg/iotModel"
+	"sviwo/pkg/iotModel"
 )
 
 // InsertDeviceData 插入设备数据

@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"github.com/gogf/gf/v2/database/gdb"
-	"sagooiot/pkg/iotModel"
-	"sagooiot/pkg/tsd/comm"
+	"sviwo/pkg/iotModel"
+	"sviwo/pkg/tsd/comm"
 )
 
 type Influxdb struct {

@@ -11,6 +11,7 @@ require (
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.6.3
 	github.com/gogf/gf/v2 v2.6.3
 	github.com/qiniu/x v1.10.5
+	github.com/redis/go-redis/v9 v9.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/taosdata/driver-go/v3 v3.5.2
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
@@ -46,7 +47,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/redis/go-redis/v9 v9.5.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	go.opentelemetry.io/otel v1.24.0 // indirect

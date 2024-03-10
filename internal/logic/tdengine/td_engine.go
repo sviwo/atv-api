@@ -26,13 +26,13 @@ func tdEngineNew() *sTdEngine {
 	return _instance
 }
 
-var dbName = "sagoo_iot"
+var dbName = "sviwo_iot"
 
 // 初始化函数
 func init() {
 	service.RegisterTdEngine(tdEngineNew())
 	// 简化配置获取过程
-	dbName = g.Cfg().MustGet(context.Background(), "tsd.tdengine.dbName", "sagoo_iot").String()
+	dbName = g.Cfg().MustGet(context.Background(), "tsd.tdengine.dbName", "sviwo_iot").String()
 }
 
 type connections struct {

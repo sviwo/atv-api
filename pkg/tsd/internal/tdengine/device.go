@@ -8,8 +8,8 @@ import (
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
-	"sagooiot/pkg/iotModel"
-	"sagooiot/pkg/tsd/comm"
+	"sviwo/pkg/iotModel"
+	"sviwo/pkg/tsd/comm"
 	"time"
 
 	"strings"

@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"sagooiot/pkg/iotModel"
-	"sagooiot/pkg/tsd/comm"
+	"sviwo/pkg/iotModel"
+	"sviwo/pkg/tsd/comm"
 
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"

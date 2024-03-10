@@ -3,8 +3,8 @@ package tdengine
 import (
 	"context"
 	"encoding/json"
-	"sagooiot/internal/model"
-	"sagooiot/internal/service"
+	"sviwo/internal/model"
+	"sviwo/internal/service"
 	"testing"
 
 	_ "github.com/gogf/gf/contrib/drivers/mysql/v2"
