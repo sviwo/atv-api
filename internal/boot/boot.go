@@ -9,6 +9,7 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/frame/g"
 	"gopkg.in/gomail.v2"
+	"sviwo/internal/network/core/logic/model"
 	"sviwo/internal/service"
 	"sviwo/pkg/amqp"
 	"time"
@@ -40,6 +41,7 @@ Boot
 为对于使用者来讲并不关心底层基础模块的初始化逻辑，而业务模块的初始化大多数会采用显式初始化。
 */
 func Boot(ctx context.Context) {
+	model.InitCoreLogic(ctx)
 	initSnowflake()
 	initTDengine(ctx)
 	initSendEmail(ctx)
@@ -54,17 +56,6 @@ func initTDengine(ctx context.Context) {
 	if err := service.TdLogTable().CreateStable(ctx); err != nil {
 		g.Log().Fatal(ctx, "TDengine 日志超级表创建失败：", err)
 	}
-
-	////mqtt启动
-	//if err := mqtt.InitSystemMqtt(); err != nil {
-	//	g.Log().Errorf(ctx, "MQTT 初始化mqtt客户端失败,失败原因:%+#v", err)
-	//}
-	//defer mqtt.Close()
-
-	//启动失败的话请注释掉
-	//if err := network.ReloadNetwork(context.Background()); err != nil {
-	//	g.Log().Errorf(ctx, "载入网络错误,错误原因:%+#v", err)
-	//}
 }
 
 func initSnowflake() {

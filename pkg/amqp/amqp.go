@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"pack.ag/amqp"
+	"sviwo/internal/network/core"
 	"time"
 )
 
@@ -17,8 +18,8 @@ type AmqpManager struct {
 }
 
 // 业务函数。用户自定义实现，该函数被异步执行，请考虑系统资源消耗情况。
-func (am *AmqpManager) processMessage(message *amqp.Message) {
-	fmt.Println("data received:", string(message.GetData()), " properties:", message.ApplicationProperties)
+func (am *AmqpManager) processMessage(ctx context.Context, message *amqp.Message) {
+	core.HandleMessage(ctx, message)
 }
 
 func (am *AmqpManager) StartReceiveMessage(ctx context.Context) {
@@ -39,7 +40,7 @@ func (am *AmqpManager) StartReceiveMessage(ctx context.Context) {
 		message, err := am.Receiver.Receive(ctx)
 
 		if nil == err {
-			go am.processMessage(message)
+			go am.processMessage(ctx, message)
 			message.Accept()
 		} else {
 			fmt.Println("amqp receive data error:", err)

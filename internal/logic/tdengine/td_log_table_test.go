@@ -15,7 +15,7 @@ func TestInsertLog(t *testing.T) {
 		Ts:      gtime.Now(),
 		Device:  "k213213",
 		Type:    "属性上报",
-		Content: `{"device_id":"k213213","return_time":"2024-02-23 10:49:33","property_99":2,"property_98":2,"property_97":3,"property_96":4,"property_95":2}`,
+		Content: `{"device_id":"k213213","return_time":"2022-11-10 10:49:33","property_99":2,"property_98":2,"property_97":3,"property_96":4,"property_95":2}`,
 	}
 	err := service.TdLogTable().Insert(context.TODO(), logData)
 	if err != nil {
