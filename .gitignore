@@ -13,7 +13,6 @@ main
 main.exe
 output/
 manifest/output/
-bin
 *.log
 
 ./manifest/docker/mysql/data/

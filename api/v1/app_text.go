@@ -9,7 +9,7 @@ type AppTextTreeReq struct {
 }
 
 type AppTextTreeRes struct {
-	TextId    string            `json:"textId"      dc:""`
+	Id        string            `json:"id"      dc:""`
 	ParentId  string            `json:"parentId"    dc:""`
 	TextTitle string            `json:"textTitle"   dc:"文本标题"`
 	Children  []*AppTextTreeRes `json:"children"    dc:""`

@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:01
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-11 13:14:36
 // ==========================================================================
 
 package internal
@@ -20,7 +20,7 @@ type AppTextDao struct {
 
 // AppTextColumns defines and stores column names for table sw_app_text.
 type AppTextColumns struct {
-	TextId      string //
+	Id          string //
 	ParentId    string //
 	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
 	TextTitle   string // 文本标题
@@ -33,7 +33,7 @@ type AppTextColumns struct {
 
 // appTextColumns holds the columns for table sw_app_text.
 var appTextColumns = AppTextColumns{
-	TextId:      "text_id",
+	Id:          "id",
 	ParentId:    "parent_id",
 	Enable:      "enable",
 	TextTitle:   "text_title",

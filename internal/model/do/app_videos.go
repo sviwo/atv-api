@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:11
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-11 13:14:30
 // =================================================================================
 
 package do
@@ -12,7 +12,7 @@ import (
 // AppVideos is the golang structure of table sw_app_videos for DAO operations like Where/Data.
 type AppVideos struct {
 	g.Meta      `orm:"table:sw_app_videos, do:true"`
-	VideosId    interface{} //
+	Id          interface{} //
 	ParentId    interface{} //
 	Enable      interface{} // 显示或屏蔽：true=显示，false=屏蔽
 	VideosTitle interface{} // 视频标题

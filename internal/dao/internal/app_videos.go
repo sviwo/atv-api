@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:11
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-11 13:14:30
 // ==========================================================================
 
 package internal
@@ -20,7 +20,7 @@ type AppVideosDao struct {
 
 // AppVideosColumns defines and stores column names for table sw_app_videos.
 type AppVideosColumns struct {
-	VideosId    string //
+	Id          string //
 	ParentId    string //
 	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
 	VideosTitle string // 视频标题
@@ -35,7 +35,7 @@ type AppVideosColumns struct {
 
 // appVideosColumns holds the columns for table sw_app_videos.
 var appVideosColumns = AppVideosColumns{
-	VideosId:    "videos_id",
+	Id:          "id",
 	ParentId:    "parent_id",
 	Enable:      "enable",
 	VideosTitle: "videos_title",

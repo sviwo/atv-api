@@ -9,7 +9,7 @@ type AppVideosTreeReq struct {
 }
 
 type AppVideosTreeRes struct {
-	VideosId    string              `json:"videosId"    dc:""`
+	Id          string              `json:"id"    dc:""`
 	ParentId    string              `json:"parentId"    dc:""`
 	VideosTitle string              `json:"videosTitle" dc:"视频标题"`
 	SmallImg    string              `json:"smallImg"    dc:"缩略图"`
