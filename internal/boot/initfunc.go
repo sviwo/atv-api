@@ -3,9 +3,8 @@ package boot
 import (
 	"context"
 	"fmt"
-	"sviwo/internal/service"
-
 	"github.com/gogf/gf/v2/frame/g"
+	"sviwo/internal/service"
 )
 
 type NoDeferFunc struct {
