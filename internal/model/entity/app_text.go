@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:01
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-11 13:14:36
 // =================================================================================
 
 package entity
@@ -10,7 +10,7 @@ import (
 
 // AppText is the golang structure for table app_text.
 type AppText struct {
-	TextId      int64       `json:"textId"      description:""`
+	Id          int64       `json:"id"          description:""`
 	ParentId    int64       `json:"parentId"    description:""`
 	Enable      bool        `json:"enable"      description:"显示或屏蔽：true=显示，false=屏蔽"`
 	TextTitle   string      `json:"textTitle"   description:"文本标题"`

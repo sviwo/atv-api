@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:11
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-11 13:14:30
 // =================================================================================
 
 package entity
@@ -10,7 +10,7 @@ import (
 
 // AppVideos is the golang structure for table app_videos.
 type AppVideos struct {
-	VideosId    int64       `json:"videosId"    description:""`
+	Id          int64       `json:"id"          description:""`
 	ParentId    int64       `json:"parentId"    description:""`
 	Enable      bool        `json:"enable"      description:"显示或屏蔽：true=显示，false=屏蔽"`
 	VideosTitle string      `json:"videosTitle" description:"视频标题"`

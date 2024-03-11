@@ -7,7 +7,7 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
 	"log"
-	"sagooiot/pkg/iotModel"
+	"sviwo/pkg/iotModel"
 	"testing"
 	"time"
 )

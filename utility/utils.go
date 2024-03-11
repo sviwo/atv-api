@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gogf/gf/v2/container/glist"
 	"github.com/gogf/gf/v2/crypto/gaes"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/database/gdb"
@@ -454,4 +455,31 @@ func GfTokenDecryptToken(ctx context.Context, token string) string {
 		panic(err2)
 	}
 	return gstr.Split(string(decryptToken), "_")[0]
+}
+
+/*
+BuildTree 构建树形结构
+*/
+func BuildTree(array []map[string]interface{}) (treeDataList []interface{}) {
+	temp := make(map[string]map[string]interface{})
+	list := glist.New()
+	for _, m := range array {
+		id := gconv.String(m["id"])
+		temp[id] = m
+		list.PushBack(id)
+	}
+	for range temp {
+		//用id获取对应的map对象
+		mapObj := temp[gconv.String(list.PopFront())]
+		//使用此map对象的parentId获取他的父级
+		parentObj := temp[gconv.String(mapObj["parentId"])]
+		if parentObj == nil {
+			//对象本身没有父级则说明已经是顶级，则将自己追加为返回值元素
+			treeDataList = append(treeDataList, mapObj)
+		} else {
+			//对象本身有父级，则将自己追加为父级的children
+			parentObj["children"] = append(gconv.SliceAny(parentObj["children"]), mapObj)
+		}
+	}
+	return
 }

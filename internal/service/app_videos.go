@@ -7,7 +7,7 @@ import (
 
 type (
 	IAppVideos interface {
-		GetAppVideosTree(ctx context.Context) (out []*model.AppVideosListOutput)
+		GetAppVideosTree(ctx context.Context) (out []*model.AppVideosTreeOutput)
 	}
 )
 

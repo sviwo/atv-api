@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-08 08:43:01
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-11 13:14:36
 // =================================================================================
 
 package do
@@ -12,7 +12,7 @@ import (
 // AppText is the golang structure of table sw_app_text for DAO operations like Where/Data.
 type AppText struct {
 	g.Meta      `orm:"table:sw_app_text, do:true"`
-	TextId      interface{} //
+	Id          interface{} //
 	ParentId    interface{} //
 	Enable      interface{} // 显示或屏蔽：true=显示，false=屏蔽
 	TextTitle   interface{} // 文本标题

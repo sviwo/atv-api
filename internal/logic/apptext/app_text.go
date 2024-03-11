@@ -1,14 +1,13 @@
-package version
+package apptext
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/container/glist"
 	"github.com/gogf/gf/v2/util/gconv"
-	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
+	"sviwo/utility"
 )
 
 func init() {
@@ -21,34 +20,17 @@ func New() *sAppText {
 
 type sAppText struct{}
 
-func (s sAppText) GetAppTextTree(ctx context.Context) (out []*model.AppTextListOutput) {
+func (s sAppText) GetAppTextTree(ctx context.Context) (out []*model.AppTextTreeOutput) {
+	var array []*model.AppTextTreeOutput
 	if err := dao.AppText.Ctx(ctx).
 		Where("enable", consts.EnableDisplay).
 		Where("is_delete", consts.DeleteOn).
 		OrderAsc("orders").
-		Scan(&out); err != nil {
+		Scan(&array); err != nil {
 		panic(err)
 	}
-	if err := gconv.Structs(gutil.Values(buildTree(out)), &out); err != nil {
+	if err := gconv.Structs(utility.BuildTree(gconv.Maps(array)), &out); err != nil {
 		panic(err)
-	}
-	return
-}
-
-func buildTree(array []*model.AppTextListOutput) (outputs []*model.AppTextListOutput) {
-	temp := map[interface{}]*model.AppTextListOutput{}
-	list := glist.New()
-	for _, data := range array {
-		temp[data.TextId] = data
-		list.PushBack(data.TextId)
-	}
-	for range temp {
-		output := temp[list.PopFront()]
-		if temp[output.ParentId] == nil {
-			outputs = append(outputs, output)
-		} else {
-			temp[output.ParentId].Children = append(temp[output.ParentId].Children, output)
-		}
 	}
 	return
 }

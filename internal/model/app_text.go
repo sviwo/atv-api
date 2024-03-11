@@ -1,10 +1,10 @@
 package model
 
-type AppTextListOutput struct {
-	TextId    int64                `json:"textId"      description:""`
+type AppTextTreeOutput struct {
+	Id        int64                `json:"id"      description:""`
 	ParentId  int64                `json:"parentId"    description:""`
 	TextTitle string               `json:"textTitle"   description:"文本标题"`
-	Children  []*AppTextListOutput `json:"children"    description:""`
+	Children  []*AppTextTreeOutput `json:"children"    description:""`
 }
 
 type AppTextDetailOutput struct {
