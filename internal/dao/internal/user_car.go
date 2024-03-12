@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-01 18:29:43
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-12 18:45:03
 // ==========================================================================
 
 package internal
@@ -20,28 +20,24 @@ type UserCarDao struct {
 
 // UserCarColumns defines and stores column names for table sw_user_car.
 type UserCarColumns struct {
-	UserCarId          string //
-	CarId              string //
-	UserId             string //
-	IsSelect           string // 是否选定：false=未选定，true=已选定
-	MobileKey          string // 手机钥匙开关：false=关，true=开
-	SpeedLimit         string // 速度限制开关：false=关，true=开
-	DrivingModeType    string // 驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式
-	EnergyRecoveryType string // 动能回收类型：0=无，1=中，2=强
-	CreateTime         string //
+	UserCarId  string //
+	CarId      string //
+	UserId     string //
+	IsSelect   string // 是否选定：false=未选定，true=已选定
+	MobileKey  string // 手机钥匙开关：false=关，true=开
+	SpeedLimit string // 速度限制开关：false=关，true=开
+	CreateTime string //
 }
 
 // userCarColumns holds the columns for table sw_user_car.
 var userCarColumns = UserCarColumns{
-	UserCarId:          "user_car_id",
-	CarId:              "car_id",
-	UserId:             "user_id",
-	IsSelect:           "is_select",
-	MobileKey:          "mobile_key",
-	SpeedLimit:         "speed_limit",
-	DrivingModeType:    "driving_mode_type",
-	EnergyRecoveryType: "energy_recovery_type",
-	CreateTime:         "create_time",
+	UserCarId:  "user_car_id",
+	CarId:      "car_id",
+	UserId:     "user_id",
+	IsSelect:   "is_select",
+	MobileKey:  "mobile_key",
+	SpeedLimit: "speed_limit",
+	CreateTime: "create_time",
 }
 
 // NewUserCarDao creates and returns a new DAO object for table data access.

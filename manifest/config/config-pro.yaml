@@ -43,13 +43,6 @@ gfToken:
   LoginPath: "/login"
   LogoutPath: "/logout"
 
-oss:
-  fileUrlPrefix: xxx
-  endpoint: xxx
-  accessKeyID: xxx
-  accessKeySecret: xxx
-  bucket: xxx
-
 email:
   host: smtp.gmail.com
   port: 587
@@ -66,10 +59,48 @@ mqtt:
 #    userName: admin
 #    userPassWorld: 123456
 
-#TDengine配置
-tdengine:
-  type: "taosRestful" #http连接方式，端口是6041
-  dsn: "root:taosdata@http(192.168.0.76:6041)/"
-  dbName: "sviwo_iot"
-  maxOpenConns: 10
-  maxIdleConns: 5
+# 时序数据库配置
+tsd:
+  database: "TdEngine" #可选择 TdEngine、Influxdb
+  tdengine:
+    #  type: "taosRestful" #http连接方式，端口是6041
+    #  dsn: "root:taosdata@http(127.0.0.1:6041)/"
+    type: "taosWS" #http连接方式，端口是6041
+    dsn: "root:taosdata@ws(114.115.135.233:6041)/"
+    dbName: "sviwo_iot"
+    maxOpenConns: 2000
+    maxIdleConns: 80
+  influxdb:
+    addr: "http://localhost:8086"
+    org: "sviwo"
+    dbName: "sviwo_iot"
+    token: "ez4BQ5QQCUpcAp1FDhhdY9jfcvxq2Z9OLkQSuQG_IPOzE9GvGRHfRm_YYwfuHtCaS7TVefxhEnzCOHi_nGtsCw=="
+    userName:
+    passWord:
+  aggregator: #聚合器配置，用来配置批量写入时的聚合器
+    batchSize: 1000 #批处理数
+    workers: 100 #工作线程数
+    channelBufferSize: 50000  #通道缓冲数
+    lingerTime: 100 # 防止数据积压时间，单位毫秒
+
+#阿里云
+aliyun:
+  accessKeyID: LTAI5tLnA6rbeAnmpMtsh6vE
+  accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
+  oss:
+    fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
+    endpoint: oss-cn-chengdu.aliyuncs.com
+    bucket: test-sviwo-car-oss
+  amqp:
+    clientId: "sviwo-001" #实例ID
+    iotInstanceId: "iot-060aapw2" #实例ID
+    host: "iot-060aapw2.amqp.iothub.aliyuncs.com"
+    consumerGroupId: "4szfGy4iu2TZyCkRvO4J000100"
+  iotApi:
+    host: "iot.cn-shanghai.aliyuncs.com"
+
+#缓存
+cache:
+  prefix: "SviwoIot_Sys:" #缓存前缀
+  adapter: "redis"                    # 缓存驱动方式，支持：memory|redis|file，不填默认memory
+  fileDir: "./storage/cache"         # 文件缓存路径，adapter=file时必填
