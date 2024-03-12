@@ -462,15 +462,16 @@ BuildTree 构建树形结构
 */
 func BuildTree(array []map[string]interface{}) (treeDataList []interface{}) {
 	temp := make(map[string]map[string]interface{})
-	list := glist.New()
+	//此list是为了保持数据顺序使用
+	orderList := glist.New()
 	for _, m := range array {
 		id := gconv.String(m["id"])
 		temp[id] = m
-		list.PushBack(id)
+		orderList.PushBack(id)
 	}
 	for range temp {
-		//用id获取对应的map对象
-		mapObj := temp[gconv.String(list.PopFront())]
+		//根据orderList有序的id获取对应的map对象
+		mapObj := temp[gconv.String(orderList.PopFront())]
 		//使用此map对象的parentId获取他的父级
 		parentObj := temp[gconv.String(mapObj["parentId"])]
 		if parentObj == nil {
