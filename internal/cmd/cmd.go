@@ -55,8 +55,8 @@ var (
 					)
 				})
 			})
-			s.Run()
 			boot.Boot(ctx)
+			s.Run()
 			return nil
 		},
 	}
