@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
+	"sviwo/internal/network/core/logic/model"
 	"sviwo/internal/service"
 )
 
@@ -13,12 +14,12 @@ type NoDeferFunc struct {
 }
 
 var InitFuncNoDeferListForIotCore = []NoDeferFunc{
+	{model.InitCoreLogic, "核心处理逻辑"},
 	{service.TSLTable().CreateDatabase, "时序数据库创建"},
-	{service.TdLogTable().CreateStable, "时序库日志表创建"},
 	{service.TdLogTable().CreateStable, "时序库日志表创建"},
 }
 
-func InitTDengineFunc(ctx context.Context, noDeferFuncList []NoDeferFunc) error {
+func InitSystem(ctx context.Context, noDeferFuncList []NoDeferFunc) error {
 	for _, funcNode := range noDeferFuncList {
 		g.Log().Infof(ctx, "开始初始化%s", funcNode.Desc)
 		if err := funcNode.F(ctx); err != nil {

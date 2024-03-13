@@ -42,13 +42,13 @@ Boot
 func Boot(ctx context.Context) {
 	model.InitCoreLogic(ctx)
 	initSnowflake()
-	initTDengine(ctx)
 	initSendEmail(ctx)
 	go initAmqp(ctx)
+	initTDengine(ctx)
 }
 
 func initTDengine(ctx context.Context) {
-	err := InitTDengineFunc(ctx, InitFuncNoDeferListForIotCore)
+	err := InitSystem(ctx, InitFuncNoDeferListForIotCore)
 	if err != nil {
 		fmt.Printf("defer func error: %s\n", err.Error())
 	}

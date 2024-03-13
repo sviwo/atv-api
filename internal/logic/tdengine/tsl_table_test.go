@@ -72,3 +72,28 @@ func TestDelTag(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestCreateDevStable(t *testing.T) {
+	taos, err := service.TdEngine().GetConn(context.Background(), "sviwo_iot")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var name string
+	err = taos.QueryRow("SELECT stable_name FROM information_schema.ins_stables WHERE stable_name = 'device_speed' LIMIT 1").Scan(&name)
+	if name != "" {
+		return
+	}
+
+	//sql1 := "CREATE STABLE device_electricity (ts TIMESTAMP, Electricity int, RemainMile double) TAGS (device VARCHAR(255))"
+	//_, err = taos.Exec(sql1)
+	//
+	//sql2 := "CREATE STABLE device_speed (ts TIMESTAMP, VehSpeed int, RotateSpeed int) TAGS (device VARCHAR(255))"
+	//_, err = taos.Exec(sql2)
+
+	//sql3 := "INSERT INTO ? USING device_electricity TAGS ('?') VALUES (NOW(), '?', '?')"
+	//_, err = taos.Exec(sql3, consts.TdDevicePrefix+"electricity_sviwo001", "sviwo001", 90, 1800.00)
+	//
+	//sql4 := "INSERT INTO ? USING device_speed TAGS ('?') VALUES (NOW(), '?', '?')"
+	//_, err = taos.Exec(sql4, consts.TdDevicePrefix+"speed_sviwo001", "sviwo001", 80, 260)
+
+}
