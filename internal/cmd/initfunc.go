@@ -1,4 +1,4 @@
-package boot
+package cmd
 
 import (
 	"context"

@@ -93,13 +93,14 @@ aliyun:
     fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
     endpoint: oss-cn-chengdu.aliyuncs.com
     bucket: test-sviwo-car-oss
-  amqp:
-    clientId: "sviwo-001" #实例ID
+  iot:
     iotInstanceId: "iot-060aapw2" #实例ID
-    host: "iot-060aapw2.amqp.iothub.aliyuncs.com"
-    consumerGroupId: "4szfGy4iu2TZyCkRvO4J000100"
-  iotApi:
-    host: "iot.cn-shanghai.aliyuncs.com"
+    clientId: "sviwo-001" #实例ID
+    amqp:
+      host: "iot-060aapw2.amqp.iothub.aliyuncs.com"
+      consumerGroupId: "4szfGy4iu2TZyCkRvO4J000100"
+    api:
+      host: "iot.cn-shanghai.aliyuncs.com"
 
 #缓存
 cache:
