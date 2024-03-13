@@ -60,7 +60,7 @@ func initSnowflake() {
 }
 
 func initAliyunIotApi(ctx context.Context) {
-	err := aliyun.InitAliyunClient()
+	err := aliyun.InitAliyunIotClient()
 	if err != nil {
 		panic(err)
 	}

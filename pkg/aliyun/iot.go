@@ -16,7 +16,7 @@ import (
 
 var iotClient *iot20180120.Client
 
-func InitAliyunClient() error {
+func InitAliyunIotClient() error {
 	var ctx = gctx.New()
 	accessKeyID := g.Cfg().MustGet(ctx, "aliyun.accessKeyID").String()
 	accessKeySecret := g.Cfg().MustGet(ctx, "aliyun.accessKeySecret").String()
