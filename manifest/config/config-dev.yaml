@@ -65,10 +65,10 @@ mqtt:
 tsd:
   database: "TdEngine" #可选择 TdEngine、Influxdb
   tdengine:
-    #  type: "taosRestful" #http连接方式，端口是6041
-    #  dsn: "root:taosdata@http(127.0.0.1:6041)/"
-    type: "taosWS" #http连接方式，端口是6041
-    dsn: "root:taosdata@ws(114.115.135.233:6041)/"
+    type: "taosRestful" #http连接方式，端口是6041
+    dsn: "root:taosdata@http(114.115.135.233:6041)/"
+#    type: "taosWS" #http连接方式，端口是6041
+#    dsn: "root:taosdata@ws(114.115.135.233:6041)/"
     dbName: "sviwo_iot"
     maxOpenConns: 2000
     maxIdleConns: 80

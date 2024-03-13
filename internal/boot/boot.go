@@ -10,7 +10,6 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"gopkg.in/gomail.v2"
 	"sviwo/internal/network/core/logic/model"
-	"sviwo/internal/service"
 	"sviwo/pkg/amqp"
 	"time"
 )
@@ -43,18 +42,15 @@ Boot
 func Boot(ctx context.Context) {
 	model.InitCoreLogic(ctx)
 	initSnowflake()
-	initTDengine(ctx)
 	initSendEmail(ctx)
 	go initAmqp(ctx)
+	initTDengine(ctx)
 }
 
 func initTDengine(ctx context.Context) {
-	// TDengine 初始化
-	if err := service.TSLTable().CreateDatabase(ctx); err != nil {
-		g.Log().Fatal(ctx, "TDengine 数据库创建失败：", err)
-	}
-	if err := service.TdLogTable().CreateStable(ctx); err != nil {
-		g.Log().Fatal(ctx, "TDengine 日志超级表创建失败：", err)
+	err := InitSystem(ctx, InitFuncNoDeferListForIotCore)
+	if err != nil {
+		fmt.Printf("defer func error: %s\n", err.Error())
 	}
 }
 
