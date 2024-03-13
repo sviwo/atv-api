@@ -15,7 +15,6 @@ type NoDeferFunc struct {
 var InitFuncNoDeferListForIotCore = []NoDeferFunc{
 	{service.TSLTable().CreateDatabase, "时序数据库创建"},
 	{service.TdLogTable().CreateStable, "时序库日志表创建"},
-	{service.TdLogTable().CreateStable, "时序库日志表创建"},
 }
 
 func InitTDengineFunc(ctx context.Context, noDeferFuncList []NoDeferFunc) error {
