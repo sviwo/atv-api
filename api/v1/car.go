@@ -51,22 +51,22 @@ type EnabledSpeedLimitReq struct {
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
-type ControlCarLampReq struct {
+type CtlLampReq struct {
 	g.Meta `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
-type ControlCarHornReq struct {
+type CtlHornReq struct {
 	g.Meta `path:"/car/control/horn" method:"post" tags:"车辆相关" sm:"控制喇叭"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
-type ControlCarSwitchDriveModeReq struct {
-	g.Meta `path:"/car/control/switch/driveMode" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
+type CtlSwitchDTReq struct {
+	g.Meta `path:"/car/control/switch/dt" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }
 
-type ControlCarSwitchEnergyRecoveryTypeReq struct {
-	g.Meta `path:"/car/Control/switch/energyRecoveryType" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
+type CtlSwitchERTReq struct {
+	g.Meta `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
 	CarId  int64 `json:"carId"           dc:""          v:"required"`
 }

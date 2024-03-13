@@ -11,6 +11,5 @@ import (
 )
 
 func main() {
-	ctx := gctx.GetInitCtx()
-	cmd.Main.Run(ctx)
+	cmd.Main.Run(gctx.New())
 }
