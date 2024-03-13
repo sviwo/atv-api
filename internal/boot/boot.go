@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"gopkg.in/gomail.v2"
 	"sviwo/internal/network/core/logic/model"
+	"sviwo/pkg/aliyun"
 	"sviwo/pkg/amqp"
 	"time"
 )
@@ -31,6 +32,7 @@ var (
 初始化细节，一旦出现错误时，很难快速定位错误原因。因此使用隐式初始化时，往往要求在初始化出错时将详细的错误以及堆栈信息打印出来便于错误定位。
 */
 func init() {
+
 }
 
 /*
@@ -42,16 +44,11 @@ Boot
 func Boot(ctx context.Context) {
 	model.InitCoreLogic(ctx)
 	initSnowflake()
-	initTDengine(ctx)
 	initSendEmail(ctx)
+	initSendEmail(ctx)
+	initAliyunIotApi(ctx)
 	go initAmqp(ctx)
-}
 
-func initTDengine(ctx context.Context) {
-	err := InitTDengineFunc(ctx, InitFuncNoDeferListForIotCore)
-	if err != nil {
-		fmt.Printf("defer func error: %s\n", err.Error())
-	}
 }
 
 func initSnowflake() {
@@ -60,6 +57,13 @@ func initSnowflake() {
 		panic(err)
 	}
 	GID = Node
+}
+
+func initAliyunIotApi(ctx context.Context) {
+	err := aliyun.InitAliyunIotClient()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func initSendEmail(ctx context.Context) {
@@ -74,10 +78,10 @@ func initSendEmail(ctx context.Context) {
 func initAmqp(ctx context.Context) {
 	accessKey := g.Cfg().MustGet(ctx, "aliyun.accessKeyID").String()
 	accessSecret := g.Cfg().MustGet(ctx, "aliyun.accessKeySecret").String()
-	host := g.Cfg().MustGet(ctx, "aliyun.amqp.host").String()
-	clientId := g.Cfg().MustGet(ctx, "aliyun.amqp.clientId").String()
-	iotInstanceId := g.Cfg().MustGet(ctx, "aliyun.amqp.iotInstanceId").String()
-	consumerGroupId := g.Cfg().MustGet(ctx, "aliyun.amqp.consumerGroupId").String()
+	clientId := g.Cfg().MustGet(ctx, "aliyun.iot.clientId").String()
+	iotInstanceId := g.Cfg().MustGet(ctx, "aliyun.iot.iotInstanceId").String()
+	host := g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
+	consumerGroupId := g.Cfg().MustGet(ctx, "aliyun.iot.amqp.consumerGroupId").String()
 	address := "amqps://" + host + ":5671"
 	timestamp := time.Now().Nanosecond() / 1000000
 	//userName组装方法，请参见AMQP客户端接入说明文档。
