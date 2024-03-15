@@ -1,4 +1,4 @@
-package event
+package onoffline
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 
 func Init() (err error) {
 	//  /sys/${productKey}/${devicekey}/thing/event/${tsl.event.identifier}/post
-	if err = core.RegisterSubTopicHandler(sagooProtocol.EvnetTopic, consts.MsgTypeEvent, ReportEvent); err != nil {
+	if err = core.RegisterSubTopicHandler(sagooProtocol.PropertyOnOfflineTopic, consts.MsgTypeEvent, OnOff); err != nil {
 		return err
 	}
 	return nil
 }
 
 // 事件上报
-func ReportEvent(ctx context.Context, data topicModel.TopicHandlerData) error {
-	fmt.Println("-----------事件上报-------", string(data.PayLoad))
+func OnOff(ctx context.Context, data topicModel.TopicHandlerData) error {
+	fmt.Println("-----------设备上下线-------", string(data.PayLoad))
 	return nil
 }
