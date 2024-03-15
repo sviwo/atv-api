@@ -10,21 +10,21 @@ type (
 		GetCarList(ctx context.Context) (out []*model.QueryCarOutput)
 		DelCar(ctx context.Context, carId int64)
 		/*
-			ControlCarLamp 控制车灯
+			CtlLamp 控制车灯
 		*/
-		ControlCarLamp(ctx context.Context, carId int64)
+		CtlLamp(ctx context.Context, carId int64)
 		/*
-			ControlCarHorn 控制喇叭
+			CtlHorn 控制喇叭
 		*/
-		ControlCarHorn(ctx context.Context, carId int64)
+		CtlHorn(ctx context.Context, carId int64)
 		/*
-			ControlCarSwitchMode 切换驾驶模式
+			CtlSwitchDriveType 切换驾驶模式
 		*/
-		ControlCarSwitchDriveMode(ctx context.Context, in model.ControlCarSwitchDMInput)
+		CtlSwitchDriveType(ctx context.Context, in model.CtlSwitchDTInput)
 		/*
-			ControlCarSwitchEnergyRecoveryType 切换动能回收模式
+			CtlSwitchEnergyRecoveryType 切换动能回收模式
 		*/
-		ControlCarSwitchEnergyRecoveryType(ctx context.Context, in model.ControlCarSwitchERTypeInput)
+		CtlSwitchEnergyRecoveryType(ctx context.Context, in model.CtlSwitchERTInput)
 		/*
 			EnabledMobileKey 开启/关闭蓝牙钥匙
 		*/

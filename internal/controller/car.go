@@ -55,42 +55,42 @@ func (c cCar) EnabledSpeedLimit(ctx context.Context, req *v1.EnabledSpeedLimitRe
 }
 
 /*
-ControlCarLamp 控制车灯
+CtlLamp 控制车灯
 */
-func (c cCar) ControlCarLamp(ctx context.Context, req *v1.ControlCarLampReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().ControlCarLamp(ctx, req.CarId)
+func (c cCar) CtlLamp(ctx context.Context, req *v1.CtlLampReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().CtlLamp(ctx, req.CarId)
 	return
 }
 
 /*
-ControlCarHorn 控制喇叭
+CtlHorn 控制喇叭
 */
-func (c cCar) ControlCarHorn(ctx context.Context, req *v1.ControlCarHornReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().ControlCarHorn(ctx, req.CarId)
+func (c cCar) CtlHorn(ctx context.Context, req *v1.CtlHornReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().CtlHorn(ctx, req.CarId)
 	return
 }
 
 /*
-ControlCarSwitchDriveMode 切换驾驶模式
+CtlSwitchDriveType 切换驾驶模式
 */
-func (c cCar) ControlCarSwitchDriveMode(ctx context.Context, req *v1.ControlCarSwitchDriveModeReq) (res *v1.EmptyFieldRes, err error) {
-	data := model.ControlCarSwitchDMInput{}
+func (c cCar) CtlSwitchDriveType(ctx context.Context, req *v1.CtlSwitchDTReq) (res *v1.EmptyFieldRes, err error) {
+	data := model.CtlSwitchDTInput{}
 	if err = gconv.Struct(req, &data); err != nil {
 		panic(err)
 	}
-	service.Car().ControlCarSwitchDriveMode(ctx, data)
+	service.Car().CtlSwitchDriveType(ctx, data)
 	return
 }
 
 /*
-ControlCarSwitchEnergyRecoveryType 切换动能回收模式
+CtlSwitchEnergyRecoveryType 切换动能回收模式
 */
-func (c cCar) ControlCarSwitchEnergyRecoveryType(ctx context.Context, req *v1.ControlCarSwitchEnergyRecoveryTypeReq) (
+func (c cCar) CtlSwitchEnergyRecoveryType(ctx context.Context, req *v1.CtlSwitchERTReq) (
 	res *v1.EmptyFieldRes, err error) {
-	data := model.ControlCarSwitchERTypeInput{}
+	data := model.CtlSwitchERTInput{}
 	if err = gconv.Struct(req, &data); err != nil {
 		panic(err)
 	}
-	service.Car().ControlCarSwitchEnergyRecoveryType(ctx, data)
+	service.Car().CtlSwitchEnergyRecoveryType(ctx, data)
 	return
 }

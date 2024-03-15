@@ -62,13 +62,6 @@ gfToken:
   LoginPath: "/login"
   LogoutPath: "/logout"
 
-oss:
-  fileUrlPrefix: https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/
-  endpoint: oss-cn-chengdu.aliyuncs.com
-  accessKeyID: LTAI5tLnA6rbeAnmpMtsh6vE
-  accessKeySecret: uE34y1Ccv3U98jHDGMVdRC15s0sQL3
-  bucket: test-sviwo-car-oss
-
 email:
   host: smtp.gmail.com
   port: 587

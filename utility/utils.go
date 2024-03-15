@@ -20,8 +20,10 @@ import (
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"gopkg.in/gomail.v2"
+	"io"
 	"math/rand"
 	"net"
+	"net/http"
 	"strconv"
 	"strings"
 	"sviwo/internal/boot"
@@ -462,15 +464,16 @@ BuildTree 构建树形结构
 */
 func BuildTree(array []map[string]interface{}) (treeDataList []interface{}) {
 	temp := make(map[string]map[string]interface{})
-	list := glist.New()
+	//此list是为了保持数据顺序使用
+	orderList := glist.New()
 	for _, m := range array {
 		id := gconv.String(m["id"])
 		temp[id] = m
-		list.PushBack(id)
+		orderList.PushBack(id)
 	}
 	for range temp {
-		//用id获取对应的map对象
-		mapObj := temp[gconv.String(list.PopFront())]
+		//根据orderList有序的id获取对应的map对象
+		mapObj := temp[gconv.String(orderList.PopFront())]
 		//使用此map对象的parentId获取他的父级
 		parentObj := temp[gconv.String(mapObj["parentId"])]
 		if parentObj == nil {
@@ -482,4 +485,77 @@ func BuildTree(array []map[string]interface{}) (treeDataList []interface{}) {
 		}
 	}
 	return
+}
+
+// GetPublicIP 获取公网IP
+func GetPublicIP() (ip string, err error) {
+	resp, err := http.Get("https://ifconfig.co/ip")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer func(Body io.ReadCloser) {
+		if err := Body.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	ip = string(body)
+	// 去除空格
+	ip = strings.Replace(ip, " ", "", -1)
+	// 去除换行符
+	ip = strings.Replace(ip, "\n", "", -1)
+
+	return
+}
+
+// RemoveDuplicationMap 数组去重
+func RemoveDuplicationMap(arr []string) []string {
+	set := make(map[string]struct{}, len(arr))
+	j := 0
+	for _, v := range arr {
+		_, ok := set[v]
+		if ok {
+			continue
+		}
+		set[v] = struct{}{}
+		arr[j] = v
+		j++
+	}
+	return arr[:j]
+}
+
+func RemoveRepeatedElementAndEmpty(arr []int) []int {
+	newArr := make([]int, 0)
+	for _, item := range arr {
+		repeat := false
+		if len(newArr) > 0 {
+			for _, v := range newArr {
+				if v == item {
+					repeat = true
+					break
+				}
+			}
+		}
+		if repeat {
+			continue
+		}
+		newArr = append(newArr, item)
+	}
+	return newArr
+}
+
+// FileSize 字节的单位转换 保留两位小数
+func FileSize(fileSize int64) string {
+	units := []string{"B", "KB", "MB", "GB", "TB", "EB"}
+	var size = float64(fileSize)
+	var i int
+	for i = 0; size > 1024; i++ {
+		size /= 1024
+	}
+	return fmt.Sprintf("%.2f %s", size, units[i])
 }

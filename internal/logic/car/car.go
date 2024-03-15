@@ -52,16 +52,16 @@ func (s sCar) DelCar(ctx context.Context, carId int64) {
 	}
 }
 
-func (s sCar) ControlCarLamp(ctx context.Context, carId int64) {
+func (s sCar) CtlLamp(ctx context.Context, carId int64) {
 }
 
-func (s sCar) ControlCarHorn(ctx context.Context, carId int64) {
+func (s sCar) CtlHorn(ctx context.Context, carId int64) {
 }
 
-func (s sCar) ControlCarSwitchDriveMode(ctx context.Context, in model.ControlCarSwitchDMInput) {
+func (s sCar) CtlSwitchDriveType(ctx context.Context, in model.CtlSwitchDTInput) {
 }
 
-func (s sCar) ControlCarSwitchEnergyRecoveryType(ctx context.Context, in model.ControlCarSwitchERTypeInput) {
+func (s sCar) CtlSwitchEnergyRecoveryType(ctx context.Context, in model.CtlSwitchERTInput) {
 }
 
 func (s sCar) EnabledMobileKey(ctx context.Context, carId int64) {

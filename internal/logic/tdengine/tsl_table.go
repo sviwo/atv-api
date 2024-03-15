@@ -203,6 +203,10 @@ func (s *sTSLTable) DropTable(ctx context.Context, table string) (err error) {
 
 // 创建数据库
 func (s *sTSLTable) CreateDatabase(ctx context.Context) (err error) {
+	return CreateTDDatabase(ctx)
+}
+
+func CreateTDDatabase(ctx context.Context) (err error) {
 	// 资源锁
 	lockKey := "tdLock:initDb"
 	lockVal, err := g.Redis().Do(ctx, "SET", lockKey, gtime.Now().Unix(), "NX", "EX", "3600")

@@ -26,6 +26,10 @@ func tdLogTableNew() *sTdLogTable {
 
 // 添加超级表
 func (s *sTdLogTable) CreateStable(ctx context.Context) (err error) {
+	return CreateStable(ctx)
+}
+
+func CreateStable(ctx context.Context) (err error) {
 	// 资源锁
 	lockKey := "tdLock:initLogTable"
 	lockVal, err := g.Redis().Do(ctx, "SET", lockKey, gtime.Now().Unix(), "NX", "EX", "3600")
