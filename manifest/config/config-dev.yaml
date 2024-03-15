@@ -4,6 +4,18 @@ server:
   swaggerPath: "/swagger"
   clientMaxBodySize: "10MB"
 
+# 系统配置
+system:
+  ipMethod: "whois"   # IP归属地解析方法，可选：cz88|whois，默认为whois
+  isCluster: false   # 是否为集群部署，默认为false。开启集群必须配置redis
+  deviceCacheData:
+    poolSize: 50 #设备数据缓存池连接数
+    recordDuration: "20m"  #设备数据缓存时长，超过时长的数据将被清除。默认为10分钟
+    recordLimit: 1000 #设备数据缓存条数限制，超过条数的数据将被清除。默认为1000条
+  pluginsPath: "./plugins/built"
+
+
+
 logger:
   path: "./logs/server/"          # 日志文件路径。默认为空，表示关闭，仅输出到终端
   file: "{Y-m-d}.log"             # 日志文件格式。默认为"{Y-m-d}.log"
@@ -30,6 +42,11 @@ redis:
     address: 114.115.135.233:7001 #redis地址
     db: 1 #db
     pass: sviwo-987dfsdrf6g46sd7q9we4sd6a5 #密码
+    minIdle: 50 #最小空闲连接数
+    maxIdle: 20 #允许闲置的最大连接数
+    maxActive: 16 #最大活跃连接数
+    idleTimeout: "30s" #连接最大空闲时间，使用时间字符串例如30s/2m/2d
+    ClientName: "SystemCache"
   cache:
     address: 114.115.135.233:7001  #地址
     db: 1   #db
