@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // =================================================================================
 
 package entity
@@ -15,8 +15,6 @@ type User struct {
 	Password    string      `json:"password"    description:""`
 	PwdSalt     string      `json:"pwdSalt"     description:"密码盐值"`
 	PwdEncryNum int         `json:"pwdEncryNum" description:"密码加密次数"`
-	PublicKey   string      `json:"publicKey"   description:""`
-	PrivateKey  string      `json:"privateKey"  description:""`
 	FirstName   string      `json:"firstName"   description:""`
 	LastName    string      `json:"lastName"    description:""`
 	Enable      bool        `json:"enable"      description:"账号是否可用：true=正常，false=停用"`

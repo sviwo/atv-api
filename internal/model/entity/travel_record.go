@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-26 19:31:45
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // =================================================================================
 
 package entity
@@ -12,7 +12,7 @@ import (
 type TravelRecord struct {
 	TravelRecordId int64       `json:"travelRecordId" description:""`
 	UserId         int64       `json:"userId"         description:"用户ID"`
-	CarId          int64       `json:"carId"          description:"车辆ID"`
+	DeviceId       int64       `json:"deviceId"       description:"设备ID"`
 	StartPoint     string      `json:"startPoint"     description:"起点"`
 	EndPoint       string      `json:"endPoint"       description:"终点"`
 	MileageDriven  int         `json:"mileageDriven"  description:"行驶里程，单位（m）"`

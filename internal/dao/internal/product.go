@@ -11,66 +11,64 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// BatteryDao is the data access object for table sw_battery.
-type BatteryDao struct {
+// ProductDao is the data access object for table sw_product.
+type ProductDao struct {
 	table   string         // table is the underlying table name of the DAO.
 	group   string         // group is the database configuration group name of current DAO.
-	columns BatteryColumns // columns contains all the column names of Table for convenient usage.
+	columns ProductColumns // columns contains all the column names of Table for convenient usage.
 }
 
-// BatteryColumns defines and stores column names for table sw_battery.
-type BatteryColumns struct {
-	BatteryId   string //
-	CarId       string // 车辆id
-	BatteryCode string // 电池编号
-	BatteryTemp string // 电池温度
-	CreateTime  string //
-	UpdateTime  string //
-	IsDelete    string // 是否删除：true=已删除，false=正常
+// ProductColumns defines and stores column names for table sw_product.
+type ProductColumns struct {
+	ProductId    string //
+	ProductName  string // 产品名称
+	ProductModel string // 产品型号
+	CreateTime   string //
+	UpdateTime   string //
+	IsDelete     string // 是否删除：true=已删除，false=正常
 }
 
-// batteryColumns holds the columns for table sw_battery.
-var batteryColumns = BatteryColumns{
-	BatteryId:   "battery_id",
-	CarId:       "car_id",
-	BatteryCode: "battery_code",
-	BatteryTemp: "battery_temp",
-	CreateTime:  "create_time",
-	UpdateTime:  "update_time",
-	IsDelete:    "is_delete",
+// productColumns holds the columns for table sw_product.
+var productColumns = ProductColumns{
+	ProductId:    "product_id",
+	ProductName:  "product_name",
+	ProductModel: "product_model",
+	CreateTime:   "create_time",
+	UpdateTime:   "update_time",
+	IsDelete:     "is_delete",
 }
 
-// NewBatteryDao creates and returns a new DAO object for table data access.
-func NewBatteryDao() *BatteryDao {
-	return &BatteryDao{
+// NewProductDao creates and returns a new DAO object for table data access.
+func NewProductDao() *ProductDao {
+	return &ProductDao{
 		group:   "default",
-		table:   "sw_battery",
-		columns: batteryColumns,
+		table:   "sw_product",
+		columns: productColumns,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of current DAO.
-func (dao *BatteryDao) DB() gdb.DB {
+func (dao *ProductDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of current dao.
-func (dao *BatteryDao) Table() string {
+func (dao *ProductDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of current dao.
-func (dao *BatteryDao) Columns() BatteryColumns {
+func (dao *ProductDao) Columns() ProductColumns {
 	return dao.columns
 }
 
 // Group returns the configuration group name of database of current dao.
-func (dao *BatteryDao) Group() string {
+func (dao *ProductDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns the Model for current DAO, It automatically sets the context for current operation.
-func (dao *BatteryDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *ProductDao) Ctx(ctx context.Context) *gdb.Model {
 	return dao.DB().Model(dao.table).Safe().Ctx(ctx)
 }
 
@@ -80,6 +78,6 @@ func (dao *BatteryDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note that, you should not Commit or Rollback the transaction in function f
 // as it is automatically handled by this function.
-func (dao *BatteryDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *ProductDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

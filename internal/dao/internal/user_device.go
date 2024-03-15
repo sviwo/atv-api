@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-12 18:45:03
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // ==========================================================================
 
 package internal
@@ -11,17 +11,17 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// UserCarDao is the data access object for table sw_user_car.
-type UserCarDao struct {
-	table   string         // table is the underlying table name of the DAO.
-	group   string         // group is the database configuration group name of current DAO.
-	columns UserCarColumns // columns contains all the column names of Table for convenient usage.
+// UserDeviceDao is the data access object for table sw_user_device.
+type UserDeviceDao struct {
+	table   string            // table is the underlying table name of the DAO.
+	group   string            // group is the database configuration group name of current DAO.
+	columns UserDeviceColumns // columns contains all the column names of Table for convenient usage.
 }
 
-// UserCarColumns defines and stores column names for table sw_user_car.
-type UserCarColumns struct {
-	UserCarId  string //
-	CarId      string //
+// UserDeviceColumns defines and stores column names for table sw_user_device.
+type UserDeviceColumns struct {
+	Id         string //
+	DeviceId   string //
 	UserId     string //
 	IsSelect   string // 是否选定：false=未选定，true=已选定
 	MobileKey  string // 手机钥匙开关：false=关，true=开
@@ -29,10 +29,10 @@ type UserCarColumns struct {
 	CreateTime string //
 }
 
-// userCarColumns holds the columns for table sw_user_car.
-var userCarColumns = UserCarColumns{
-	UserCarId:  "user_car_id",
-	CarId:      "car_id",
+// userDeviceColumns holds the columns for table sw_user_device.
+var userDeviceColumns = UserDeviceColumns{
+	Id:         "id",
+	DeviceId:   "device_id",
 	UserId:     "user_id",
 	IsSelect:   "is_select",
 	MobileKey:  "mobile_key",
@@ -40,37 +40,37 @@ var userCarColumns = UserCarColumns{
 	CreateTime: "create_time",
 }
 
-// NewUserCarDao creates and returns a new DAO object for table data access.
-func NewUserCarDao() *UserCarDao {
-	return &UserCarDao{
+// NewUserDeviceDao creates and returns a new DAO object for table data access.
+func NewUserDeviceDao() *UserDeviceDao {
+	return &UserDeviceDao{
 		group:   "default",
-		table:   "sw_user_car",
-		columns: userCarColumns,
+		table:   "sw_user_device",
+		columns: userDeviceColumns,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of current DAO.
-func (dao *UserCarDao) DB() gdb.DB {
+func (dao *UserDeviceDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of current dao.
-func (dao *UserCarDao) Table() string {
+func (dao *UserDeviceDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of current dao.
-func (dao *UserCarDao) Columns() UserCarColumns {
+func (dao *UserDeviceDao) Columns() UserDeviceColumns {
 	return dao.columns
 }
 
 // Group returns the configuration group name of database of current dao.
-func (dao *UserCarDao) Group() string {
+func (dao *UserDeviceDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns the Model for current DAO, It automatically sets the context for current operation.
-func (dao *UserCarDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *UserDeviceDao) Ctx(ctx context.Context) *gdb.Model {
 	return dao.DB().Model(dao.table).Safe().Ctx(ctx)
 }
 
@@ -80,6 +80,6 @@ func (dao *UserCarDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note that, you should not Commit or Rollback the transaction in function f
 // as it is automatically handled by this function.
-func (dao *UserCarDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *UserDeviceDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

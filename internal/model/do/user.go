@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // =================================================================================
 
 package do
@@ -17,8 +17,6 @@ type User struct {
 	Password    interface{} //
 	PwdSalt     interface{} // 密码盐值
 	PwdEncryNum interface{} // 密码加密次数
-	PublicKey   interface{} //
-	PrivateKey  interface{} //
 	FirstName   interface{} //
 	LastName    interface{} //
 	Enable      interface{} // 账号是否可用：true=正常，false=停用

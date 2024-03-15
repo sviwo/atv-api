@@ -19,19 +19,14 @@ func New() *sTravelRecord {
 
 type sTravelRecord struct{}
 
-func (s sTravelRecord) Delete(ctx context.Context, in model.TravelRecordInput) (err error) {
-	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-	_, err = dao.TravelRecord.Ctx(ctx).Data(g.Map{"is_delete": consts.DeleteOn}).Where(g.Map{"travel_record_id": in.TravelRecordId, "user_id": userId}).Update()
-	return
-}
-
-func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelRecordQueryInput) (total int, out []*model.TravelRecordOutput, err error) {
+func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelRecordQueryInput) (
+	total int, out []*model.TravelRecordOutput, err error) {
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	err = g.Try(ctx, func(ctx context.Context) {
 		m := dao.TravelRecord.Ctx(ctx)
 		m = m.Where("user_id", userId)
-		if in.CarId != 0 {
-			m = m.Where("car_id", in.CarId)
+		if in.DeviceId != 0 {
+			m = m.Where("device_id", in.DeviceId)
 		}
 		m = m.Where("is_delete", consts.DeleteOn)
 		total, err = m.Count()
@@ -44,5 +39,14 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 			panic(err)
 		}
 	})
+	return
+}
+
+func (s sTravelRecord) Delete(ctx context.Context, in model.TravelRecordInput) (err error) {
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+	_, err = dao.TravelRecord.Ctx(ctx).
+		Data(g.Map{"is_delete": consts.DeleteYes}).
+		Where(g.Map{"travel_record_id": in.TravelRecordId, "user_id": userId}).
+		Update()
 	return
 }

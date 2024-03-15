@@ -8,19 +8,19 @@ import (
 	"sviwo/internal/dao/internal"
 )
 
-// internalCarDao is internal type for wrapping internal DAO implements.
-type internalCarDao = *internal.CarDao
+// internalDeviceDao is internal type for wrapping internal DAO implements.
+type internalDeviceDao = *internal.DeviceDao
 
-// carDao is the data access object for table sw_car.
+// deviceDao is the data access object for table sw_device.
 // You can define custom methods on it to extend its functionality as you wish.
-type carDao struct {
-	internalCarDao
+type deviceDao struct {
+	internalDeviceDao
 }
 
 var (
-	// Car is globally public accessible object for table sw_car operations.
-	Car = carDao{
-		internal.NewCarDao(),
+	// Device is globally public accessible object for table sw_device operations.
+	Device = deviceDao{
+		internal.NewDeviceDao(),
 	}
 )
 

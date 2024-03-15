@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-12 18:45:03
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // =================================================================================
 
 package do
@@ -9,11 +9,11 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
-// UserCar is the golang structure of table sw_user_car for DAO operations like Where/Data.
-type UserCar struct {
-	g.Meta     `orm:"table:sw_user_car, do:true"`
-	UserCarId  interface{} //
-	CarId      interface{} //
+// UserDevice is the golang structure of table sw_user_device for DAO operations like Where/Data.
+type UserDevice struct {
+	g.Meta     `orm:"table:sw_user_device, do:true"`
+	Id         interface{} //
+	DeviceId   interface{} //
 	UserId     interface{} //
 	IsSelect   interface{} // 是否选定：false=未选定，true=已选定
 	MobileKey  interface{} // 手机钥匙开关：false=关，true=开

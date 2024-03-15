@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-02-23 10:50:21
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // ==========================================================================
 
 package internal
@@ -25,8 +25,6 @@ type UserColumns struct {
 	Password    string //
 	PwdSalt     string // 密码盐值
 	PwdEncryNum string // 密码加密次数
-	PublicKey   string //
-	PrivateKey  string //
 	FirstName   string //
 	LastName    string //
 	Enable      string // 账号是否可用：true=正常，false=停用
@@ -45,8 +43,6 @@ var userColumns = UserColumns{
 	Password:    "password",
 	PwdSalt:     "pwd_salt",
 	PwdEncryNum: "pwd_encry_num",
-	PublicKey:   "public_key",
-	PrivateKey:  "private_key",
 	FirstName:   "first_name",
 	LastName:    "last_name",
 	Enable:      "enable",

@@ -6,9 +6,9 @@ import (
 )
 
 type TravelRecordQueryReq struct {
-	g.Meta `path:"/travelRecord/list/get" method:"get" tags:"行程相关" sm:"获取行程列表"`
-	UserId int64 `json:"userId"         dc:"用户ID"     `
-	CarId  int64 `json:"carId"         dc:"车辆ID"     `
+	g.Meta   `path:"/travelRecord/list/get" method:"get" tags:"行程相关" sm:"获取行程列表"`
+	UserId   int64  `json:"userId"         dc:"用户ID"     `
+	DeviceId uint64 `json:"deviceId"       description:""`
 	CommonPaginationReq
 }
 
@@ -24,7 +24,7 @@ type TravelRecordDeleteReq struct {
 type TravelRecordReq struct {
 	TravelRecordId int64       `json:"travelRecordId" dc:""`
 	UserId         string      `json:"userId"         dc:"用户ID"`
-	CarId          string      `json:"carId"          dc:"车辆ID"`
+	DeviceId       uint64      `json:"deviceId"       description:""`
 	StartPoint     string      `json:"startPoint"     dc:"起点"`
 	EndPoint       string      `json:"endPoint"       dc:"终点"`
 	MileageDriven  int         `json:"mileageDriven"  dc:"行驶里程，单位（m）"`

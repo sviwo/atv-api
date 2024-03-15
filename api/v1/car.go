@@ -10,16 +10,15 @@ type GetCarInfoReq struct {
 }
 
 type CarInfo struct {
-	CarNickname    string      `json:"carNickname"        dc:"车辆昵称（用户自定义）"`
+	Nickname       string      `json:"nickname"           dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
 	TravelKm       int         `json:"travelKm"           dc:"行驶公里数"`
-	CarFrameCode   string      `json:"carFrameCode"       dc:"车架编号"`
-	CarMotorCode   string      `json:"carMotorCode"       dc:"车辆电机编号"`
+	DeviceCode     string      `json:"deviceCode"         dc:"设备编号（同于车架号）"`
 	AfterSalesTime *gtime.Time `json:"afterSalesTime"     dc:"保修日期"`
 	ActivationTime *gtime.Time `json:"activationTime"     dc:"激活时间"`
 }
 
 type UserCarInfo struct {
-	CarId           string `json:"carId"           dc:""`
+	DeviceId        string `json:"deviceId"           dc:""`
 	IsSelect        bool   `json:"isSelect"        dc:"是否选定：false=未选定，true=已选定"`
 	MobileKey       bool   `json:"mobileKey"       dc:"手机钥匙开关：0=关，1=开"`
 	SpeedLimit      bool   `json:"speedLimit"      dc:"速度限制开关：0=关，1=开"`
@@ -32,41 +31,41 @@ type GetCarInfoRes struct {
 }
 
 type BindingCarReq struct {
-	g.Meta       `path:"/car/binding" method:"post" tags:"车辆相关" sm:"绑定车辆"`
-	CarFrameCode string `json:"carFrameCode"       dc:"车架号"          v:"required"`
+	g.Meta     `path:"/car/binding" method:"post" tags:"车辆相关" sm:"绑定车辆"`
+	DeviceCode string `json:"deviceCode"       dc:"车架号"          v:"required"`
 }
 
 type DelCarReq struct {
-	g.Meta `path:"/car/del" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/del" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
 type EnabledMobileKeyReq struct {
-	g.Meta `path:"/car/enabled/mobileKey" method:"post" tags:"车辆相关" sm:"开启/关闭蓝牙钥匙"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/enabled/mobileKey" method:"post" tags:"车辆相关" sm:"开启/关闭蓝牙钥匙"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
 type EnabledSpeedLimitReq struct {
-	g.Meta `path:"/car/enabled/speedLimit" method:"post" tags:"车辆相关" sm:"开启/关闭速度限制"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/enabled/speedLimit" method:"post" tags:"车辆相关" sm:"开启/关闭速度限制"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
 type CtlLampReq struct {
-	g.Meta `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
 type CtlHornReq struct {
-	g.Meta `path:"/car/control/horn" method:"post" tags:"车辆相关" sm:"控制喇叭"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/control/horn" method:"post" tags:"车辆相关" sm:"控制喇叭"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
 type CtlSwitchDTReq struct {
-	g.Meta `path:"/car/control/switch/dt" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/control/switch/dt" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
 type CtlSwitchERTReq struct {
-	g.Meta `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
-	CarId  int64 `json:"carId"           dc:""          v:"required"`
+	g.Meta   `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
+	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }

@@ -8,19 +8,19 @@ import (
 	"sviwo/internal/dao/internal"
 )
 
-// internalAppLogDao is internal type for wrapping internal DAO implements.
-type internalAppLogDao = *internal.AppLogDao
+// internalProductDao is internal type for wrapping internal DAO implements.
+type internalProductDao = *internal.ProductDao
 
-// appLogDao is the data access object for table sw_app_log.
+// productDao is the data access object for table sw_product.
 // You can define custom methods on it to extend its functionality as you wish.
-type appLogDao struct {
-	internalAppLogDao
+type productDao struct {
+	internalProductDao
 }
 
 var (
-	// AppLog is globally public accessible object for table sw_app_log operations.
-	AppLog = appLogDao{
-		internal.NewAppLogDao(),
+	// Product is globally public accessible object for table sw_product operations.
+	Product = productDao{
+		internal.NewProductDao(),
 	}
 )
 

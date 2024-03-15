@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-12 18:45:03
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
 // =================================================================================
 
 package entity
@@ -8,10 +8,10 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
-// UserCar is the golang structure for table user_car.
-type UserCar struct {
-	UserCarId  uint64      `json:"userCarId"  description:""`
-	CarId      int64       `json:"carId"      description:""`
+// UserDevice is the golang structure for table user_device.
+type UserDevice struct {
+	Id         uint64      `json:"id"         description:""`
+	DeviceId   int64       `json:"deviceId"   description:""`
 	UserId     int64       `json:"userId"     description:""`
 	IsSelect   bool        `json:"isSelect"   description:"是否选定：false=未选定，true=已选定"`
 	MobileKey  bool        `json:"mobileKey"  description:"手机钥匙开关：false=关，true=开"`

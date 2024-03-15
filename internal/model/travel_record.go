@@ -3,15 +3,15 @@ package model
 import "github.com/gogf/gf/v2/os/gtime"
 
 type TravelRecordQueryInput struct {
-	UserId int64 `json:"userId"         description:"用户ID"     v:"required"`
-	CarId  int64 `json:"carId"         description:"车辆ID"     `
+	UserId   int64  `json:"userId"         description:"用户ID"     v:"required"`
+	DeviceId uint64 `json:"deviceId"       description:""`
 	CommonPaginationInput
 }
 
 type TravelRecordOutput struct {
 	TravelRecordId int64       `json:"travelRecordId" description:""`
 	UserId         int64       `json:"userId"         description:"用户ID"`
-	CarId          int64       `json:"carId"          description:"车辆ID"`
+	DeviceId       uint64      `json:"deviceId"       description:""`
 	StartPoint     string      `json:"startPoint"     description:"起点"`
 	EndPoint       string      `json:"endPoint"       description:"终点"`
 	MileageDriven  int         `json:"mileageDriven"  description:"行驶里程，单位（m）"`
@@ -24,7 +24,7 @@ type TravelRecordOutput struct {
 type TravelRecordInput struct {
 	TravelRecordId int64       `json:"travelRecordId" description:""`
 	UserId         int64       `json:"userId"         description:"用户ID"`
-	CarId          int64       `json:"carId"          description:"车辆ID"`
+	DeviceId       uint64      `json:"deviceId"       description:""`
 	StartPoint     string      `json:"startPoint"     description:"起点"`
 	EndPoint       string      `json:"endPoint"       description:"终点"`
 	MileageDriven  int         `json:"mileageDriven"  description:"行驶里程，单位（m）"`

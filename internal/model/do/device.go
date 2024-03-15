@@ -9,15 +9,15 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
-// AppText is the golang structure of table sw_app_text for DAO operations like Where/Data.
-type AppText struct {
-	g.Meta      `orm:"table:sw_app_text, do:true"`
-	Id          interface{} //
-	ParentId    interface{} //
-	Enable      interface{} // 显示或屏蔽：true=显示，false=屏蔽
-	TextTitle   interface{} // 文本标题
-	TextContent interface{} // 文本内容
-	Orders      interface{} // 排序
+// Device is the golang structure of table sw_device for DAO operations like Where/Data.
+type Device struct {
+	g.Meta      `orm:"table:sw_device, do:true"`
+	DeviceId    interface{} //
+	ProductId   interface{} // 产品ID
+	DeviceCode  interface{} // 设备编号（同于车架号）
+	DeviceName  interface{} // 设备名称
+	DeviceModel interface{} // 设备型号
+	Nickname    interface{} // 产品昵称（目前只有ATV，则等同于车辆昵称）
 	CreateTime  *gtime.Time //
 	UpdateTime  *gtime.Time //
 	IsDelete    interface{} // 是否删除：true=已删除，false=正常

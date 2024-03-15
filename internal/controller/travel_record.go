@@ -14,8 +14,7 @@ type cTravelRecord struct{}
 
 func (c cTravelRecord) GetTravelRecordList(ctx context.Context, req *v1.TravelRecordQueryReq) (res *v1.TravelRecordRes, err error) {
 	tData := model.TravelRecordQueryInput{}
-	err = gconv.Struct(req, &tData)
-	if err != nil {
+	if err = gconv.Struct(req, &tData); err != nil {
 		panic(err)
 	}
 	total, out, err := service.TravelRecord().GetTravelRecordList(ctx, tData)
@@ -31,12 +30,10 @@ func (c cTravelRecord) GetTravelRecordList(ctx context.Context, req *v1.TravelRe
 
 func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordDeleteReq) (res *v1.EmptyFieldRes, err error) {
 	tData := model.TravelRecordInput{}
-	err = gconv.Struct(req, &tData)
-	if err != nil {
+	if err = gconv.Struct(req, &tData); err != nil {
 		panic(err)
 	}
-	err = service.TravelRecord().Delete(ctx, tData)
-	if err != nil {
+	if err = service.TravelRecord().Delete(ctx, tData); err != nil {
 		panic(err)
 	}
 	return
