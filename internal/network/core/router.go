@@ -84,29 +84,17 @@ func StartSubscriber(ctx context.Context) error {
 
 func HandleMessage(ctx context.Context, message *amqp.Message) {
 	topic := message.ApplicationProperties["topic"].(string)
-	for k, _ := range subMapInfo.subTopics {
-		// 将通配符 "+" 转换为正则表达式中的 ".+"
-		regexStr := "^" + k
-		regexStr = regexp.MustCompile(`/\+/`).ReplaceAllString(regexStr, `/.+`)
-		regex := regexp.MustCompile(regexStr + "$")
-
+	for k, f := range subMapInfo.subTopics {
+		k = transTopic(k)
+		isMatch, _ := regexp.MatchString(k, topic)
 		// 匹配输入字符串
-		if regex.MatchString(topic) {
-			fmt.Println("匹配成功:", topic)
+		if isMatch {
+			err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
+			if err != nil {
+				return
+			}
 			break
 		}
-		//regexStr := strings.ReplaceAll(k, "*", ".*")
-		//regexStr = regexp.QuoteMeta(regexStr)
-		//// 将通配符替换为匹配任意字符的正则表达式
-		//regex := regexp.MustCompile("^" + regexStr + "$")
-		//if regex.MatchString(topic) {
-		//	err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
-		//	if err != nil {
-		//		return
-		//	}
-		//} else {
-		//	fmt.Println("--------未处理的data received-------:", string(message.GetData()), " properties:", message.ApplicationProperties)
-		//}
 	}
 
 	//if f, ok := subMapInfo.subTopics[topic]; ok {
@@ -118,4 +106,9 @@ func HandleMessage(ctx context.Context, message *amqp.Message) {
 	//} else {
 	//	fmt.Println("--------未处理的data received-------:", string(message.GetData()), " properties:", message.ApplicationProperties)
 	//}
+}
+
+func transTopic(topic string) string {
+	topic = strings.ReplaceAll(topic, "+", ".+")
+	return strings.ReplaceAll(topic, "#", "*")
 }

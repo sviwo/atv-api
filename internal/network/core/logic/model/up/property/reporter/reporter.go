@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"sviwo/internal/consts"
 	"sviwo/internal/network/core"
-	sagooProtocol "sviwo/pkg/iotModel/sviwoProtocol"
+	"sviwo/pkg/iotModel/sviwoProtocol"
 	"sviwo/pkg/iotModel/topicModel"
 )
 
 func Init() (err error) {
-	if err = core.RegisterSubTopicHandler(sagooProtocol.PropertySubRequestTopic, consts.MsgTypeEvent, ReportProperty); err != nil {
+	if err = core.RegisterSubTopicHandler(sviwoProtocol.PropertySubRequestTopic, consts.MsgTypeEvent, ReportProperty); err != nil {
 		return err
 	}
 	return nil
@@ -18,7 +18,7 @@ func Init() (err error) {
 
 // ReportProperty 属性上报
 func ReportProperty(ctx context.Context, data topicModel.TopicHandlerData) error {
-	fmt.Println("-----------属性上报-------", string(data.PayLoad))
+	fmt.Println("-----------属性上报-------", data)
 	return nil
 
 }
