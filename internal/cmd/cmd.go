@@ -8,6 +8,7 @@ import (
 	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/controller"
+	"sviwo/internal/logic/tdengine"
 	"sviwo/internal/service"
 )
 
@@ -57,6 +58,7 @@ var (
 			})
 			boot.Boot(ctx)
 			s.Run()
+			tdengine.Close()
 			return nil
 		},
 	}
