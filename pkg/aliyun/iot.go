@@ -52,7 +52,8 @@ func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName
 		if _err != nil {
 			return _err
 		}
-		glog.Infof(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
+		glog.Printf(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
+		//glog.Infof(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
 		return nil
 	}()
 	if tryErr != nil {
