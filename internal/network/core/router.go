@@ -5,10 +5,13 @@ import (
 	"errors"
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
+	"github.com/gogf/gf/v2/frame/g"
 	"pack.ag/amqp"
 	"regexp"
 	"strings"
+	"sviwo/internal/consts"
 	"sviwo/internal/mqtt"
+	"sviwo/internal/network/core/logic/baseLogic"
 	"sviwo/pkg/gpool"
 	"sviwo/pkg/iotModel/topicModel"
 	"sync"
@@ -90,14 +93,36 @@ func HandleMessage(ctx context.Context, message *amqp.Message) {
 			//todo 是否入库，前端展示
 			return errors.New(fmt.Sprintf("topic:%s is illegal, message(%s) ignored", topic, string(message.GetData())))
 		}
-		for k, f := range subMapInfo.subTopics {
+		//解析消息详情
+		productKey, deviceKey := topicInfo[1], topicInfo[2]
+		if topicInfo[1] == "as" {
+			productKey, deviceKey = topicInfo[4], topicInfo[5]
+		}
+		for k, handleF := range subMapInfo.subTopics {
 			k = transTopic(k)
 			isMatch, _ := regexp.MatchString(k, topic)
 			// 匹配输入字符串
 			if isMatch {
-				err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
-				if err != nil {
-					return err
+				//记录TD设备日志
+				logType := handleF.logType
+				if len(topicInfo) == 7 && topicInfo[5] == "property" {
+					logType = consts.MsgTypePropertyReport
+				}
+				go baseLogic.InertTdLog(ctx, logType, deviceKey, string(message.GetData()))
+				if err := handleF.f(ctx, topicModel.TopicHandlerData{
+					Topic:        topic,
+					ProductKey:   productKey,
+					DeviceKey:    deviceKey,
+					PayLoad:      message.GetData(),
+					DeviceDetail: nil,
+				}); err != nil {
+					if err.Error() != "ignore" {
+						return errors.New(fmt.Sprintf("handleF error: %s, topic:%s, message:%s ", err.Error(), topic, string(message.GetData())))
+
+					} else {
+						g.Log().Infof(ctx, "handleF: %s, topic:%s, message:%s, message ignored", err.Error(), topic, string(message.GetData()))
+						return nil
+					}
 				}
 				break
 			}

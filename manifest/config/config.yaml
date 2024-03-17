@@ -124,3 +124,16 @@ cache:
   prefix: "SviwoIot_Sys:" #缓存前缀
   adapter: "redis"                    # 缓存驱动方式，支持：memory|redis|file，不填默认memory
   fileDir: "./storage/cache"         # 文件缓存路径，adapter=file时必填
+
+
+#消息队列
+queue:
+  switch: true                                        # 队列开关，可选：true|false，默认为true
+  driver: "redis"                                      # 队列驱动，可选：redis|rocketmq|kafka，默认为disk
+  retry: 2                                            # 重试次数，仅rocketmq|redis支持
+  groupName: "sviwoiot"                                  # mq群组名称
+  redis:
+    address: "114.115.135.233:7001"                         # redis服务地址，默认为127.0.0.1:6379
+    db: 0                                            # 指定redis库
+    pass: "sviwo-987dfsdrf6g46sd7q9we4sd6a5"                                          # redis密码
+    timeout: 60

@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/internal/consts"
+	"sviwo/internal/service"
 	"sviwo/pkg/channelx"
 	"sviwo/pkg/iotModel"
 	"sviwo/pkg/tsd"
@@ -78,6 +79,14 @@ func deviceDataSaveBatchProcessFunc(items []interface{}) error {
 			return err
 		}
 		// 基于物模型解析数据
+		if devLog.Type == consts.MsgTypePropertyReport {
+			deviceData, err := service.DevTSLParse().ParseData(context.Background(), devLog.Device, []byte(devLog.Content))
+			if err != nil {
+				g.Log().Debug(context.Background(), "解析设备日志数据失败:", err, devLog.Content)
+				continue
+			}
+			deviceDataList[devLog.Device] = append(deviceDataList[devLog.Device], deviceData)
+		}
 
 	}
 	_, err := db.BatchInsertMultiDeviceData(deviceDataList)

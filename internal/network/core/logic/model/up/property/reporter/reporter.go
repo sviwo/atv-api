@@ -11,7 +11,7 @@ import (
 )
 
 func Init() (err error) {
-	if err = core.RegisterSubTopicHandler(sviwoProtocol.PropertySubRequestTopic, consts.MsgTypeEvent, ReportProperty); err != nil {
+	if err = core.RegisterSubTopicHandler(sviwoProtocol.PropertySubRequestTopic, consts.MsgTypePropertyReport, ReportProperty); err != nil {
 		return err
 	}
 	return nil

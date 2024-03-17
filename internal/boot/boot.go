@@ -29,11 +29,28 @@ Boot
 为对于使用者来讲并不关心底层基础模块的初始化逻辑，而业务模块的初始化大多数会采用显式初始化。
 */
 func Boot(ctx context.Context) {
-	err := InitSystem(ctx, InitFuncNoDeferListForIotCore)
+
+	deferFuncListIotCore, err := InitSystemDeferFunc(ctx)
+	defer func() {
+		for _, f := range deferFuncListIotCore {
+			if f == nil {
+				continue
+			}
+			if deferErr := f(ctx); deferErr != nil {
+				fmt.Printf("defer func error: %s\n", deferErr.Error())
+			}
+		}
+	}()
+
+	err = InitSystem(ctx, InitFuncNoDeferListForIotCore)
 	if err != nil {
 		fmt.Printf("defer func error: %s\n", err.Error())
 		panic(err)
 	}
+	if err != nil {
+		fmt.Printf("defer func error: %s\n", err.Error())
+	}
+
 }
 
 var InitFuncNoDeferListForIotCore = []NoDeferFunc{
@@ -43,6 +60,10 @@ var InitFuncNoDeferListForIotCore = []NoDeferFunc{
 	{InitAmqp, "Amqp"},
 	{tdengine.CreateTDDatabase, "时序数据库创建"},
 	{tdengine.CreateStable, "时序库日志表创建"},
+}
+
+var initFuncWithDeferList = []DeferFunc{
+	{RunQueue, "消息队列"},
 }
 
 type NoDeferFunc struct {
@@ -60,4 +81,19 @@ func InitSystem(ctx context.Context, noDeferFuncList []NoDeferFunc) error {
 		}
 	}
 	return nil
+}
+
+func InitSystemDeferFunc(ctx context.Context) ([]func(context.Context) error, error) {
+	deferFuncList := make([]func(context.Context) error, len(initFuncWithDeferList))
+	for index, deferFuncNode := range initFuncWithDeferList {
+		g.Log().Infof(ctx, "开始初始化%s", deferFuncNode.Desc)
+		if err, deferFunc := deferFuncNode.F(ctx); err != nil {
+			return nil, fmt.Errorf("初始化%s失败，错误原因是:%w", deferFuncNode.Desc, err)
+		} else {
+			deferFuncList[index] = deferFunc
+			g.Log().Infof(ctx, "初始化%s成功", deferFuncNode.Desc)
+		}
+	}
+	return deferFuncList, nil
+
 }
