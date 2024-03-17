@@ -3,7 +3,7 @@ package event
 import (
 	"context"
 	"errors"
-	"fmt"
+	"github.com/gogf/gf/v2/os/glog"
 	"strings"
 	"sviwo/internal/consts"
 	"sviwo/internal/network/core"
@@ -27,11 +27,11 @@ func ReportEvent(ctx context.Context, data topicModel.TopicHandlerData) error {
 		return reporter.ReportProperty(ctx, data)
 	}
 	topicInfo := strings.Split(data.Topic, "/")
-	eventKey := topicInfo[6]
+	eventKey := topicInfo[5]
 	if eventKey == "property" {
 		// 忽略属性上报信息
 		return errors.New("ignore")
 	}
-	fmt.Println("-----------事件上报-------", string(data.PayLoad))
+	glog.Printf(ctx, "-----------事件上报---tpoic:%s---内容：%s--", data.Topic, string(data.PayLoad))
 	return nil
 }

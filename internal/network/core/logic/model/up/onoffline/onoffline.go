@@ -2,7 +2,7 @@ package onoffline
 
 import (
 	"context"
-	"fmt"
+	"github.com/gogf/gf/v2/os/glog"
 	"sviwo/internal/consts"
 	"sviwo/internal/network/core"
 	"sviwo/pkg/iotModel/sviwoProtocol"
@@ -19,6 +19,6 @@ func Init() (err error) {
 
 // 事件上报
 func OnOff(ctx context.Context, data topicModel.TopicHandlerData) error {
-	fmt.Println("-----------设备上下线-------", data)
+	glog.Printf(ctx, "-----------设备上下线---tpoic:%s---内容：%s--", data.Topic, string(data.PayLoad))
 	return nil
 }

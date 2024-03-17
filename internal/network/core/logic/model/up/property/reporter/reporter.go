@@ -2,7 +2,7 @@ package reporter
 
 import (
 	"context"
-	"fmt"
+	"github.com/gogf/gf/v2/os/glog"
 	"strings"
 	"sviwo/internal/consts"
 	"sviwo/internal/network/core"
@@ -21,7 +21,7 @@ func Init() (err error) {
 func ReportProperty(ctx context.Context, data topicModel.TopicHandlerData) error {
 	//对存在转义字符的进行全量替换
 	payLoad := strings.ReplaceAll(string(data.PayLoad), "\\", "")
-	fmt.Println("-----------属性上报-------", payLoad)
+	glog.Printf(ctx, "-----------属性上报---tpoic:%s---内容：%s--", data.Topic, payLoad)
 	return nil
 
 }
