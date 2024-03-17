@@ -83,19 +83,27 @@ func StartSubscriber(ctx context.Context) error {
 }
 
 func HandleMessage(ctx context.Context, message *amqp.Message) {
-	topic := message.ApplicationProperties["topic"].(string)
-	for k, f := range subMapInfo.subTopics {
-		k = transTopic(k)
-		isMatch, _ := regexp.MatchString(k, topic)
-		// 匹配输入字符串
-		if isMatch {
-			err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
-			if err != nil {
-				return
-			}
-			break
+	gPool.Go(func(ctx context.Context) error {
+		topic := message.ApplicationProperties["topic"].(string)
+		topicInfo := strings.Split(topic, "/")
+		if len(topicInfo) < 3 {
+			//todo 是否入库，前端展示
+			return errors.New(fmt.Sprintf("topic:%s is illegal, message(%s) ignored", topic, string(message.GetData())))
 		}
-	}
+		for k, f := range subMapInfo.subTopics {
+			k = transTopic(k)
+			isMatch, _ := regexp.MatchString(k, topic)
+			// 匹配输入字符串
+			if isMatch {
+				err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
+				if err != nil {
+					return err
+				}
+				break
+			}
+		}
+		return nil
+	})
 
 	//if f, ok := subMapInfo.subTopics[topic]; ok {
 	//	fmt.Println("------待处理的消息data received------:", string(message.GetData()), " properties:", message.ApplicationProperties)
