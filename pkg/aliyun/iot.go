@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-var iotClient *iot20180120.Client
+var IotClient *iot20180120.Client
 
 func InitAliyunIotClient() error {
 	var ctx = gctx.New()
@@ -29,18 +29,17 @@ func InitAliyunIotClient() error {
 	}
 	config.Endpoint = tea.String(host)
 	var err error
-	iotClient, err = iot20180120.NewClient(config)
+	IotClient, err = iot20180120.NewClient(config)
 	return err
 }
 
 // 命令下发
-func PubRequest(ctx context.Context, productKey string, deviceName string, topic string, messageContent string) error {
-	pubRequest := &iot20180120.PubRequest{
-		ProductKey:     tea.String(productKey),
-		IotInstanceId:  tea.String(g.Cfg().MustGet(ctx, "aliyun.iot.iotInstanceId").String()),
-		DeviceName:     tea.String(deviceName),
-		TopicFullName:  tea.String(topic),          ///${productKey}/${deviceName}/user/get
-		MessageContent: tea.String(messageContent), //eyJ0ZXN0IjoidGFzayBwdWIgYnJvYWRjYXN0In0=
+func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName string, messageContent string) error {
+	pubRequest := &iot20180120.SetDevicePropertyRequest{
+		ProductKey:    tea.String(productKey),
+		IotInstanceId: tea.String(g.Cfg().MustGet(ctx, "aliyun.iot.iotInstanceId").String()),
+		DeviceName:    tea.String(deviceName),
+		Items:         tea.String(messageContent), //eyJ0ZXN0IjoidGFzayBwdWIgYnJvYWRjYXN0In0=
 	}
 	runtime := &util.RuntimeOptions{}
 	tryErr := func() (_e error) {
@@ -49,11 +48,12 @@ func PubRequest(ctx context.Context, productKey string, deviceName string, topic
 				_e = r
 			}
 		}()
-		resp, _err := iotClient.PubWithOptions(pubRequest, runtime)
+		resp, _err := IotClient.SetDevicePropertyWithOptions(pubRequest, runtime)
 		if _err != nil {
 			return _err
 		}
-		glog.Infof(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
+		glog.Printf(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
+		//glog.Infof(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
 		return nil
 	}()
 	if tryErr != nil {

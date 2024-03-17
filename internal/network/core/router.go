@@ -6,6 +6,7 @@ import (
 	"fmt"
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"pack.ag/amqp"
+	"regexp"
 	"strings"
 	"sviwo/internal/mqtt"
 	"sviwo/pkg/gpool"
@@ -83,13 +84,31 @@ func StartSubscriber(ctx context.Context) error {
 
 func HandleMessage(ctx context.Context, message *amqp.Message) {
 	topic := message.ApplicationProperties["topic"].(string)
-	if f, ok := subMapInfo.subTopics[topic]; ok {
-		fmt.Println("------待处理的消息data received------:", string(message.GetData()), " properties:", message.ApplicationProperties)
-		err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
-		if err != nil {
-			return
+	for k, f := range subMapInfo.subTopics {
+		k = transTopic(k)
+		isMatch, _ := regexp.MatchString(k, topic)
+		// 匹配输入字符串
+		if isMatch {
+			err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
+			if err != nil {
+				return
+			}
+			break
 		}
-	} else {
-		fmt.Println("--------未处理的data received-------:", string(message.GetData()), " properties:", message.ApplicationProperties)
 	}
+
+	//if f, ok := subMapInfo.subTopics[topic]; ok {
+	//	fmt.Println("------待处理的消息data received------:", string(message.GetData()), " properties:", message.ApplicationProperties)
+	//	err := f.f(ctx, topicModel.TopicHandlerData{Topic: topic, PayLoad: message.GetData(), DeviceDetail: nil})
+	//	if err != nil {
+	//		return
+	//	}
+	//} else {
+	//	fmt.Println("--------未处理的data received-------:", string(message.GetData()), " properties:", message.ApplicationProperties)
+	//}
+}
+
+func transTopic(topic string) string {
+	topic = strings.ReplaceAll(topic, "+", ".+")
+	return strings.ReplaceAll(topic, "#", "*")
 }

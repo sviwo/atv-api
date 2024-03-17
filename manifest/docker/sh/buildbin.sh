@@ -16,19 +16,19 @@ build() {
 
 dev(){
   build
-  cp ./manifest/config/config-dev.yaml ./manifest/docker/sviwo/config/config-dev.yaml
+  cp ./manifest/config/config.yaml ./manifest/docker/sviwo/config/config.yaml
   echo "Copy config-dev.yaml success!!!"
 }
 
 pro(){
   build
-  cp ./manifest/config/config-pro.yaml ./manifest/docker/sviwo/config/config-dev.yaml
+  cp ./manifest/config/config-pro.yaml ./manifest/docker/sviwo/config/config.yaml
   echo "Copy config-pro.yaml success!!!"
 }
 
 testing(){
   build
-  cp ./manifest/config/config-test.yaml ./manifest/docker/sviwo/config/config-dev.yaml
+  cp ./manifest/config/config-test.yaml ./manifest/docker/sviwo/config/config.yaml
   echo "Copy config-test.yaml success!!!"
 }
 
