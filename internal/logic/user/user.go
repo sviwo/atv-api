@@ -16,7 +16,7 @@ import (
 	"sviwo/internal/model"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
-	"sviwo/utility"
+	"sviwo/pkg/utility"
 )
 
 // 实现用户登陆注册接口

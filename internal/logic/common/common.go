@@ -9,7 +9,7 @@ import (
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/service"
-	"sviwo/utility"
+	"sviwo/pkg/utility"
 )
 
 func init() {

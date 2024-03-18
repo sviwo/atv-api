@@ -13,7 +13,8 @@ require (
 	github.com/goflyfox/gtoken v1.5.7
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.6.3
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.6.3
-	github.com/gogf/gf/v2 v2.6.3
+	github.com/gogf/gf/contrib/trace/jaeger/v2 v2.6.4
+	github.com/gogf/gf/v2 v2.6.4
 	github.com/golang-module/carbon/v2 v2.3.10
 	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75
 	github.com/gorilla/websocket v1.5.1
@@ -69,6 +70,7 @@ require (
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
+	go.opentelemetry.io/otel/exporters/jaeger v1.14.0 // indirect
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect

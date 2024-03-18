@@ -11,8 +11,8 @@ import (
 	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/service"
-	ecc "sviwo/utility/encrypt"
-	"sviwo/utility/file"
+	ecc2 "sviwo/pkg/utility/encrypt"
+	"sviwo/pkg/utility/file"
 )
 
 var Common = cCommon{}
@@ -43,7 +43,7 @@ func (cCommon) ImgUpload(ctx context.Context, req *v1.ImgUploadReq) (res *v1.Img
 GetEccPublicKey 获取ecc公钥
 */
 func (cCommon) GetEccPublicKey(ctx context.Context, req *v1.EccPublicKeyReq) (res *v1.EccPublicKeyRes, err error) {
-	key, err := ecc.GenerateEccKeyHex()
+	key, err := ecc2.GenerateEccKeyHex()
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +55,7 @@ func (cCommon) GetEccPublicKey(ctx context.Context, req *v1.EccPublicKeyReq) (re
 	}
 	publicKey := key.PublicKey
 	res = &v1.EccPublicKeyRes{PublicKey: publicKey, PublicCode: publicCode}
-	text, _ := ecc.EccEncryptToHex(gconv.Bytes("{\"email\":\"821317143@qq.com\"}"), publicKey)
+	text, _ := ecc2.EccEncryptToHex(gconv.Bytes("{\"email\":\"821317143@qq.com\"}"), publicKey)
 	glog.Info(ctx, "text=====", text)
 	return
 }

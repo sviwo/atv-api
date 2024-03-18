@@ -7,7 +7,7 @@ import (
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
-	"sviwo/utility"
+	"sviwo/pkg/utility"
 )
 
 func init() {

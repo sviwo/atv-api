@@ -7,7 +7,7 @@ import (
 	"sviwo/api/v1"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
-	"sviwo/utility/file"
+	"sviwo/pkg/utility/file"
 )
 
 var User = cUser{}

@@ -14,7 +14,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
-	"sviwo/utility/nx"
+	nx2 "sviwo/pkg/utility/nx"
 	"time"
 )
 
@@ -22,7 +22,7 @@ type Worker struct {
 	ops       Options
 	redis     redis.UniversalClient
 	redisOpt  asynq.RedisConnOpt
-	lock      *nx.Nx
+	lock      *nx2.Nx
 	client    *asynq.Client
 	inspector *asynq.Inspector
 	Error     error
@@ -141,10 +141,10 @@ func New(options ...func(*Options)) (tk *Worker) {
 	client := asynq.NewClient(rs)
 	inspector := asynq.NewInspector(rs)
 	// initialize redis lock
-	nxLock := nx.New(
-		nx.WithRedis(rd),
-		nx.WithExpire(10),
-		nx.WithKey(strings.Join([]string{ops.redisPeriodKey, "lock"}, ".")),
+	nxLock := nx2.New(
+		nx2.WithRedis(rd),
+		nx2.WithExpire(10),
+		nx2.WithKey(strings.Join([]string{ops.redisPeriodKey, "lock"}, ".")),
 	)
 	// initialize server
 	srv := asynq.NewServer(

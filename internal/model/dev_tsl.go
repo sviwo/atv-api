@@ -87,11 +87,19 @@ type TSLFunctionInput struct {
 
 // 事件
 type TSLEvent struct {
-	Key       string       `json:"key" dc:"事件标识" v:"required|regex:^[A-Za-z_]+[\\w]*$#请输入事件标识|标识由字母、数字和下划线组成,且不能以数字开头"`
-	Name      string       `json:"name" dc:"事件名称" v:"required#请输入事件名称"`                 // 事件名称
-	Level     int          `json:"level" dc:"事件级别:0=普通,1=警告,2=紧急" v:"required#请选择事件级别"` // 事件级别
-	ValueType TSLValueType `json:"valueType" dc:"事件值"`                                  // 事件值
-	Desc      string       `json:"desc" dc:"描述"`                                        // 描述
+	Key     string           `json:"key" dc:"事件标识" v:"required|regex:^[A-Za-z_]+[\\w]*$#请输入事件标识|标识由字母、数字和下划线组成,且不能以数字开头"`
+	Name    string           `json:"name" dc:"事件名称" v:"required#请输入事件名称"`
+	Level   int              `json:"level" dc:"事件级别:0=普通,1=警告,2=紧急" v:"required#请选择事件级别"`
+	Outputs []TSLEventOutput `json:"outputs" dc:"输出参数"`
+	Desc    string           `json:"desc" dc:"描述"`
+}
+
+// 事件:输入参数
+type TSLEventOutput struct {
+	Key       string       `json:"key" dc:"参数标识" v:"regex:^[A-Za-z_]+[\\w]*$#标识由字母、数字和下划线组成,且不能以数字开头"`
+	Name      string       `json:"name" dc:"参数名称"`
+	ValueType TSLValueType `json:"valueType" dc:"参数值"`
+	Desc      string       `json:"desc" dc:"描述"`
 }
 
 // 标签

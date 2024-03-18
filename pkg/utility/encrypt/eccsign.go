@@ -9,7 +9,7 @@ import (
 	"github.com/qiniu/x/log"
 	"math/big"
 	"runtime"
-	"sviwo/utility/hash"
+	"sviwo/pkg/utility/hash"
 )
 
 func eccSign(msg []byte, priKey []byte) (rSign []byte, sSign []byte, err error) {

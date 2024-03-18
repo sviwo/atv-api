@@ -20,3 +20,8 @@ func GetDeviceDetailInfo(deviceKey string) (out *model.DeviceOutput, err error) 
 
 	return
 }
+
+// InitSystemConfig 初始化系统参数配置
+func InitSystemConfig(ctx context.Context) (err error) {
+	return
+}

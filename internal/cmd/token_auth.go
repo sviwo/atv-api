@@ -13,8 +13,8 @@ import (
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
-	ecc "sviwo/utility/encrypt"
-	"sviwo/utility/response"
+	"sviwo/pkg/utility/encrypt"
+	"sviwo/pkg/utility/response"
 )
 
 // 登录gtoken

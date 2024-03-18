@@ -17,4 +17,5 @@ import (
 	_ "sviwo/internal/logic/user"
 	_ "sviwo/internal/logic/userauth"
 	_ "sviwo/internal/logic/version"
+	_ "sviwo/internal/logic/product"
 )
