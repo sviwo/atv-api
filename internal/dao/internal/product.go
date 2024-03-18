@@ -23,16 +23,22 @@ type ProductColumns struct {
 	ProductId    string //
 	ProductName  string // 产品名称
 	ProductModel string // 产品型号
+	Status       string // 发布状态：0=未发布，1=已发布
 	CreateTime   string //
 	UpdateTime   string //
 	IsDelete     string // 是否删除：true=已删除，false=正常
+	ProductKey   string
+	MetaData     string
 }
 
 // productColumns holds the columns for table sw_product.
 var productColumns = ProductColumns{
 	ProductId:    "product_id",
 	ProductName:  "product_name",
+	ProductKey:   "product_key",
 	ProductModel: "product_model",
+	Status:       "status",
+	MetaData:     "metadata",
 	CreateTime:   "create_time",
 	UpdateTime:   "update_time",
 	IsDelete:     "is_delete",
