@@ -54,6 +54,7 @@ func Boot(ctx context.Context) {
 }
 
 var InitFuncNoDeferListForIotCore = []NoDeferFunc{
+	{AllSystemInit, "初始化系统变量"},
 	{model.InitCoreLogic, "核心处理逻辑"},
 	{InitSnowflake, "雪花算法ID"},
 	{InitSendEmail, "发送邮件"},
