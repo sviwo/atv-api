@@ -32,7 +32,7 @@ type GetCarInfoRes struct {
 
 type BindingCarReq struct {
 	g.Meta     `path:"/car/binding" method:"post" tags:"车辆相关" sm:"绑定车辆"`
-	DeviceCode string `json:"deviceCode"       dc:"车架号"          v:"required"`
+	DeviceCode string `json:"deviceCode"       dc:"车架号（最大长度20）"          v:"required|max-length:20"`
 }
 
 type DelCarReq struct {

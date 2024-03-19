@@ -12,12 +12,12 @@ type EmptyFieldRes struct{}
 
 type VftCodeReq struct {
 	g.Meta `path:"/common/getVftCode" method:"get" tags:"公共接口" sm:"获取验证码"`
-	Email  string `json:"email" v:"required|email"   dc:"请输入邮箱"`
+	Email  string `json:"email"    dc:"请输入邮箱（标准邮箱格式）" v:"required|email"`
 }
 
 type ImgUploadReq struct {
 	g.Meta `path:"/common/img/upload" method:"post" mime:"multipart/form-data" tags:"公共接口" sm:"上传图片"`
-	File   *ghttp.UploadFile `json:"file" type:"file" v:"required"   dc:"请选择上传文件"`
+	File   *ghttp.UploadFile `json:"file" type:"file" v:"required"   dc:"请选择上传文件（最大10MB）"`
 }
 
 type ImgUploadRes struct {

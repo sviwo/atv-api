@@ -23,8 +23,8 @@ type GetUserAuthRes struct {
 
 type SubmitUserAuthReq struct {
 	g.Meta              `path:"/user/submit/auth" method:"post" tags:"用户实名相关" sm:"提交用户实名信息"`
-	AuthFirstName       string            `json:"authFirstName"       dc:""                      v:"required"`
-	AuthLastName        string            `json:"authLastName"        dc:""                      v:"required"`
-	CertificateFrontImg *ghttp.UploadFile `json:"certificateFrontImg" type:"file"   dc:"证件正面"  v:"required"`
-	CertificateBackImg  *ghttp.UploadFile `json:"certificateBackImg"  type:"file"   dc:"证件背面"  v:"required"`
+	AuthFirstName       string            `json:"authFirstName"       dc:"最大长度100"       v:"required|max-length:100"`
+	AuthLastName        string            `json:"authLastName"        dc:"最大长度100"       v:"required|max-length:100"`
+	CertificateFrontImg *ghttp.UploadFile `json:"certificateFrontImg" type:"file"   dc:"证件正面（最大10MB）" v:"required"`
+	CertificateBackImg  *ghttp.UploadFile `json:"certificateBackImg"  type:"file"   dc:"证件背面（最大10MB）" v:"required"`
 }

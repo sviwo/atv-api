@@ -54,8 +54,10 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) *uint64 {
 }
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
-	err := dao.User.Ctx(ctx).Where("username", username).Where("is_delete", consts.DeleteOn).Scan(&user)
-	if err != nil {
+	if err := dao.User.Ctx(ctx).
+		Where("username", username).
+		Where("is_delete", consts.DeleteOn).
+		Scan(&user); err != nil {
 		panic(err)
 	}
 	return
@@ -72,7 +74,7 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 	userInfo := entity.User{Username: in.Username, Enable: true, CreateTime: gtime.Now(), IsDelete: false}
 	operatePwd(&userInfo, in.Password)
 
-	err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
+	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
 		//插入用户数据返回用户id
 		userId, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
 		if err != nil {
@@ -84,8 +86,7 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 			panic(err)
 		}
 		return nil
-	})
-	if err != nil {
+	}); err != nil {
 		panic(err)
 	}
 }
