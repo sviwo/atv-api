@@ -55,7 +55,7 @@ func (s *sDevDevice) CacheDeviceDetailList(ctx context.Context) (err error) {
 				}
 			}
 			//缓存设备详细信息
-			err := cache.Instance().Set(context.Background(), consts.DeviceDetailInfoPrefix+d.Key, d, 0)
+			err := cache.Instance().Set(context.Background(), consts.DeviceDetailInfoPrefix+d.DeviceName, d, 0)
 			if err != nil {
 				g.Log().Error(ctx, err.Error())
 			}
@@ -80,7 +80,7 @@ func (s *sDevDevice) Get(ctx context.Context, deviceCode string) (out *model.Dev
 		return
 	}
 	if out.Status != 0 {
-		out.Status = dcache.GetDeviceStatus(ctx, out.Key) //查询设备状态
+		out.Status = dcache.GetDeviceStatus(ctx, out.DeviceName) //查询设备状态
 	}
 	if out.Product != nil {
 		out.ProductName = out.Product.ProductName

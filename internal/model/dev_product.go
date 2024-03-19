@@ -34,8 +34,6 @@ type ProductOutput struct {
 	*entity.Product
 	DeviceTotal  int    `json:"deviceTotal" dc:"设备数量"`
 	CategoryName string `json:"categoryName" dc:"分类名称"`
-
-	Category *DevProductCategory `json:"category" orm:"with:id=category_id" dc:"分类信息"`
 }
 
 type DevProductCategory struct {

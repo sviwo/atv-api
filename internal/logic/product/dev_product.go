@@ -59,10 +59,6 @@ func (s *sDevProduct) List(ctx context.Context) (list []*model.ProductOutput, er
 	var productIds = make([]int64, dLen)
 	for i, v := range list {
 		productIds[i] = v.ProductId
-
-		if v.Category != nil {
-			list[i].CategoryName = v.Category.Name
-		}
 		list[i].Metadata = ""
 	}
 

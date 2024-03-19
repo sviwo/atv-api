@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"sviwo/internal/logic/tdengine"
 	"sviwo/internal/network/core/logic/model"
+	"sviwo/internal/service"
 )
 
 /*
@@ -61,6 +62,7 @@ var InitFuncNoDeferListForIotCore = []NoDeferFunc{
 	{InitAmqp, "Amqp"},
 	{tdengine.CreateTDDatabase, "时序数据库创建"},
 	{tdengine.CreateStable, "时序库日志表创建"},
+	{service.DevDevice().CacheDeviceDetailList, "缓存设备信息"},
 }
 
 var initFuncWithDeferList = []DeferFunc{
