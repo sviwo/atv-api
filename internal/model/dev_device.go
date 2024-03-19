@@ -53,7 +53,6 @@ type DeviceOutput struct {
 	ProductName string          `json:"productName" dc:"产品名称"`
 	TSL         *TSL            `json:"tsl" dc:"物模型"`
 	Product     *entity.Product `json:"product" orm:"with:key=product_key" dc:"产品信息"`
-	Tags        []*DevDeviceTag `json:"tags" orm:"with:device_id=id" dc:"设备标签"`
 }
 
 type AddDeviceInput struct {
