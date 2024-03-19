@@ -9,7 +9,7 @@ gfcli:
     system: "linux,darwin,windows"
     mod: ""
     cgo: 0
-    packSrc: "manifest/config/config.yaml,manifest/i18n,resource/public,resource/template"
+    packSrc: "manifest/config/config.yaml,manifest/i18n"
     output: "manifest/docker/sviwo/bin/sviwo-api"
 
   # dao生成
