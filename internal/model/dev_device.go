@@ -28,7 +28,7 @@ type DevDevice struct {
 	Key  string `json:"key" dc:"设备标识"`
 }
 type DevProductWithName struct {
-	gmeta.Meta `orm:"table:dev_product"`
+	gmeta.Meta `orm:"table:sw_product"`
 	Id         uint   `json:"id" dc:"产品ID"`
 	Name       string `json:"name" dc:"产品名称"`
 	Key        string `json:"key" dc:"产品标识"`
@@ -49,10 +49,10 @@ type DevDeviceTag struct {
 }
 
 type DeviceOutput struct {
-	*entity.DevDevice
+	*entity.Device
 	ProductName string          `json:"productName" dc:"产品名称"`
 	TSL         *TSL            `json:"tsl" dc:"物模型"`
-	Product     *entity.Product `json:"product" orm:"with:key=product_key" dc:"产品信息"`
+	Product     *entity.Product `json:"product" orm:"with:product_key=product_key" dc:"产品信息"`
 }
 
 type AddDeviceInput struct {

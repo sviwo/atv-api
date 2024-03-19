@@ -62,10 +62,10 @@ type TSLParam struct {
 // 属性
 type TSLProperty struct {
 	Key        string       `json:"identifier" dc:"属性标识" v:"required|regex:^[A-Za-z_]+[\\w]*$#请输入属性标识|标识由字母、数字和下划线组成,且不能以数字开头"`
-	Name       string       `json:"name" dc:"属性名称" v:"required#请输入属性名称"`                   // 属性名称
-	AccessMode int          `json:"accessMode" dc:"属性访问类型:0=读写,1=只读" v:"required#请选择是否只读"` // 属性访问类型
-	ValueType  TSLValueType `json:"dataType" dc:"属性值"`                                     // 属性值
-	Desc       string       `json:"desc" dc:"描述"`                                          // 描述
+	Name       string       `json:"name" dc:"属性名称" v:"required#请输入属性名称"`                    // 属性名称
+	AccessMode string       `json:"accessMode" dc:"属性访问类型:rw=读写,r=只读" v:"required#请选择是否只读"` // 属性访问类型
+	ValueType  TSLValueType `json:"dataType" dc:"属性值"`                                      // 属性值
+	Desc       string       `json:"desc" dc:"描述"`                                           // 描述
 }
 
 // 功能
