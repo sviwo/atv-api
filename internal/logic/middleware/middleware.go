@@ -72,7 +72,7 @@ func (s *sMiddleware) CtxHandler(r *ghttp.Request) {
 }
 
 func (s *sMiddleware) I18NHandler(r *ghttp.Request) {
-	r.SetCtx(gi18n.WithLanguage(r.Context(), r.Header.Get("language")))
+	r.SetCtx(gi18n.WithLanguage(r.Context(), r.Header.Get("Accept-Language")))
 	r.Middleware.Next()
 }
 

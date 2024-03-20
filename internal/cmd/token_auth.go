@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/goflyfox/gtoken/gtoken"
+	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/util/gconv"
@@ -54,18 +55,19 @@ func loginAfterFunc(r *ghttp.Request, respData gtoken.Resp) {
 	} else {
 		userKey := respData.GetString(gtoken.KeyUserKey)
 		token := respData.GetString(gtoken.KeyToken)
-		r.Response.Header().Set("Authorization", token)
+		m := gmap.New()
+		m.Set("Authorization", token)
 
 		eccKey, err := ecc.GenerateEccKeyHex()
 		if err != nil {
 			panic(err)
 		}
-		r.Response.Header().Set("PublicKey", eccKey.PublicKey)
+		m.Set("PublicKey", eccKey.PublicKey)
 		_, err = g.Redis().Set(r.GetCtx(), fmt.Sprintf(consts.RedisEccPrivateKey, userKey), eccKey.PrivateKey)
 		if err != nil {
 			panic(err)
 		}
-		response.SuccessMsg(r, nil)
+		response.SuccessMsg(r, m)
 	}
 }
 
