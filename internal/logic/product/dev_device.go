@@ -18,10 +18,10 @@ import (
 type sDevDevice struct{}
 
 func init() {
-	service.RegisterDevDevice(deviceNew())
+	service.RegisterDevDevice(DeviceNew())
 }
 
-func deviceNew() *sDevDevice {
+func DeviceNew() *sDevDevice {
 	return &sDevDevice{}
 }
 
