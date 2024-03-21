@@ -33,6 +33,7 @@ var (
 					controller.Common.GetVftCode,
 					controller.Common.GetEccPublicKey,
 					controller.User.Register,
+					controller.User.UpdatePassword,
 				)
 				//需要登录鉴权的路由组
 				group.Group("/api", func(group *ghttp.RouterGroup) {
@@ -44,7 +45,6 @@ var (
 					group.Bind(
 						controller.Common.ImgUpload,
 						controller.User.Info,
-						controller.User.UpdatePassword,
 						controller.User.EditInfo,
 						controller.Home,
 						controller.UserAuth,
