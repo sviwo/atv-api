@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
+	"sviwo/internal/logic/product"
 	"sviwo/internal/logic/tdengine"
 	"sviwo/internal/network/core/logic/model"
 )
@@ -61,7 +62,9 @@ var InitFuncNoDeferListForIotCore = []NoDeferFunc{
 	{InitAmqp, "Amqp"},
 	{tdengine.CreateTDDatabase, "时序数据库创建"},
 	{tdengine.CreateStable, "时序库日志表创建"},
-	//{service.DevDevice().CacheDeviceDetailList, "缓存设备信息"},
+	{product.DevInitNew().InitProductForTd, "时序库产品表初始化"},
+	{product.DevInitNew().InitDeviceForTd, "时序库设备表初始化"},
+	{product.DeviceNew().CacheDeviceDetailList, "缓存设备信息"},
 }
 
 var initFuncWithDeferList = []DeferFunc{
