@@ -1,6 +1,6 @@
 module sviwo
 
-go 1.22
+go 1.19
 
 require (
 	github.com/alibabacloud-go/darabonba-openapi/v2 v2.0.5
