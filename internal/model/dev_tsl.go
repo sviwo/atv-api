@@ -113,10 +113,10 @@ type TSLTag struct {
 
 // 物模型
 type TSL struct {
-	Key        string        `json:"key" dc:"产品标识" v:"regex:^[A-Za-z_]+[\\w]*$#标识由字母、数字和下划线组成,且不能以数字开头"`
-	Name       string        `json:"name" dc:"产品名称"`     // 产品名称
-	Properties []TSLProperty `json:"properties" dc:"属性"` // 属性
-	Functions  []TSLFunction `json:"services" dc:"功能"`   // 功能
-	Events     []TSLEvent    `json:"events" dc:"事件"`     // 事件
-	Tags       []TSLTag      `json:"tags" dc:"标签"`       // 标签
+	ProductKey  string        `json:"key" dc:"产品标识" v:"regex:^[A-Za-z_]+[\\w]*$#标识由字母、数字和下划线组成,且不能以数字开头"`
+	ProductName string        `json:"name" dc:"产品名称"`     // 产品名称
+	Properties  []TSLProperty `json:"properties" dc:"属性"` // 属性
+	Functions   []TSLFunction `json:"services" dc:"功能"`   // 功能
+	Events      []TSLEvent    `json:"events" dc:"事件"`     // 事件
+	Tags        []TSLTag      `json:"tags" dc:"标签"`       // 标签
 }

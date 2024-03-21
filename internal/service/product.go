@@ -25,6 +25,12 @@ type (
 		Detail(ctx context.Context, key string) (out *model.DetailProductOutput, err error)
 		List(ctx context.Context) (list []*model.ProductOutput, err error)
 	}
+	IDevInit interface {
+		// InitProductForTd 产品表结构初始化
+		InitProductForTd(ctx context.Context) (err error)
+		// InitDeviceForTd 设备表结构初始化
+		InitDeviceForTd(ctx context.Context) (err error)
+	}
 	IDevDevice interface {
 		// Get 获取设备详情
 		Get(ctx context.Context, key string) (out *model.DeviceOutput, err error)
@@ -39,6 +45,7 @@ var (
 	localDevTSLParse       IDevTSLParse
 	localDevProduct        IDevProduct
 	localDevDevice         IDevDevice
+	localDevInit           IDevInit
 )
 
 func DevTSLParse() IDevTSLParse {
@@ -72,6 +79,17 @@ func DevDevice() IDevDevice {
 
 func RegisterDevDevice(i IDevDevice) {
 	localDevDevice = i
+}
+
+func DevInit() IDevInit {
+	if localDevInit == nil {
+		panic("implement not found for interface IDevInit, forgot register?")
+	}
+	return localDevInit
+}
+
+func RegisterDevInit(i IDevInit) {
+	localDevInit = i
 }
 
 
