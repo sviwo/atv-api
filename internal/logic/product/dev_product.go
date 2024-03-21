@@ -38,10 +38,6 @@ func (s *sDevProduct) Detail(ctx context.Context, key string) (out *model.Detail
 		}
 	}
 
-	if out.Category != nil {
-		out.CategoryName = out.Category.Name
-	}
-
 	return
 }
 

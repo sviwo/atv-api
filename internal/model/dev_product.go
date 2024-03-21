@@ -50,8 +50,6 @@ type DetailProductOutput struct {
 	DeviceTotal  int    `json:"deviceTotal" dc:"设备数量"`
 	CategoryName string `json:"categoryName" dc:"分类名称"`
 
-	Category *DevProductCategory `json:"category" orm:"with:id=category_id" dc:"部门信息"`
-
 	TSL *TSL `json:"tsl" dc:"物模型"`
 }
 

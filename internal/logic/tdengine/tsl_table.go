@@ -103,7 +103,7 @@ func (s *sTSLTable) CreateStable(ctx context.Context, tsl *model.TSL) (err error
 	if len(tags) > 0 {
 		tConent = fmt.Sprintf("TAGS (%s)", strings.Join(tags, ","))
 	}
-	table := comm.ProductTableName(tsl.Key)
+	table := comm.ProductTableName(tsl.ProductKey)
 	sql := fmt.Sprintf("CREATE STABLE IF NOT EXISTS %s.%s (%s) %s", dbName, table, strings.Join(columns, ","), tConent)
 
 	_, err = taos.Exec(sql)
