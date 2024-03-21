@@ -41,7 +41,7 @@ func (s *sDevInit) InitProductForTd(ctx context.Context) (err error) {
 
 	var list []*entity.Product
 	c := dao.Product.Columns()
-	err = dao.Product.Ctx(ctx).Where(c.Status, model.ProductStatusOn).Where(c.IsDelete, consts.DeleteOn).Scan(&list)
+	err = dao.Product.Ctx(ctx).Where(c.Status, model.ProductStatusOn).Where(c.MetadataTable, consts.MetadataTable).Scan(&list)
 	if err != nil || len(list) == 0 {
 		return
 	}
@@ -94,7 +94,7 @@ func (s *sDevInit) InitDeviceForTd(ctx context.Context) (err error) {
 
 	var list []*entity.Device
 	c := dao.Device.Columns()
-	err = dao.Device.Ctx(ctx).WhereGT(c.Status, model.DeviceStatusNoEnable).Where(c.IsDelete, consts.DeleteOn).Scan(&list)
+	err = dao.Device.Ctx(ctx).WhereGT(c.Status, model.DeviceStatusNoEnable).Where(c.MetadataTable, consts.MetadataTable).Scan(&list)
 	if err != nil || len(list) == 0 {
 		return
 	}

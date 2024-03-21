@@ -52,4 +52,8 @@ const (
 	//显示或屏蔽：true=显示，false=屏蔽
 	EnableDisplay = true
 	EnableShield  = false
+
+	//是否生成物模型表或子表：true(1)=是，false(0)=否
+	MetadataTable   = true
+	DeMetadataTable = false
 )

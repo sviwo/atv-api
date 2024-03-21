@@ -34,6 +34,7 @@ type DeviceColumns struct {
 	CreateTime     string //
 	UpdateTime     string //
 	IsDelete       string // 是否删除：true=已删除，false=正常
+	MetadataTable  string //是否生成物模型子表：0=否，1=是
 }
 
 // deviceColumns holds the columns for table sw_device.
@@ -51,6 +52,7 @@ var deviceColumns = DeviceColumns{
 	Nickname:       "nickname",
 	CreateTime:     "create_time",
 	UpdateTime:     "update_time",
+	MetadataTable:  "metadata_table",
 	IsDelete:       "is_delete",
 }
 
