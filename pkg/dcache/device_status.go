@@ -9,6 +9,7 @@ import (
 	"sviwo/internal/consts"
 	"sviwo/internal/model"
 	"sviwo/internal/queues"
+	"sviwo/internal/service"
 	"sviwo/pkg/cache"
 	"sviwo/pkg/iotModel"
 	"time"
@@ -94,7 +95,10 @@ func online(ctx context.Context, device *model.DeviceOutput) (err error) {
 			Status:     "online",
 			CreateTime: gtime.Now().Unix(),
 		}
-		g.Log().Infof(context.Background(), "设备上线告警处理？: %v", data)
+		err = service.AlarmRule().Check(ctx, device.Product.ProductKey, device.DeviceName, consts.AlarmTriggerTypeOnline, data)
+		if err != nil {
+			g.Log().Errorf(ctx, "告警检测失败: %s", err.Error())
+		}
 	}()
 
 	return
@@ -114,7 +118,7 @@ func offline(ctx context.Context, device *model.DeviceOutput) (err error) {
 		CreateTime: gtime.Now().Unix(),
 	}
 	if err == nil {
-		g.Log().Infof(context.Background(), "设备下线告警处理？: %v", data)
+		err = service.AlarmRule().Check(ctx, device.ProductKey, device.DeviceName, consts.AlarmTriggerTypeOffline, data)
 	}
 	return
 }

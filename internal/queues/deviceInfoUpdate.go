@@ -6,6 +6,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/internal/consts"
+	"sviwo/internal/service"
 	"sviwo/pkg/channelx"
 	"sviwo/pkg/iotModel"
 	"sviwo/pkg/worker"
@@ -67,8 +68,7 @@ func (q *qDeviceStatusInfoUpdate) Handle(ctx context.Context, p worker.Payload) 
 func deviceInfoUpdateBatchProcessFunc(items []interface{}) (err error) {
 	var data []iotModel.DeviceStatusLog
 	err = gconv.Scan(items, &data)
-	//批量更新设备状态
-
+	err = service.DevDevice().BatchUpdateDeviceStatusInfo(context.Background(), data)
 	if err != nil {
 		return err
 	}

@@ -21,6 +21,7 @@ type DeviceDao struct {
 // DeviceColumns defines and stores column names for table sw_device.
 type DeviceColumns struct {
 	DeviceId       string //
+	ProductId      string
 	ProductKey     string // 所属产品KEY 替代productId
 	Status         string // 状态：0=未启用,1=离线,2=在线
 	OnlineTimeout  string // 设备在线超时设置，单位：秒
@@ -40,6 +41,7 @@ type DeviceColumns struct {
 // deviceColumns holds the columns for table sw_device.
 var deviceColumns = DeviceColumns{
 	DeviceId:       "device_id",
+	ProductId:      "product_id",
 	DeviceCode:     "device_code",
 	DeviceName:     "device_name",
 	Status:         "status",

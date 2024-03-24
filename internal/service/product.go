@@ -13,6 +13,10 @@ import (
 )
 
 type (
+	IDevDeviceProperty interface {
+		// Set 设备属性设置
+		Set(ctx context.Context, in *model.DevicePropertyInput) (out *model.DevicePropertyOutput, err error)
+	}
 	IDevTSLParse interface {
 		// ParseData 基于物模型解析上报数据
 		ParseData(ctx context.Context, deviceKey string, data []byte) (res iotModel.ReportPropertyData, err error)
@@ -43,6 +47,8 @@ type (
 		// CacheDeviceDetailList 缓存所有设备详情数据
 		CacheDeviceDetailList(ctx context.Context) (err error)
 		List(ctx context.Context, productKey string, keyWord string) (list []*model.DeviceOutput, err error)
+		BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStatusLogList []iotModel.DeviceStatusLog) (err error)
+
 
 	}
 )
@@ -53,6 +59,7 @@ var (
 	localDevDevice         IDevDevice
 	localDevInit           IDevInit
 	localDevDataReport     IDevDataReport
+	localDevDeviceProperty IDevDeviceProperty
 )
 
 func DevTSLParse() IDevTSLParse {
@@ -108,6 +115,17 @@ func DevDataReport() IDevDataReport {
 
 func RegisterDevDataReport(i IDevDataReport) {
 	localDevDataReport = i
+}
+
+func DevDeviceProperty() IDevDeviceProperty {
+	if localDevDeviceProperty == nil {
+		panic("implement not found for interface IDevDeviceProperty, forgot register?")
+	}
+	return localDevDeviceProperty
+}
+
+func RegisterDevDeviceProperty(i IDevDeviceProperty) {
+	localDevDeviceProperty = i
 }
 
 

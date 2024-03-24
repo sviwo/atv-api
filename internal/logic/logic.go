@@ -19,4 +19,5 @@ import (
 	_ "sviwo/internal/logic/version"
 	_ "sviwo/internal/logic/product"
 	_ "sviwo/internal/logic/alarm"
+	_ "sviwo/internal/logic/analysis"
 )

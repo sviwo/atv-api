@@ -13,6 +13,7 @@ import (
 	"sviwo/internal/service"
 	"sviwo/pkg/cache"
 	"sviwo/pkg/dcache"
+	"sviwo/pkg/iotModel"
 )
 
 type sDevDevice struct{}
@@ -117,6 +118,62 @@ func (s *sDevDevice) List(ctx context.Context, productKey string, keyWord string
 		if v.Product != nil {
 			list[i].ProductName = v.Product.ProductName
 		}
+	}
+
+	return
+}
+
+// BatchUpdateDeviceStatusInfo 批量更新设备状态信息，设备上线、离线、注册
+func (s *sDevDevice) BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStatusLogList []iotModel.DeviceStatusLog) (err error) {
+
+	onLineData := g.Map{}
+	onlineDeviceKeyList := make([]string, 0)
+
+	offLineData := g.Map{}
+	offLineDeviceKeyList := make([]string, 0)
+
+	registryData := g.Map{}
+	registryDeviceKeyList := make([]string, 0)
+
+	for _, statusLog := range deviceStatusLogList {
+		switch statusLog.Status {
+		case consts.DeviceStatueOnline:
+			device, err := dcache.GetDeviceDetailInfo(statusLog.DeviceKey)
+			if err != nil {
+				continue
+			}
+
+			if device.RegistryTime == nil {
+				registryData[dao.Device.Columns().RegistryTime] = statusLog.Timestamp
+				registryDeviceKeyList = append(registryDeviceKeyList, statusLog.DeviceKey)
+			}
+
+			onLineData[dao.Device.Columns().LastOnlineTime] = statusLog.Timestamp
+			onLineData[dao.Device.Columns().Status] = consts.DeviceStatueOnline
+			onlineDeviceKeyList = append(onlineDeviceKeyList, statusLog.DeviceKey)
+		case consts.DeviceStatueOffline:
+			offLineData[dao.Device.Columns().LastOnlineTime] = statusLog.Timestamp
+			offLineData[dao.Device.Columns().Status] = consts.DeviceStatueOffline
+			offLineDeviceKeyList = append(offLineDeviceKeyList, statusLog.DeviceKey)
+		}
+	}
+	if len(registryDeviceKeyList) > 0 {
+		_, err = dao.Device.Ctx(ctx).
+			Data(registryData).
+			WhereIn(dao.Device.Columns().DeviceName, registryDeviceKeyList).
+			Update()
+	}
+	if len(onlineDeviceKeyList) > 0 {
+		_, err = dao.Device.Ctx(ctx).
+			Data(onLineData).
+			WhereIn(dao.Device.Columns().DeviceName, onlineDeviceKeyList).
+			Update()
+	}
+	if len(offLineDeviceKeyList) > 0 {
+		_, err = dao.Device.Ctx(ctx).
+			Data(offLineData).
+			WhereIn(dao.Device.Columns().DeviceName, onlineDeviceKeyList).
+			Update()
 	}
 
 	return

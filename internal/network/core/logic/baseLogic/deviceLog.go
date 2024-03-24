@@ -9,10 +9,14 @@ import (
 	"sviwo/internal/model"
 	"sviwo/internal/queues"
 	"sviwo/pkg/dcache"
+	"sviwo/pkg/statistics"
 )
 
 // InertTdLog 插入设备日志
 func InertTdLog(ctx context.Context, logType, deviceKey string, obj interface{}) {
+
+	statistics.CountDeviceData() // 统计设备数据
+
 	str, strIsOk := obj.(string)
 	content := str
 	if !strIsOk {
