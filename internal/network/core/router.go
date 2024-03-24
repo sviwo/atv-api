@@ -10,8 +10,10 @@ import (
 	"regexp"
 	"strings"
 	"sviwo/internal/consts"
+	"sviwo/internal/model"
 	"sviwo/internal/mqtt"
 	"sviwo/internal/network/core/logic/baseLogic"
+	"sviwo/pkg/dcache"
 	"sviwo/pkg/gpool"
 	"sviwo/pkg/iotModel/topicModel"
 	"sync"
@@ -98,6 +100,24 @@ func HandleMessage(ctx context.Context, message *amqp.Message) {
 		if topicInfo[1] == "as" {
 			productKey, deviceKey = topicInfo[4], topicInfo[5]
 		}
+
+		// 获取设备详情，拿出来消息协议，然后按照产品定义的消息协议解析消息
+		deviceInfo, err := dcache.GetDeviceDetailInfo(deviceKey)
+		if err != nil {
+			g.Log().Debugf(ctx, "device info error: %v, topic:%s, message:%s, message ignored", err.Error(), topic, string(message.GetData()))
+			return nil
+		}
+		if deviceInfo == nil {
+			g.Log().Debugf(ctx, "device info is nil, topic:%s, message:%s, message ignored", topic, string(message.GetData()))
+			return nil
+		}
+		// 设备禁用不处理
+		if deviceInfo.Status == model.DeviceStatusNoEnable {
+			g.Log().Debug(ctx, deviceKey, "device is no enable")
+			return nil
+		}
+		dcache.UpdateStatus(ctx, deviceInfo) //更新设备状态
+
 		for k, handleF := range subMapInfo.subTopics {
 			k = transTopic(k)
 			isMatch, _ := regexp.MatchString(k, topic)
@@ -114,7 +134,7 @@ func HandleMessage(ctx context.Context, message *amqp.Message) {
 					ProductKey:   productKey,
 					DeviceKey:    deviceKey,
 					PayLoad:      message.GetData(),
-					DeviceDetail: nil,
+					DeviceDetail: deviceInfo,
 				}); err != nil {
 					if err.Error() != "ignore" {
 						return errors.New(fmt.Sprintf("handleF error: %s, topic:%s, message:%s ", err.Error(), topic, string(message.GetData())))

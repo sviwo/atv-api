@@ -2,12 +2,16 @@ package event
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/glog"
 	"strings"
 	"sviwo/internal/consts"
+	"sviwo/internal/model"
 	"sviwo/internal/network/core"
 	"sviwo/internal/network/core/logic/model/up/property/reporter"
+	"sviwo/internal/service"
 	sviwoProtocol "sviwo/pkg/iotModel/sviwoProtocol"
 	"sviwo/pkg/iotModel/topicModel"
 )
@@ -33,5 +37,32 @@ func ReportEvent(ctx context.Context, data topicModel.TopicHandlerData) error {
 		return errors.New("ignore")
 	}
 	glog.Printf(ctx, "-----------事件上报---tpoic:%s---内容：%s--", data.Topic, string(data.PayLoad))
+	var reportData sviwoProtocol.ReportEventReq
+	if reportDataErr := json.Unmarshal(data.PayLoad, &reportData); reportDataErr != nil {
+		g.Log().Errorf(ctx, "parse data error: %v, topic:%s, message:%s, message ignored", reportDataErr, data.Topic, string(data.PayLoad))
+		return reportDataErr
+	}
+	var reportEventData = model.ReportEventData{
+		Key: eventKey,
+		Param: model.ReportEventParam{
+			Value:      map[string]any{},
+			CreateTime: reportData.GmtCreate,
+		},
+	}
+	for _, event := range data.DeviceDetail.TSL.Events {
+		if event.Key == eventKey {
+			for _, o := range event.Outputs {
+				for k, v := range reportData.Value {
+					if k == o.Key {
+						reportEventData.Param.Value[k] = o.ValueType.ConvertValue(v)
+					}
+				}
+			}
+		}
+	}
+	if reportEventErr := service.DevDataReport().Event(ctx, data.DeviceKey, reportEventData); reportEventErr != nil {
+		g.Log().Errorf(ctx, "report event error: %v, topic:%s, message:%s, message ignored", reportEventErr, data.Topic, string(data.PayLoad))
+		return reportEventErr
+	}
 	return nil
 }

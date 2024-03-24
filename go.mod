@@ -3,6 +3,7 @@ module sviwo
 go 1.19
 
 require (
+	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/alibabacloud-go/darabonba-openapi/v2 v2.0.5
 	github.com/alibabacloud-go/iot-20180120/v6 v6.1.0
 	github.com/alibabacloud-go/tea v1.2.1

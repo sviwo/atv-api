@@ -10,6 +10,16 @@ type (
 		Value      interface{} `json:"value"`
 		CreateTime int64       `json:"time"`
 	}
+	//公共参数
+	CommonParam struct {
+		RequestId       string      `json:"requestId"`
+		ProductKey      string      `json:"productKey"`
+		DeviceName      string      `json:"deviceName"`
+		DeviceType      string      `json:"deviceType"`
+		GmtCreate       int64       `json:"gmtCreate"`
+		IotId           string      `json:"iotId"`
+		CheckFailedData interface{} `json:"checkFailedData"`
+	}
 )
 
 const (

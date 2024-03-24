@@ -4,15 +4,14 @@ package sviwoProtocol
 type (
 	// 属性上报请求报文
 	ReportPropertyReq struct {
-		RequestId  string `json:"requestId"`
-		ProductKey string `json:"productKey"`
-		DeviceName string `json:"deviceName"`
-		GmtCreate  int64  `json:"gmtCreate"`
-		IotId      string `json:"iotId"`
-		Version    string `json:"version"`
-		DeviceType string `json:"deviceType"`
-		//Sys             SysInfo                `json:"sys"`
-		CheckFailedData map[string]interface{} `json:"checkFailedData"`
+		RequestId       string                 `json:"requestId"`
+		ProductKey      string                 `json:"productKey"`
+		DeviceName      string                 `json:"deviceName"`
+		GmtCreate       int64                  `json:"gmtCreate"`
+		IotId           string                 `json:"iotId"`
+		CheckFailedData interface{}            `json:"checkFailedData"`
+		Version         string                 `json:"version"`
+		DeviceType      string                 `json:"deviceType"`
 		Params          map[string]interface{} `json:"items"`
 	}
 	// 属性上报响应报文

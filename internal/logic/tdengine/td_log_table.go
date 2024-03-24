@@ -55,7 +55,7 @@ func CreateStable(ctx context.Context) (err error) {
 		return
 	}
 
-	sql := "CREATE STABLE device_log (ts TIMESTAMP, type VARCHAR(20), content VARCHAR(5000)) TAGS (device VARCHAR(255))"
+	sql := "CREATE STABLE device_log (ts TIMESTAMP, type VARCHAR(20),content VARCHAR(5000)) TAGS (device VARCHAR(255))"
 	_, err = taos.Exec(sql)
 
 	return

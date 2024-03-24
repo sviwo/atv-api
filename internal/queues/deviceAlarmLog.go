@@ -2,7 +2,11 @@ package queues
 
 import (
 	"context"
+	"encoding/json"
+	"github.com/gogf/gf/v2/frame/g"
 	"sviwo/internal/consts"
+	"sviwo/internal/model"
+	"sviwo/internal/service"
 	"sviwo/pkg/worker"
 )
 
@@ -24,6 +28,16 @@ func (q *qDeviceAlarmLog) GetTopic() string {
 
 // Handle 处理消息
 func (q *qDeviceAlarmLog) Handle(ctx context.Context, p worker.Payload) (err error) {
+	g.Log().Debugf(ctx, "alarm_Handle: Payload(%s)", p.Payload)
 
+	if p.Payload == nil || q.GetTopic() != p.Group {
+		return nil
+	}
+	var data model.AlarmLogAddInput
+	if err = json.Unmarshal(p.Payload, &data); err != nil {
+		return err
+	}
+	//真正写日志
+	_, err = service.AlarmLog().Add(ctx, &data)
 	return
 }

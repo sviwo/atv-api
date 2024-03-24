@@ -25,6 +25,12 @@ type (
 		Detail(ctx context.Context, key string) (out *model.DetailProductOutput, err error)
 		List(ctx context.Context) (list []*model.ProductOutput, err error)
 	}
+	IDevDataReport interface {
+		// Event 设备事件上报
+		Event(ctx context.Context, deviceKey string, data model.ReportEventData, subKey ...string) error
+		// Property 设备属性上报
+		Property(ctx context.Context, deviceKey string, data model.ReportPropertyData, subKey ...string) error
+	}
 	IDevInit interface {
 		// InitProductForTd 产品表结构初始化
 		InitProductForTd(ctx context.Context) (err error)
@@ -46,6 +52,7 @@ var (
 	localDevProduct        IDevProduct
 	localDevDevice         IDevDevice
 	localDevInit           IDevInit
+	localDevDataReport     IDevDataReport
 )
 
 func DevTSLParse() IDevTSLParse {
@@ -90,6 +97,17 @@ func DevInit() IDevInit {
 
 func RegisterDevInit(i IDevInit) {
 	localDevInit = i
+}
+
+func DevDataReport() IDevDataReport {
+	if localDevDataReport == nil {
+		panic("implement not found for interface IDevDataReport, forgot register?")
+	}
+	return localDevDataReport
+}
+
+func RegisterDevDataReport(i IDevDataReport) {
+	localDevDataReport = i
 }
 
 
