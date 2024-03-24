@@ -7,6 +7,7 @@ import (
 	"github.com/gogf/gf/v2/util/guid"
 	"sviwo/internal/consts"
 	"sviwo/internal/network/core/logic/baseLogic"
+	"sviwo/pkg/aliyun"
 	"sviwo/pkg/iotModel/sviwoProtocol"
 	"sviwo/pkg/iotModel/topicModel"
 )
@@ -38,8 +39,12 @@ func PropertySet(ctx context.Context, request topicModel.TopicDownHandlerData) (
 		Params:  requestDataMap,
 		Method:  "thing.service.property.set",
 	}
-
 	//下发消息
+	requestData, _ := json.Marshal(r.Params)
+	err := aliyun.SetDevicePropertyRequest(ctx, request.DeviceDetail.ProductKey, request.DeviceDetail.DeviceName, string(requestData))
+	if err != nil {
+		return nil, err
+	}
 
 	baseLogic.InertTdLog(ctx, consts.MsgTypePropertySet, request.DeviceDetail.DeviceName, r)
 	response, err := baseLogic.SyncRequest(ctx, r.Id, "SetProperty", r, 0)
