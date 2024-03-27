@@ -16,8 +16,6 @@ type (
 	IDevDeviceProperty interface {
 		// Set 设备属性设置
 		Set(ctx context.Context, in *model.DevicePropertyInput) (out *model.DevicePropertyOutput, err error)
-		// 获取注册设备到指定产品下所需要的证书
-		GetDeviceSecret(ctx context.Context, deviceCode string) (out *model.DeviceSecretOutput)
 	}
 	IDevTSLParse interface {
 		// ParseData 基于物模型解析上报数据
@@ -44,6 +42,8 @@ type (
 		InitDeviceForTd(ctx context.Context) (err error)
 	}
 	IDevDevice interface {
+		// 获取注册设备到指定产品下所需要的证书
+		GetDeviceSecret(ctx context.Context, deviceCode string) (out *model.DeviceSecretOutput)
 		// Get 获取设备详情
 		Get(ctx context.Context, key string) (out *model.DeviceOutput, err error)
 		// CacheDeviceDetailList 缓存所有设备详情数据

@@ -5,12 +5,17 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/internal/consts"
+	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
+	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
+	"sviwo/pkg/aliyun"
 	"sviwo/pkg/cache"
 	"sviwo/pkg/dcache"
 	"sviwo/pkg/iotModel"
@@ -176,5 +181,57 @@ func (s *sDevDevice) BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStat
 			Update()
 	}
 
+	return
+}
+
+func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
+	out *model.DeviceSecretOutput) {
+	count, err := dao.Device.Ctx(ctx).
+		Where(dao.Device.Columns().DeviceName, deviceCode).
+		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).
+		Count()
+	if err != nil {
+		panic(err)
+	}
+	if count == 0 {
+		panic(gerror.NewCode(enums.IllegalDevice))
+		return
+	}
+
+	device := new(entity.Device)
+	if err := dao.Device.Ctx(ctx).
+		Where(dao.Device.Columns().DeviceName, deviceCode).
+		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).
+		Scan(&device); err != nil {
+		panic(err)
+	}
+	if device.Status != consts.DeviceStatueRegister {
+		if err := gconv.Struct(device, &out); err != nil {
+			panic(err)
+		}
+		return
+	}
+	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
+		data, err := aliyun.RegisterDevice(ctx, device.ProductKey, device.DeviceName)
+		if err != nil {
+			return err
+		}
+		if _, err := dao.Device.Ctx(ctx).
+			Data(dao.Device.Columns().RegistryTime, gtime.Now(),
+				dao.Device.Columns().Status, consts.DeviceStatueDisable,
+				dao.Device.Columns().DeviceSecret, data.DeviceSecret,
+			).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
+			return err
+		}
+		if err := gconv.Struct(data, &out); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		if e := aliyun.DeleteDevice(ctx, device.ProductKey, device.DeviceName); err != nil {
+			panic(e)
+		}
+		panic(err)
+	}
 	return
 }
