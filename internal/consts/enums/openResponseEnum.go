@@ -36,11 +36,12 @@ var (
 		   公共异常 1000～1999
 			httpStatus = 200
 	*/
-	IllegalOperation       = New(1000, "非法操作")
-	IllegalArgument        = New(1001, "请求参数缺失")
-	RequestParamTypeError  = New(1002, "请求参数错误")
-	RequestMethodTypeError = New(1003, "请求方式错误")
-	TransactionUserError   = New(1999, "用户重复请求或伪造请求")
+	IllegalOperation          = New(1000, "非法操作")
+	RequestMissingParam       = New(1001, "请求参数缺失")
+	RequestParamTypeError     = New(1002, "请求参数错误")
+	RequestMethodTypeError    = New(1003, "请求方式错误")
+	RequestThirdInterFaceFail = New(1004, "请求第三方接口失败")
+	TransactionUserError      = New(1999, "用户重复请求或伪造请求")
 
 	/*
 		   app错误码 2000～2999
@@ -54,6 +55,12 @@ var (
 	VftCodeOverdue    = New(2005, "验证码已过期")
 	VftCodeSendFailed = New(2006, "验证码发送失败，请检查网络")
 	CarNotExists      = New(2007, "此车辆不存在")
+
+	/*
+		   第三方错误码 3000～3999
+			httpStatus = 200
+	*/
+	IllegalDevice = New(3000, "非法设备")
 )
 
 func New(code int, message string) gcode.Code {

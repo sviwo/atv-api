@@ -91,7 +91,7 @@ func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 		rule, err := gvalidErr.FirstRule()
 		if "required" == rule {
 			response.Json(
-				r, enums.New(enums.IllegalArgument.Code(), err.Error()),
+				r, enums.New(enums.RequestMissingParam.Code(), err.Error()),
 				nil,
 			)
 		} else {
@@ -145,7 +145,7 @@ func (s *sMiddleware) DecodeDataHandler(r *ghttp.Request) {
 		}
 		contentType := r.GetHeader("Content-Type")
 		if contentType == "" {
-			panic(gerror.NewCode(enums.IllegalArgument))
+			panic(gerror.NewCode(enums.RequestMissingParam))
 		}
 		switch contentType {
 		case "application/json":

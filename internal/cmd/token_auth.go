@@ -38,10 +38,10 @@ func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 	password := r.Get("password").String()
 	loginType := r.Get("loginType").Uint8()
 	if gutil.IsEmpty(username) || gutil.IsEmpty(loginType) {
-		response.JsonExit(r, enums.IllegalArgument, nil)
+		response.JsonExit(r, enums.RequestMissingParam, nil)
 	}
 	if consts.LoginTypePwd == loginType && gutil.IsEmpty(password) {
-		response.JsonExit(r, enums.IllegalArgument, nil)
+		response.JsonExit(r, enums.RequestMissingParam, nil)
 	}
 	input := model.LoginInput{Username: username, Password: password, LoginType: loginType}
 	userId := service.User().Login(r.GetCtx(), input)

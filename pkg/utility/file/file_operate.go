@@ -60,7 +60,7 @@ UploadFile 上传文件
 */
 func UploadFile(file *ghttp.UploadFile) (uri string, err error) {
 	if gutil.IsEmpty(file.Filename) {
-		return "", gerror.NewCode(enums.IllegalArgument)
+		return "", gerror.NewCode(enums.RequestMissingParam)
 	}
 	open, err := file.Open()
 	if err != nil {
@@ -79,7 +79,7 @@ DeleteFile 删除文件
 */
 func DeleteFile(fileName string) error {
 	if gutil.IsEmpty(fileName) {
-		return gerror.NewCode(enums.IllegalArgument)
+		return gerror.NewCode(enums.RequestMissingParam)
 	}
 	err := getInstance().DeleteObject(fileName)
 	if err != nil {

@@ -440,7 +440,7 @@ GfTokenDecryptToken GfToken解密
 */
 func GfTokenDecryptToken(ctx context.Context, token string) string {
 	if token == "" {
-		panic(gerror.NewCode(enums.IllegalArgument))
+		panic(gerror.NewCode(enums.RequestMissingParam))
 	}
 	parts := strings.SplitN(token, " ", 2)
 	if !(len(parts) == 2 && parts[0] == "Bearer") {

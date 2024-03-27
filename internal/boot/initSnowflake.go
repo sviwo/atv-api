@@ -5,9 +5,7 @@ import (
 	"github.com/bwmarrin/snowflake"
 )
 
-var (
-	GID *snowflake.Node
-)
+var GID *snowflake.Node
 
 func InitSnowflake(ctx context.Context) error {
 	Node, err := snowflake.NewNode(1)

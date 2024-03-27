@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-27 15:02:22
 // ==========================================================================
 
 package internal
@@ -21,37 +21,39 @@ type DeviceDao struct {
 // DeviceColumns defines and stores column names for table sw_device.
 type DeviceColumns struct {
 	DeviceId       string //
-	ProductId      string
-	ProductKey     string // 所属产品KEY 替代productId
-	Status         string // 状态：0=未启用,1=离线,2=在线
-	OnlineTimeout  string // 设备在线超时设置，单位：秒
-	RegistryTime   string // 激活时间
-	Version        string // 固件版本号
-	LastOnlineTime string // 最后上线时间
-	DeviceCode     string // 设备编号（同于车架号）
-	DeviceName     string // 设备名称
+	ProductId      string // 所属产品
+	ProductKey     string // 对应物联网平台产品的ProductKey
+	DeviceName     string // 对应物联网平台颁发的设备证书的DeviceName
+	DeviceSecret   string // 对应物联网平台颁发的设备证书的DeviceSecret
 	DeviceModel    string // 设备型号
 	Nickname       string // 产品昵称（目前只有ATV，则等同于车辆昵称）
+	Status         string // 状态：0=未启用，1=离线，2=在线
+	OnlineTimeout  string // 设备在线超时设置，单位：秒
+	ActivateTime   string // 激活时间
+	RegistryTime   string // 注册时间
+	Version        string // 固件版本号
+	LastOnlineTime string // 最后上线时间
 	CreateTime     string //
 	UpdateTime     string //
+	MetadataTable  string // 是否生成物模型表：0=否，1=是
 	IsDelete       string // 是否删除：true=已删除，false=正常
-	MetadataTable  string //是否生成物模型子表：0=否，1=是
 }
 
 // deviceColumns holds the columns for table sw_device.
 var deviceColumns = DeviceColumns{
 	DeviceId:       "device_id",
 	ProductId:      "product_id",
-	DeviceCode:     "device_code",
-	DeviceName:     "device_name",
-	Status:         "status",
-	OnlineTimeout:  "online_timeout",
-	RegistryTime:   "registry_time",
-	LastOnlineTime: "last_online_time",
-	Version:        "version",
 	ProductKey:     "product_key",
+	DeviceName:     "device_name",
+	DeviceSecret:   "device_secret",
 	DeviceModel:    "device_model",
 	Nickname:       "nickname",
+	Status:         "status",
+	OnlineTimeout:  "online_timeout",
+	ActivateTime:   "activate_time",
+	RegistryTime:   "registry_time",
+	Version:        "version",
+	LastOnlineTime: "last_online_time",
 	CreateTime:     "create_time",
 	UpdateTime:     "update_time",
 	MetadataTable:  "metadata_table",
