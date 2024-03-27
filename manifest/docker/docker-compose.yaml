@@ -16,6 +16,20 @@ services:
     privileged: true    #容器将以更高的权限运行
     ports:
       - 7001:6379
+
+  sviwo-tdengine:
+    image: tdengine/tdengine:3.2.1.0
+    container_name: sviwo-tdengine-server
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - "./taos/dnode/data:/var/lib/taos"
+      - "./taos/dnode/log:/var/log/taos"
+    ports:
+      - 6030:6030
+      - 6041:6041
+
   sviwo-mysql:
     image: mysql:8.0.25
     container_name: sviwo-mysql
