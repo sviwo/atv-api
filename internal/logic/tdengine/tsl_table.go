@@ -19,10 +19,10 @@ import (
 type sTSLTable struct{}
 
 func init() {
-	service.RegisterTSLTable(tslTableNew())
+	service.RegisterTSLTable(TslTableNew())
 }
 
-func tslTableNew() *sTSLTable {
+func TslTableNew() *sTSLTable {
 	return &sTSLTable{}
 }
 
