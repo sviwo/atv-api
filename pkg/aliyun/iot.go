@@ -3,35 +3,19 @@ package aliyun
 import (
 	"encoding/json"
 	"fmt"
-	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	iot20180120 "github.com/alibabacloud-go/iot-20180120/v6/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/glog"
 	"golang.org/x/net/context"
+	"net/http"
 	"strings"
+	"sviwo/internal/consts/enums"
 )
 
 var IotClient *iot20180120.Client
-
-func InitAliyunIotClient() error {
-	var ctx = gctx.New()
-	accessKeyID := g.Cfg().MustGet(ctx, "aliyun.accessKeyID").String()
-	accessKeySecret := g.Cfg().MustGet(ctx, "aliyun.accessKeySecret").String()
-	host := g.Cfg().MustGet(ctx, "aliyun.iot.api.host").String()
-	config := &openapi.Config{
-		// 必填，您的 AccessKey ID
-		AccessKeyId: &accessKeyID,
-		// 必填，您的 AccessKey Secret
-		AccessKeySecret: &accessKeySecret,
-	}
-	config.Endpoint = tea.String(host)
-	var err error
-	IotClient, err = iot20180120.NewClient(config)
-	return err
-}
 
 // 命令下发
 func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName string, messageContent string) error {
@@ -80,4 +64,40 @@ func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName
 		}
 	}
 	return tryErr
+}
+
+// RegisterDevice 拿到注册产品下的设备需要的参数
+func RegisterDevice(ctx context.Context, productKey, deviceName string) (data *iot20180120.RegisterDeviceResponseBodyData, err error) {
+	registerDeviceRequest := &iot20180120.RegisterDeviceRequest{
+		ProductKey:    tea.String(productKey),
+		DeviceName:    tea.String(deviceName),
+		IotInstanceId: tea.String(g.Cfg().MustGet(ctx, "aliyun.iot.iotInstanceId").String()),
+	}
+	resp, err := IotClient.RegisterDeviceWithOptions(registerDeviceRequest, &util.RuntimeOptions{})
+	if err != nil {
+		return nil, err
+	}
+	if *resp.StatusCode != http.StatusOK || !*resp.Body.Success {
+		glog.Error(ctx, util.ToJSONString(resp.Body.ErrorMessage))
+		return nil, gerror.NewCode(enums.RequestThirdInterFaceFail)
+	}
+	data = resp.Body.Data
+	return
+}
+
+// DeleteDevice 删除注册到产品下的设备
+func DeleteDevice(ctx context.Context, productKey, deviceName string) error {
+	deleteDeviceRequest := &iot20180120.DeleteDeviceRequest{
+		ProductKey: tea.String(productKey),
+		DeviceName: tea.String(deviceName),
+	}
+	resp, err := IotClient.DeleteDeviceWithOptions(deleteDeviceRequest, &util.RuntimeOptions{})
+	if err != nil {
+		return err
+	}
+	if *resp.StatusCode != http.StatusOK || !*resp.Body.Success {
+		glog.Error(ctx, util.ToJSONString(resp.Body.ErrorMessage))
+		return gerror.NewCode(enums.Fail)
+	}
+	return nil
 }

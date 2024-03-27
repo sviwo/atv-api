@@ -34,6 +34,7 @@ var (
 					controller.Common.GetEccPublicKey,
 					controller.User.Register,
 					controller.User.UpdatePassword,
+					controller.Device.GetDeviceSecret,
 				)
 				//需要登录鉴权的路由组
 				group.Group("/api", func(group *ghttp.RouterGroup) {

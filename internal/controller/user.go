@@ -33,7 +33,7 @@ func (c cUser) Info(ctx context.Context, req *v1.UserInfoReq) (res *v1.UserInfoR
 	if err = gconv.Struct(service.User().Info(ctx), &res); err != nil {
 		panic(err)
 	}
-	return res, err
+	return
 }
 
 /*

@@ -72,7 +72,7 @@ func (s *sDevDevice) Get(ctx context.Context, deviceCode string) (out *model.Dev
 		Duration: 0,
 		Name:     consts.GetDetailDeviceOutput + deviceCode,
 		Force:    false,
-	}).WithAll().Where(dao.Device.Columns().DeviceCode, deviceCode).Scan(&out)
+	}).WithAll().Where(dao.Device.Columns().DeviceName, deviceCode).Scan(&out)
 	if err != nil {
 		return
 	}
@@ -100,7 +100,7 @@ func (s *sDevDevice) List(ctx context.Context, productKey string, keyWord string
 		m = m.Where(dao.Device.Columns().ProductKey, productKey)
 	}
 	if keyWord != "" {
-		m = m.WhereLike(dao.Device.Columns().DeviceCode, "%"+keyWord+"%").WhereOrLike(dao.Device.Columns().DeviceName, "%"+keyWord+"%")
+		m = m.WhereLike(dao.Device.Columns().DeviceName, "%"+keyWord+"%").WhereOrLike(dao.Device.Columns().DeviceName, "%"+keyWord+"%")
 	}
 
 	err = m.WhereIn(dao.Device.Columns().ProductKey,

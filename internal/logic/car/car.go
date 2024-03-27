@@ -70,7 +70,7 @@ func (s sCar) EnabledMobileKey(ctx context.Context, deviceId int64) {
 	if userDevice.MobileKey {
 		mobileKey = consts.CarMobileKeyNo
 	}
-	if err, _ := dao.UserDevice.Ctx(ctx).Data("mobile_key", mobileKey).
+	if _, err := dao.UserDevice.Ctx(ctx).Data("mobile_key", mobileKey).
 		Where("id", userDevice.Id).Update(); err != nil {
 		panic(err)
 	}

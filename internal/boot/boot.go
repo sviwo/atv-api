@@ -59,6 +59,7 @@ var InitFuncNoDeferListForIotCore = []NoDeferFunc{
 	{model.InitCoreLogic, "核心处理逻辑"},
 	{InitSnowflake, "雪花算法ID"},
 	{InitSendEmail, "发送邮件"},
+	{InitAliyunIotClient, "阿里云iot"},
 	{InitAmqp, "Amqp"},
 	{tdengine.CreateTDDatabase, "时序数据库创建"},
 	{tdengine.CreateStable, "时序库日志表创建"},

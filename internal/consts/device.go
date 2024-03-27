@@ -1,7 +1,8 @@
 package consts
 
 const (
-	DeviceStatueDisable = 0
-	DeviceStatueOffline = 1
-	DeviceStatueOnline  = 2
+	DeviceStatueRegister = 0
+	DeviceStatueDisable  = 1
+	DeviceStatueOffline  = 2
+	DeviceStatueOnline   = 3
 )
