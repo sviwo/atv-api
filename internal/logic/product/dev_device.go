@@ -211,11 +211,11 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 		}
 		return
 	}
+	data, err := aliyun.RegisterDevice(ctx, device.ProductKey, device.DeviceName)
+	if err != nil {
+		panic(err)
+	}
 	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
-		data, err := aliyun.RegisterDevice(ctx, device.ProductKey, device.DeviceName)
-		if err != nil {
-			return err
-		}
 		if _, err := dao.Device.Ctx(ctx).
 			Data(dao.Device.Columns().RegistryTime, gtime.Now(),
 				dao.Device.Columns().Status, consts.DeviceStatueDisable,
