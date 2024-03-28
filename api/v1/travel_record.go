@@ -12,7 +12,7 @@ type TravelRecordQueryReq struct {
 }
 
 type TravelRecordRes struct {
-	Result interface{} `dc:"列表数据"`
+	Result interface{} `json:"result" dc:"列表数据"`
 	CommonPaginationRes
 }
 
