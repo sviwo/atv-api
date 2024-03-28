@@ -3,6 +3,7 @@ package aliyun
 import (
 	"encoding/json"
 	"fmt"
+	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
 	iot20180120 "github.com/alibabacloud-go/iot-20180120/v6/client"
 	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
@@ -17,7 +18,23 @@ import (
 
 var IotClient *iot20180120.Client
 
-// 命令下发
+func InitAliyunIotClient(ctx context.Context) error {
+	accessKeyID := g.Cfg().MustGet(ctx, "aliyun.accessKeyID").String()
+	accessKeySecret := g.Cfg().MustGet(ctx, "aliyun.accessKeySecret").String()
+	host := g.Cfg().MustGet(ctx, "aliyun.iot.api.host").String()
+	config := &openapi.Config{
+		// 必填，您的 AccessKey ID
+		AccessKeyId: &accessKeyID,
+		// 必填，您的 AccessKey Secret
+		AccessKeySecret: &accessKeySecret,
+	}
+	config.Endpoint = tea.String(host)
+	var err error
+	IotClient, err = iot20180120.NewClient(config)
+	return err
+}
+
+// SetDevicePropertyRequest 命令下发
 func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName string, messageContent string) error {
 	pubRequest := &iot20180120.SetDevicePropertyRequest{
 		ProductKey:    tea.String(productKey),
@@ -37,28 +54,27 @@ func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName
 			return _err
 		}
 		glog.Printf(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
-		//glog.Infof(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
 		return nil
 	}()
 	if tryErr != nil {
-		var error = &tea.SDKError{}
+		var err = &tea.SDKError{}
 		if _t, ok := tryErr.(*tea.SDKError); ok {
-			error = _t
+			err = _t
 		} else {
-			error.Message = tea.String(tryErr.Error())
+			err.Message = tea.String(tryErr.Error())
 		}
 		// 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
 		// 错误 message
-		glog.Errorf(ctx, tea.StringValue(error.Message))
+		glog.Errorf(ctx, tea.StringValue(err.Message))
 		// 诊断地址
 		var data interface{}
-		d := json.NewDecoder(strings.NewReader(tea.StringValue(error.Data)))
-		d.Decode(&data)
+		d := json.NewDecoder(strings.NewReader(tea.StringValue(err.Data)))
+		tryErr := d.Decode(&data)
 		if m, ok := data.(map[string]interface{}); ok {
 			recommend, _ := m["Recommend"]
 			fmt.Println(recommend)
 		}
-		_, tryErr = util.AssertAsString(error.Message)
+		_, tryErr = util.AssertAsString(err.Message)
 		if tryErr != nil {
 			return tryErr
 		}

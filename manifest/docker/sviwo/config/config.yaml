@@ -14,8 +14,6 @@ system:
     recordLimit: 1000 #设备数据缓存条数限制，超过条数的数据将被清除。默认为1000条
   pluginsPath: "./plugins/built"
 
-
-
 logger:
   path: "./logs/server/"          # 日志文件路径。默认为空，表示关闭，仅输出到终端
   file: "{Y-m-d}.log"             # 日志文件格式。默认为"{Y-m-d}.log"

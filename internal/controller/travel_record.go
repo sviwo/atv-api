@@ -24,16 +24,14 @@ func (c cTravelRecord) GetTravelRecordList(ctx context.Context, req *v1.TravelRe
 	res = new(v1.TravelRecordRes)
 	res.Total = total
 	res.CurrentPage = req.PageNum
-	res.Result = out
+	if err = gconv.Struct(out, &res.Result); err != nil {
+		panic(err)
+	}
 	return
 }
 
 func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordDeleteReq) (res *v1.EmptyFieldRes, err error) {
-	tData := model.TravelRecordInput{}
-	if err = gconv.Struct(req, &tData); err != nil {
-		panic(err)
-	}
-	if err = service.TravelRecord().Delete(ctx, tData); err != nil {
+	if err = service.TravelRecord().Delete(ctx, req.TravelRecordId); err != nil {
 		panic(err)
 	}
 	return

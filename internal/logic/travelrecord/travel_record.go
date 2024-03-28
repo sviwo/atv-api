@@ -42,11 +42,11 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 	return
 }
 
-func (s sTravelRecord) Delete(ctx context.Context, in model.TravelRecordInput) (err error) {
+func (s sTravelRecord) Delete(ctx context.Context, travelRecordId int64) (err error) {
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	_, err = dao.TravelRecord.Ctx(ctx).
 		Data(g.Map{"is_delete": consts.DeleteYes}).
-		Where(g.Map{"travel_record_id": in.TravelRecordId, "user_id": userId}).
+		Where(g.Map{"travel_record_id": travelRecordId, "user_id": userId}).
 		Update()
 	return
 }

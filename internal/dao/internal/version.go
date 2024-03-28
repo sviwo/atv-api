@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-28 15:15:17
 // ==========================================================================
 
 package internal
@@ -21,7 +21,6 @@ type VersionDao struct {
 // VersionColumns defines and stores column names for table sw_version.
 type VersionColumns struct {
 	VersionId         string //
-	VersionNumber     string // 版本号，用于app版本比较判断
 	VersionCode       string // 版本编码：app显示当前版本号使用，例如：V1.1.1
 	VersionType       string // 版本类型：0=APP更新，1=固件升级
 	VersionUpdateType string // 版本更新类型：0=弱更新，1=强更新
@@ -36,7 +35,6 @@ type VersionColumns struct {
 // versionColumns holds the columns for table sw_version.
 var versionColumns = VersionColumns{
 	VersionId:         "version_id",
-	VersionNumber:     "version_number",
 	VersionCode:       "version_code",
 	VersionType:       "version_type",
 	VersionUpdateType: "version_update_type",

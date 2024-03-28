@@ -205,7 +205,7 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 		Scan(&device); err != nil {
 		panic(err)
 	}
-	if device.Status != consts.DeviceStatueRegister {
+	if device.Status != consts.DeviceStatueDisable {
 		if err := gconv.Struct(device, &out); err != nil {
 			panic(err)
 		}
@@ -218,7 +218,7 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
 		if _, err := dao.Device.Ctx(ctx).
 			Data(dao.Device.Columns().RegistryTime, gtime.Now(),
-				dao.Device.Columns().Status, consts.DeviceStatueDisable,
+				dao.Device.Columns().Status, consts.DeviceStatueOffline,
 				dao.Device.Columns().DeviceSecret, data.DeviceSecret,
 			).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
 			return err
