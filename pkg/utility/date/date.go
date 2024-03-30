@@ -236,3 +236,46 @@ func GetTimeTagGroup() string {
 	month := now.Month()
 	return fmt.Sprintf("%d:%02d:", year, month)
 }
+
+// 时间戳转 yyyy-MM-dd HH:mm:ss
+func TimeStampToDateTime(timeStamp int64) string {
+	tm := gtime.NewFromTimeStamp(timeStamp)
+	return tm.Format("Y-m-d H:i:s")
+}
+
+// 时间戳转 yyyy-MM-dd
+func TimeStampToDate(timeStamp int64) string {
+	tm := gtime.NewFromTimeStamp(timeStamp)
+	return tm.Format("Y-m-d")
+}
+
+// 日期字符串转时间戳（秒）
+func StrToTimestamp(dateStr string) int64 {
+	tm, err := gtime.StrToTime(dateStr)
+	if err != nil {
+		return 0
+	}
+	return tm.Timestamp()
+}
+
+// 生成最近一周的日期
+func GetRecent7Date() (dates []string) {
+	gt := gtime.New(time.Now())
+	dates = []string{
+		gt.Format("Y-m-d"),
+		gt.Add(-gtime.D * 1).Format("Y-m-d"),
+		gt.Add(-gtime.D * 2).Format("Y-m-d"),
+		gt.Add(-gtime.D * 3).Format("Y-m-d"),
+		gt.Add(-gtime.D * 4).Format("Y-m-d"),
+		gt.Add(-gtime.D * 5).Format("Y-m-d"),
+		gt.Add(-gtime.D * 6).Format("Y-m-d"),
+	}
+	return
+}
+
+// 获取一周前的日期
+func GetBefore7Date() (date string) {
+	gt := gtime.New(time.Now())
+	date = gt.Add(-gtime.D * 6).Format("Y-m-d")
+	return
+}

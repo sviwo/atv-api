@@ -1,9 +1,16 @@
 package utils
 
 import (
+	"context"
 	"fmt"
+	"github.com/gogf/gf/v2/encoding/gcharset"
+	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
+	"io"
 	"log"
 	"net"
+	"net/http"
 	"strings"
 )
 
@@ -89,4 +96,86 @@ func intToIP(n int) net.IP {
 	b[2] = byte(n >> 8)
 	b[3] = byte(n)
 	return net.IPv4(b[0], b[1], b[2], b[3])
+}
+
+// 获取客户端IP
+func GetClientIp(r *ghttp.Request) string {
+	ip := r.Header.Get("X-Forwarded-For")
+	if ip == "" {
+		ip = r.GetClientIp()
+	}
+	return ip
+}
+
+// 服务端ip
+func GetLocalIP() (ip string, err error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return
+	}
+	for _, addr := range addrs {
+		ipAddr, ok := addr.(*net.IPNet)
+		if !ok {
+			continue
+		}
+		if ipAddr.IP.IsLoopback() {
+			continue
+		}
+		if !ipAddr.IP.IsGlobalUnicast() {
+			continue
+		}
+		return ipAddr.IP.String(), nil
+	}
+	return
+}
+
+// 获取ip所属城市
+func GetCityByIp(ip string) string {
+	if ip == "" {
+		return ""
+	}
+	if ip == "[::1]" || ip == "127.0.0.1" {
+		return "内网IP"
+	}
+	url := "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip
+	bytes := g.Client().GetBytes(context.Background(), url)
+	src := string(bytes)
+	srcCharset := "GBK"
+	tmp, _ := gcharset.ToUTF8(srcCharset, src)
+	json, err := gjson.DecodeToJson(tmp)
+	if err != nil {
+		return ""
+	}
+	if json.Get("code").Int() == 0 {
+		city := fmt.Sprintf("%s %s", json.Get("pro").String(), json.Get("city").String())
+		return city
+	} else {
+		return ""
+	}
+}
+
+// GetPublicIP 获取公网IP
+func GetPublicIP() (ip string, err error) {
+	resp, err := http.Get("https://ifconfig.co/ip")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer func(Body io.ReadCloser) {
+		if err := Body.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	ip = string(body)
+	// 去除空格
+	ip = strings.Replace(ip, " ", "", -1)
+	// 去除换行符
+	ip = strings.Replace(ip, "\n", "", -1)
+
+	return
 }

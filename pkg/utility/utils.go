@@ -9,21 +9,14 @@ import (
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/encoding/gbase64"
-	"github.com/gogf/gf/v2/encoding/gcharset"
-	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/encoding/gurl"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/glog"
-	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"gopkg.in/gomail.v2"
-	"io"
-	"math/rand"
-	"net"
-	"net/http"
 	"strconv"
 	"strings"
 	"sviwo/internal/boot"
@@ -42,18 +35,6 @@ func EncryptPassword(password, salt string, num int) string {
 	return gmd5.MustEncryptString(password + gmd5.MustEncryptString(salt))
 }
 
-// 时间戳转 yyyy-MM-dd HH:mm:ss
-func TimeStampToDateTime(timeStamp int64) string {
-	tm := gtime.NewFromTimeStamp(timeStamp)
-	return tm.Format("Y-m-d H:i:s")
-}
-
-// 时间戳转 yyyy-MM-dd
-func TimeStampToDate(timeStamp int64) string {
-	tm := gtime.NewFromTimeStamp(timeStamp)
-	return tm.Format("Y-m-d")
-}
-
 // 获取当前请求接口域名
 func GetDomain(r *ghttp.Request) (string, error) {
 	pathInfo, err := gurl.ParseURL(r.GetUrl(), -1)
@@ -68,72 +49,6 @@ func GetDomain(r *ghttp.Request) (string, error) {
 // GetUserAgent 获取user-agent
 func GetUserAgent(ctx context.Context) string {
 	return ghttp.RequestFromCtx(ctx).Header.Get("User-Agent")
-}
-
-// 获取客户端IP
-func GetClientIp(r *ghttp.Request) string {
-	ip := r.Header.Get("X-Forwarded-For")
-	if ip == "" {
-		ip = r.GetClientIp()
-	}
-	return ip
-}
-
-// 服务端ip
-func GetLocalIP() (ip string, err error) {
-	addrs, err := net.InterfaceAddrs()
-	if err != nil {
-		return
-	}
-	for _, addr := range addrs {
-		ipAddr, ok := addr.(*net.IPNet)
-		if !ok {
-			continue
-		}
-		if ipAddr.IP.IsLoopback() {
-			continue
-		}
-		if !ipAddr.IP.IsGlobalUnicast() {
-			continue
-		}
-		return ipAddr.IP.String(), nil
-	}
-	return
-}
-
-// 获取ip所属城市
-func GetCityByIp(ip string) string {
-	if ip == "" {
-		return ""
-	}
-	if ip == "[::1]" || ip == "127.0.0.1" {
-		return "内网IP"
-	}
-	url := "http://whois.pconline.com.cn/ipJson.jsp?json=true&ip=" + ip
-	bytes := g.Client().GetBytes(context.Background(), url)
-	src := string(bytes)
-	srcCharset := "GBK"
-	tmp, _ := gcharset.ToUTF8(srcCharset, src)
-	json, err := gjson.DecodeToJson(tmp)
-	if err != nil {
-		return ""
-	}
-	if json.Get("code").Int() == 0 {
-		city := fmt.Sprintf("%s %s", json.Get("pro").String(), json.Get("city").String())
-		return city
-	} else {
-		return ""
-	}
-}
-
-// 日期字符串转时间戳（秒）
-func StrToTimestamp(dateStr string) int64 {
-	tm, err := gtime.StrToTime(dateStr)
-	if err != nil {
-		g.Log().Error(context.Background(), err)
-		return 0
-	}
-	return tm.Timestamp()
 }
 
 // GetDbConfig get db boot
@@ -292,62 +207,6 @@ func CurrencyLong(currency interface{}) int64 {
 //	return strings.Replace(ret, "\\", "/", -1)
 //}
 
-// 流水号
-func CreateLogSn(prefix string) string {
-	rand.Seed(time.Now().UnixNano())
-	return prefix + strings.Replace(time.Now().Format("20060102150405.000"), ".", "", -1) + strconv.Itoa(rand.Intn(899)+100)
-}
-
-// 获取随机整数
-func RandInt(max int) int {
-	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(max)
-}
-
-//获取今天的开始时间 0点
-//gtime.New(time.Now()).StartOfDay()
-
-//获取今天的结束时间 24点
-//gtime.New(time.Now()).EndOfDay()
-
-//日期范围查询
-//whereCondition.Set(dao.UserInfo.Columns.CreatedAt+" >=", gtime.New(req.Date).StartOfDay())
-//whereCondition.Set(dao.UserInfo.Columns.CreatedAt+" <=", gtime.New(req.Date).EndOfDay())
-
-// 生成最近一周的日期
-func GetRecent7Date() (dates []string) {
-	gt := gtime.New(time.Now())
-	dates = []string{
-		gt.Format("Y-m-d"),
-		gt.Add(-gtime.D * 1).Format("Y-m-d"),
-		gt.Add(-gtime.D * 2).Format("Y-m-d"),
-		gt.Add(-gtime.D * 3).Format("Y-m-d"),
-		gt.Add(-gtime.D * 4).Format("Y-m-d"),
-		gt.Add(-gtime.D * 5).Format("Y-m-d"),
-		gt.Add(-gtime.D * 6).Format("Y-m-d"),
-	}
-	return
-}
-
-// 获取一周前的日期
-func GetBefore7Date() (date string) {
-	gt := gtime.New(time.Now())
-	date = gt.Add(-gtime.D * 6).Format("Y-m-d")
-	return
-}
-
-func GetOrderNum() (number string) {
-	rand.Seed(time.Now().UnixNano())
-	number = gconv.String(time.Now().UnixNano()) + gconv.String(rand.Intn(1000))
-	return
-}
-
-func GetRefundNum() (number string) {
-	rand.Seed(time.Now().UnixNano())
-	number = "refund" + gconv.String(time.Now().UnixNano()) + gconv.String(rand.Intn(1000))
-	return
-}
-
 // 查看数组中是否有对应的值
 func InArray(needle string, haystack []string) bool {
 	for _, v := range haystack {
@@ -484,32 +343,6 @@ func BuildTree(array []map[string]interface{}) (treeDataList []interface{}) {
 			parentObj["children"] = append(gconv.SliceAny(parentObj["children"]), mapObj)
 		}
 	}
-	return
-}
-
-// GetPublicIP 获取公网IP
-func GetPublicIP() (ip string, err error) {
-	resp, err := http.Get("https://ifconfig.co/ip")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer func(Body io.ReadCloser) {
-		if err := Body.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}(resp.Body)
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	ip = string(body)
-	// 去除空格
-	ip = strings.Replace(ip, " ", "", -1)
-	// 去除换行符
-	ip = strings.Replace(ip, "\n", "", -1)
-
 	return
 }
 
