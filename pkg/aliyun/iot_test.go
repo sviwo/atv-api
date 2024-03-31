@@ -9,13 +9,16 @@ import (
 )
 
 func TestSetDevicePropertyRequest(t *testing.T) {
+	ctx := context.Background()
+	InitAliyunIotClient(ctx)
 	maps := make(map[string]interface{})
-	maps["VehSpeed"] = 88.00
+	maps["Light"] = 1
+	//maps["speaker"] = 0
 	marshal, err := json.Marshal(maps)
 	if err != nil {
 		return
 	}
-	err = SetDevicePropertyRequest(context.Background(), "k0ugjmf1ois", "sviwo_atv", string(marshal))
+	err = SetDevicePropertyRequest(ctx, "k0ugjmf1ois", "sviwo_atv", string(marshal))
 	if err != nil {
 		return
 	}
@@ -39,6 +42,7 @@ func TestSetDevicePropertyRequest(t *testing.T) {
 
 func TestRegisterDevice(t *testing.T) {
 	ctx := context.Background()
+	InitAliyunIotClient(ctx)
 	data, err := RegisterDevice(ctx, "k0ugjmf1ois", "sviwo-"+grand.S(10))
 	if err != nil {
 		panic(err)

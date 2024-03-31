@@ -31,7 +31,7 @@ type TSLParamExtension struct {
 	// Format      *string         `json:"format,omitempty" dc:"时间类型:date,如:yyyy-MM-dd"` // 时间类型:date,如:yyyy-MM-dd
 	Elements    []TSLEnumType   `json:"elements,omitempty" dc:"枚举类型:enum"`     // 枚举类型:enum
 	ElementType *TSLArrayType   `json:"elementType,omitempty" dc:"数组类型:array"` // 数组类型:array
-	Properties  []TSLObjectType `json:"properties,omitempty" dc:"对象类型:object"` // 对象类型:object
+	Properties  []TSLStructType `json:"properties,omitempty" dc:"对象类型:struct"` // 对象类型:struct
 }
 
 // 扩展类型参数:枚举型
@@ -46,11 +46,11 @@ type TSLArrayType struct {
 }
 
 // 扩展类型参数:对象型
-type TSLObjectType struct {
-	Key       string       `json:"key" dc:"参数标识" v:"regex:^[A-Za-z_]+[\\w]*$#标识由字母、数字和下划线组成,且不能以数字开头"`
-	Name      string       `json:"name" dc:"参数名称"`     // 参数名称
-	ValueType TSLValueType `json:"valueType" dc:"参数值"` // 参数值
-	Desc      string       `json:"desc" dc:"描述"`       // 描述
+type TSLStructType struct {
+	Key       string       `json:"identifier" dc:"参数标识" v:"regex:^[A-Za-z_]+[\\w]*$#标识由字母、数字和下划线组成,且不能以数字开头"`
+	Name      string       `json:"name" dc:"参数名称"`    // 参数名称
+	ValueType TSLValueType `json:"dataType" dc:"参数值"` // 参数值
+	Desc      string       `json:"desc" dc:"描述"`      // 描述
 }
 
 // 类型参数
@@ -64,7 +64,7 @@ type TSLProperty struct {
 	Key        string       `json:"identifier" dc:"属性标识" v:"required|regex:^[A-Za-z_]+[\\w]*$#请输入属性标识|标识由字母、数字和下划线组成,且不能以数字开头"`
 	Name       string       `json:"name" dc:"属性名称" v:"required#请输入属性名称"`                    // 属性名称
 	AccessMode string       `json:"accessMode" dc:"属性访问类型:rw=读写,r=只读" v:"required#请选择是否只读"` // 属性访问类型
-	ValueType  TSLValueType `json:"dataType" dc:"属性值"`                                      // 属性值
+	ValueType  TSLValueType `json:"dataType" dc:"属性值"`                                      // 系统属性值
 	Desc       string       `json:"desc" dc:"描述"`                                           // 描述
 }
 

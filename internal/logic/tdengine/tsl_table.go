@@ -81,7 +81,7 @@ func (s *sTSLTable) CreateStable(ctx context.Context, tsl *model.TSL) (err error
 	for _, v := range tsl.Properties {
 		maxLength := 0
 		if v.ValueType.TSLParamBase.MaxLength != nil {
-			maxLength = *v.ValueType.TSLParamBase.MaxLength
+			maxLength = *v.ValueType.TSLParam.TSLParamBase.MaxLength
 		}
 		columns = append(columns, s.column(v.ValueType.Type, v.Key, v.Name, maxLength))
 		// 属性上报时间
@@ -93,8 +93,8 @@ func (s *sTSLTable) CreateStable(ctx context.Context, tsl *model.TSL) (err error
 	tags[0] = "device VARCHAR(255)"
 	for i, v := range tsl.Tags {
 		maxLength := 0
-		if v.ValueType.TSLParamBase.MaxLength != nil {
-			maxLength = *v.ValueType.TSLParamBase.MaxLength
+		if v.ValueType.TSLParam.TSLParamBase.MaxLength != nil {
+			maxLength = *v.ValueType.TSLParam.TSLParamBase.MaxLength
 		}
 		tags[i+1] = s.column(v.ValueType.Type, v.Key, v.Name, maxLength, 1)
 	}

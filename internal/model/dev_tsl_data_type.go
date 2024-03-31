@@ -27,8 +27,9 @@ type DataTypeValueExtension struct {
 
 // 参数值（类型、类型参数）
 type TSLValueType struct {
-	Type     string `json:"type" dc:"数据类型" v:"required#请选择数据类型"` // 类型
-	TSLParam        // 参数
+	Type      string      `json:"type" dc:"数据类型" v:"required#请选择数据类型"` // 类型
+	ValueType interface{} `json:"specs" dc:"属性值"`                      // 系统属性值
+	TSLParam              // 参数
 }
 
 func (t TSLValueType) ConvertValue(v interface{}) interface{} {
@@ -53,6 +54,8 @@ func (t TSLValueType) ConvertValue(v interface{}) interface{} {
 	case consts.TypeArray:
 		transfer = TArray(t.TSLParam)
 	case consts.TypeObject:
+		transfer = TObject(t.TSLParam)
+	case consts.TypeStruct:
 		transfer = TObject(t.TSLParam)
 	default:
 		return nil

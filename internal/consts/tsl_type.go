@@ -11,4 +11,5 @@ const (
 	TypeEnum   = "enum"
 	TypeArray  = "array"
 	TypeObject = "object"
+	TypeStruct = "struct"
 )
