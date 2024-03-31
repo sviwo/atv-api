@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/gogf/gf/v2/util/gutil"
 	v1 "sviwo/api/v1"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
@@ -24,8 +25,15 @@ func (c cTravelRecord) GetTravelRecordList(ctx context.Context, req *v1.TravelRe
 	res = new(v1.TravelRecordRes)
 	res.Total = total
 	res.CurrentPage = req.PageNum
-	if err = gconv.Struct(out, &res.Result); err != nil {
-		panic(err)
+	if !gutil.IsEmpty(out) {
+		for _, tr := range out {
+			recordBase := new(v1.TravelRecordBase)
+			if err = gconv.Scan(tr, &recordBase); err != nil {
+				panic(err)
+			}
+			recordBase.Duration = int(tr.EndTime.Sub(tr.StartTime).Minutes())
+			res.Result = append(res.Result, recordBase)
+		}
 	}
 	return
 }
