@@ -53,7 +53,7 @@ const (
 	EnableDisplay = true
 	EnableShield  = false
 
-	//是否生成物模型表或子表：true(1)=是，false(0)=否
-	MetadataTable   = true
-	DeMetadataTable = false
+	//是否生成物模型表或子表：1，0 否
+	MetadataTable   = 1
+	DeMetadataTable = 0
 )
