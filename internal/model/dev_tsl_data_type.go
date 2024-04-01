@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/gogf/gf/v2/util/gconv"
 	"strconv"
 	"sviwo/internal/consts"
 	"time"
@@ -27,9 +28,8 @@ type DataTypeValueExtension struct {
 
 // 参数值（类型、类型参数）
 type TSLValueType struct {
-	Type      string      `json:"type" dc:"数据类型" v:"required#请选择数据类型"` // 类型
-	ValueType interface{} `json:"specs" dc:"属性值"`                      // 系统属性值
-	TSLParam              // 参数
+	Type     string   `json:"type" dc:"数据类型" v:"required#请选择数据类型"` // 类型
+	TSLParam TSLParam `json:"specs" dc:"数据类型" v:"校验数据"`            // 类型    // 参数
 }
 
 func (t TSLValueType) ConvertValue(v interface{}) interface{} {
@@ -78,10 +78,10 @@ func (tInt TInt) Convert(v interface{}) interface{} {
 		}
 		number = int(floatNumber)
 	}
-	if tInt.TSLParamBase.Min != nil && *tInt.TSLParamBase.Min > number {
+	if tInt.TSLParamBase.Min != nil && gconv.Int(*tInt.TSLParamBase.Min) > number {
 		return *tInt.TSLParamBase.Min
 	}
-	if tInt.TSLParamBase.Max != nil && *tInt.TSLParamBase.Max > number {
+	if tInt.TSLParamBase.Max != nil && gconv.Int(*tInt.TSLParamBase.Max) > number {
 		return *tInt.TSLParamBase.Max
 	}
 	return number
@@ -94,10 +94,10 @@ func (tLong TLong) Convert(v interface{}) interface{} {
 	if !ok {
 		return 0
 	}
-	if tLong.TSLParamBase.Min != nil && float64(*tLong.TSLParamBase.Min) > number {
+	if tLong.TSLParamBase.Min != nil && gconv.Float64(*tLong.TSLParamBase.Min) > number {
 		return *tLong.TSLParamBase.Min
 	}
-	if tLong.TSLParamBase.Max != nil && float64(*tLong.TSLParamBase.Max) > number {
+	if tLong.TSLParamBase.Max != nil && gconv.Float64(*tLong.TSLParamBase.Max) > number {
 		return *tLong.TSLParamBase.Max
 	}
 	return number
@@ -110,15 +110,15 @@ func (tFloat TFloat) Convert(v interface{}) interface{} {
 	if !ok {
 		return 0
 	}
-	if tFloat.TSLParamBase.Min != nil && float32(*tFloat.TSLParamBase.Min) > float32(number) {
-		number = float64(*tFloat.TSLParamBase.Min)
+	if tFloat.TSLParamBase.Min != nil && gconv.Float32(*tFloat.TSLParamBase.Min) > float32(number) {
+		number = gconv.Float64(*tFloat.TSLParamBase.Min)
 	}
-	if tFloat.TSLParamBase.Max != nil && float32(*tFloat.TSLParamBase.Max) > float32(number) {
-		number = float64(*tFloat.TSLParamBase.Max)
+	if tFloat.TSLParamBase.Max != nil && gconv.Float32(*tFloat.TSLParamBase.Max) > float32(number) {
+		number = gconv.Float64(*tFloat.TSLParamBase.Max)
 	}
 	defaultDecimal := 2
 	if tFloat.TSLParamBase.Decimals != nil {
-		defaultDecimal = *tFloat.TSLParamBase.Decimals
+		defaultDecimal = gconv.Int(*tFloat.TSLParamBase.Decimals)
 	}
 	number32, _ := strconv.ParseFloat(strconv.FormatFloat(number, 'f', defaultDecimal, 64), 32)
 	return float32(number32)
@@ -131,15 +131,15 @@ func (tDouble TDouble) Convert(v interface{}) interface{} {
 	if !ok {
 		return 0
 	}
-	if tDouble.TSLParamBase.Min != nil && float64(*tDouble.TSLParamBase.Min) > number {
-		number = float64(*tDouble.TSLParamBase.Min)
+	if tDouble.TSLParamBase.Min != nil && gconv.Float64(*tDouble.TSLParamBase.Min) > number {
+		number = gconv.Float64(*tDouble.TSLParamBase.Min)
 	}
-	if tDouble.TSLParamBase.Max != nil && float64(*tDouble.TSLParamBase.Max) > number {
-		number = float64(*tDouble.TSLParamBase.Max)
+	if tDouble.TSLParamBase.Max != nil && gconv.Float64(*tDouble.TSLParamBase.Max) > number {
+		number = gconv.Float64(*tDouble.TSLParamBase.Max)
 	}
 	defaultDecimal := 2
 	if tDouble.TSLParamBase.Decimals != nil {
-		defaultDecimal = *tDouble.TSLParamBase.Decimals
+		defaultDecimal = gconv.Int(*tDouble.TSLParamBase.Decimals)
 	}
 	number64, _ := strconv.ParseFloat(strconv.FormatFloat(number, 'f', defaultDecimal, 64), 32)
 	return number64
@@ -152,8 +152,8 @@ func (tText TText) Convert(v interface{}) interface{} {
 	if !ok {
 		return ""
 	}
-	if tText.MaxLength != nil && *tText.MaxLength > 0 && len(text) > *tText.MaxLength {
-		return text[:*tText.MaxLength-1]
+	if tText.MaxLength != nil && gconv.Int(*tText.MaxLength) > 0 && len(text) > gconv.Int(*tText.MaxLength) {
+		return text[:gconv.Int(*tText.MaxLength)-1]
 	} else {
 		return text
 	}

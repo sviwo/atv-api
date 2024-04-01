@@ -13,9 +13,9 @@ const (
 
 // 基础类型参数
 type TSLParamBase struct {
-	Max      *int    `json:"max,omitempty" dc:"最大,数字类型:int、long、float、double"`  // 最大,数字类型:int、long、float、double
-	Min      *int    `json:"min,omitempty" dc:"最小,数字类型:int、long、float、double"`  // 最小,数字类型:int、long、float、double
-	Decimals *int    `json:"decimals,omitempty" dc:"小数位数,数字类型:float、double"`    // 小数位数,数字类型:float、double
+	Max      *string `json:"max,omitempty" dc:"最大,数字类型:int、long、float、double"`  // 最大,数字类型:int、long、float、double
+	Min      *string `json:"min,omitempty" dc:"最小,数字类型:int、long、float、double"`  // 最小,数字类型:int、long、float、double
+	Decimals *string `json:"decimals,omitempty" dc:"小数位数,数字类型:float、double"`    // 小数位数,数字类型:float、double
 	Unit     *string `json:"unit,omitempty" dc:"单位,数字类型:int、long、float、double"` // 单位,数字类型:int、long、float、double
 
 	TrueText   *string `json:"trueText,omitempty" dc:"为true时的文本,默认为'是',布尔类型:bool"`       // 为true时的文本,默认为`是`,布尔类型:bool
@@ -23,7 +23,7 @@ type TSLParamBase struct {
 	TrueValue  *bool   `json:"trueValue,omitempty" dc:"为true时的值,默认为'true',布尔类型:bool"`    // 为true时的值,默认为`true`,布尔类型:bool
 	FalseValue *bool   `json:"falseValue,omitempty" dc:"为false时的值,默认为'false',布尔类型:bool"` // 为false时的值,默认为`false`,布尔类型:bool
 
-	MaxLength *int `json:"maxLength,omitempty" dc:"最大长度,字符类型:string"` // 最大长度,字符类型:string
+	MaxLength *string `json:"length,omitempty" dc:"最大长度,字符类型:string"` // 最大长度,字符类型:string
 }
 
 // 扩展类型参数
