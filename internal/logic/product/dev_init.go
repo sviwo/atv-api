@@ -3,15 +3,14 @@ package product
 import (
 	"context"
 	"encoding/json"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
 	"sviwo/pkg/tsd/comm"
-
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type sDevInit struct{}
@@ -54,13 +53,20 @@ func (s *sDevInit) InitProductForTd(ctx context.Context) (err error) {
 		if b {
 			continue
 		}
-
+		//将阿里云物模型转换为系统物模型
 		var tsl *model.TSL
 		err = json.Unmarshal([]byte(p.Metadata), &tsl)
 		if err != nil {
 			g.Log().Error(ctx, err)
 			continue
 		}
+		//处理tsl属性格式
+		//for _, p := range tsl.Properties {
+		//	if mapInfo, ok := p.ValueType.(map[string]interface{}); ok {
+		//		g.Log().Error(ctx, mapInfo)
+		//	}
+		//}
+
 		if len(tsl.Properties) == 0 {
 			g.Log().Errorf(ctx, "产品 %s 物模型数据异常", p.ProductKey)
 			continue
