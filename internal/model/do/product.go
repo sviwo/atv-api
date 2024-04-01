@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // =================================================================================
 
 package do
@@ -11,11 +11,15 @@ import (
 
 // Product is the golang structure of table sw_product for DAO operations like Where/Data.
 type Product struct {
-	g.Meta       `orm:"table:sw_product, do:true"`
-	ProductId    interface{} //
-	ProductName  interface{} // 产品名称
-	ProductModel interface{} // 产品型号
-	CreateTime   *gtime.Time //
-	UpdateTime   *gtime.Time //
-	IsDelete     interface{} // 是否删除：true=已删除，false=正常
+	g.Meta        `orm:"table:sw_product, do:true"`
+	ProductId     interface{} //
+	ProductName   interface{} // 产品名称
+	ProductKey    interface{} // 产品key
+	ProductModel  interface{} // 产品型号
+	Status        interface{} // 发布状态：0=未发布，1=已发布
+	Metadata      interface{} // 物模型
+	CreateTime    *gtime.Time //
+	UpdateTime    *gtime.Time //
+	IsDelete      interface{} // 是否删除：true=已删除，false=正常
+	MetadataTable interface{} // 是否生成物模型表：0=否，1=是
 }

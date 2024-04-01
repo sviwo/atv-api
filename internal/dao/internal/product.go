@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // ==========================================================================
 
 package internal
@@ -22,14 +22,14 @@ type ProductDao struct {
 type ProductColumns struct {
 	ProductId     string //
 	ProductName   string // 产品名称
+	ProductKey    string // 产品key
 	ProductModel  string // 产品型号
 	Status        string // 发布状态：0=未发布，1=已发布
+	Metadata      string // 物模型
 	CreateTime    string //
 	UpdateTime    string //
 	IsDelete      string // 是否删除：true=已删除，false=正常
-	ProductKey    string
-	MetaData      string
-	MetadataTable string //是否生成物模型表：0=否，1=是
+	MetadataTable string // 是否生成物模型表：0=否，1=是
 }
 
 // productColumns holds the columns for table sw_product.
@@ -39,11 +39,11 @@ var productColumns = ProductColumns{
 	ProductKey:    "product_key",
 	ProductModel:  "product_model",
 	Status:        "status",
-	MetaData:      "metadata",
+	Metadata:      "metadata",
 	CreateTime:    "create_time",
 	UpdateTime:    "update_time",
-	MetadataTable: "metadata_table",
 	IsDelete:      "is_delete",
+	MetadataTable: "metadata_table",
 }
 
 // NewProductDao creates and returns a new DAO object for table data access.

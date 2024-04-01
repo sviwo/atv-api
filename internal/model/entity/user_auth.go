@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-15 14:53:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // =================================================================================
 
 package entity
@@ -10,7 +10,7 @@ import (
 
 // UserAuth is the golang structure for table user_auth.
 type UserAuth struct {
-	AuthId              int64       `json:"authId"              description:""`
+	AuthId              uint64      `json:"authId"              description:""`
 	UserId              int64       `json:"userId"              description:""`
 	AuthFirstName       string      `json:"authFirstName"       description:""`
 	AuthLastName        string      `json:"authLastName"        description:""`

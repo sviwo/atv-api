@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-28 15:15:17
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // =================================================================================
 
 package do
@@ -13,7 +13,7 @@ import (
 type Version struct {
 	g.Meta            `orm:"table:sw_version, do:true"`
 	VersionId         interface{} //
-	VersionCode       interface{} // 版本编码：app显示当前版本号使用，例如：V1.1.1
+	VersionCode       interface{} // 版本编码
 	VersionType       interface{} // 版本类型：0=APP更新，1=固件升级
 	VersionUpdateType interface{} // 版本更新类型：0=弱更新，1=强更新
 	VersionStatus     interface{} // 版本发布状态：0=待发布，1=已发布，2=已过期

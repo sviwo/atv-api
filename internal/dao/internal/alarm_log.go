@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // ==========================================================================
 
 package internal
@@ -11,39 +11,39 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// AlarmLogDao is the data access object for table alarm_log.
+// AlarmLogDao is the data access object for table sw_alarm_log.
 type AlarmLogDao struct {
 	table   string          // table is the underlying table name of the DAO.
 	group   string          // group is the database configuration group name of current DAO.
 	columns AlarmLogColumns // columns contains all the column names of Table for convenient usage.
 }
 
-// AlarmLogColumns defines and stores column names for table alarm_log.
+// AlarmLogColumns defines and stores column names for table sw_alarm_log.
 type AlarmLogColumns struct {
-	Id         string //
-	Type       string // 告警类型：1=规则告警，2=设备自主告警
-	Data       string // 触发告警的数据
-	ProductKey string // 产品标识
-	DeviceKey  string // 设备标识
-	Status     string // 告警状态：0=未处理，1=已处理
-	CreatedTime  string // 告警时间
-	UpdatedBy  string // 告警处理人员
-	UpdatedTime  string // 处理时间
-	Content    string // 处理意见
+	Id          string //
+	Type        string // 告警类型：1=规则告警，2=设备自主告警
+	Data        string // 触发告警的数据
+	ProductKey  string // 产品标识
+	DeviceKey   string // 设备标识
+	Status      string // 告警状态：0=未处理，1=已处理
+	CreatedTime string // 告警时间
+	UpdatedBy   string // 告警处理人员
+	UpdatedTime string // 处理时间
+	Content     string // 处理意见
 }
 
-// alarmLogColumns holds the columns for table alarm_log.
+// alarmLogColumns holds the columns for table sw_alarm_log.
 var alarmLogColumns = AlarmLogColumns{
-	Id:         "id",
-	Type:       "type",
-	Data:       "data",
-	ProductKey: "product_key",
-	DeviceKey:  "device_key",
-	Status:     "status",
-	CreatedTime:  "created_time",
-	UpdatedBy:  "updated_by",
-	UpdatedTime:  "updated_time",
-	Content:    "content",
+	Id:          "id",
+	Type:        "type",
+	Data:        "data",
+	ProductKey:  "product_key",
+	DeviceKey:   "device_key",
+	Status:      "status",
+	CreatedTime: "created_time",
+	UpdatedBy:   "updated_by",
+	UpdatedTime: "updated_time",
+	Content:     "content",
 }
 
 // NewAlarmLogDao creates and returns a new DAO object for table data access.

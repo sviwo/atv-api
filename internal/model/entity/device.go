@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-27 15:02:22
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // =================================================================================
 
 package entity
@@ -27,4 +27,6 @@ type Device struct {
 	UpdateTime     *gtime.Time `json:"updateTime"     description:""`
 	MetadataTable  bool        `json:"metadataTable"  description:"是否生成物模型表：0=否，1=是"`
 	IsDelete       bool        `json:"isDelete"       description:"是否删除：true=已删除，false=正常"`
+	Lng            string      `json:"lng"            description:"经度"`
+	Lat            string      `json:"lat"            description:"纬度"`
 }

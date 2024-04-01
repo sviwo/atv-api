@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-28 15:15:17
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // =================================================================================
 
 package entity
@@ -11,7 +11,7 @@ import (
 // Version is the golang structure for table version.
 type Version struct {
 	VersionId         int64       `json:"versionId"         description:""`
-	VersionCode       string      `json:"versionCode"       description:"版本编码：app显示当前版本号使用，例如：V1.1.1"`
+	VersionCode       string      `json:"versionCode"       description:"版本编码"`
 	VersionType       int         `json:"versionType"       description:"版本类型：0=APP更新，1=固件升级"`
 	VersionUpdateType int         `json:"versionUpdateType" description:"版本更新类型：0=弱更新，1=强更新"`
 	VersionStatus     int         `json:"versionStatus"     description:"版本发布状态：0=待发布，1=已发布，2=已过期"`

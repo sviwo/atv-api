@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-03-27 15:02:22
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
 // ==========================================================================
 
 package internal
@@ -37,6 +37,8 @@ type DeviceColumns struct {
 	UpdateTime     string //
 	MetadataTable  string // 是否生成物模型表：0=否，1=是
 	IsDelete       string // 是否删除：true=已删除，false=正常
+	Lng            string // 经度
+	Lat            string // 纬度
 }
 
 // deviceColumns holds the columns for table sw_device.
@@ -58,6 +60,8 @@ var deviceColumns = DeviceColumns{
 	UpdateTime:     "update_time",
 	MetadataTable:  "metadata_table",
 	IsDelete:       "is_delete",
+	Lng:            "lng",
+	Lat:            "lat",
 }
 
 // NewDeviceDao creates and returns a new DAO object for table data access.
