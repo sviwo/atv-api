@@ -67,6 +67,7 @@ func (s *sDevTSLParse) HandleProperties(ctx context.Context, device *model.Devic
 					if timeValue, timeOK := mapInfo["time"].(float64); timeOK && mapInfo["value"] != nil {
 						createTimestamp = int64(timeValue)
 						value = property.ValueType.ConvertValue(mapInfo["value"])
+
 					}
 				} else {
 					// 处理不带时间戳的属性值

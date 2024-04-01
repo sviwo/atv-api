@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
-	"strings"
 	"sviwo/internal/consts"
 	"sviwo/internal/service"
 	"sviwo/pkg/channelx"
@@ -76,9 +75,6 @@ func deviceDataSaveBatchProcessFunc(items []interface{}) error {
 	for _, item := range items {
 		var devLog = iotModel.DeviceLog{}
 		err := gconv.Scan(item, &devLog)
-		if strings.ContainsRune(devLog.Content, '\'') {
-			devLog.Content = strings.ReplaceAll(devLog.Content, "'", "\\\"")
-		}
 		if err != nil {
 			return err
 		}
