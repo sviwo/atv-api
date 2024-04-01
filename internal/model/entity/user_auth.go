@@ -10,7 +10,7 @@ import (
 
 // UserAuth is the golang structure for table user_auth.
 type UserAuth struct {
-	AuthId              uint64      `json:"authId"              description:""`
+	AuthId              int64       `json:"authId"              description:""`
 	UserId              int64       `json:"userId"              description:""`
 	AuthFirstName       string      `json:"authFirstName"       description:""`
 	AuthLastName        string      `json:"authLastName"        description:""`

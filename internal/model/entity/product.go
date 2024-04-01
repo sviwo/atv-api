@@ -6,10 +6,12 @@ package entity
 
 import (
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gmeta"
 )
 
 // Product is the golang structure for table product.
 type Product struct {
+	gmeta.Meta    `orm:"table:sw_product"`
 	ProductId     int64       `json:"productId"     description:""`
 	ProductName   string      `json:"productName"   description:"产品名称"`
 	ProductKey    string      `json:"productKey"    description:"产品key"`

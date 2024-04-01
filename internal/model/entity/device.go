@@ -6,10 +6,12 @@ package entity
 
 import (
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gmeta"
 )
 
 // Device is the golang structure for table device.
 type Device struct {
+	gmeta.Meta     `orm:"table:sw_device"`
 	DeviceId       uint64      `json:"deviceId"       description:""`
 	ProductId      int64       `json:"productId"      description:"所属产品"`
 	ProductKey     string      `json:"productKey"     description:"对应物联网平台产品的ProductKey"`
