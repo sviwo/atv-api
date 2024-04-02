@@ -107,23 +107,3 @@ func TestListenForNewData(t *testing.T) {
 	// 当需要停止监听时，调用 cancel 函数
 	cancel()
 }
-
-// TestGetDeviceDetailData 获取设备数据示例
-func TestGetDeviceDetailData(t *testing.T) {
-	// 获取数据示例
-	resultList := GetDeviceDetailData(context.Background(), "t20221222")
-	for _, value := range resultList {
-		t.Log(value)
-
-	}
-	t.Log("记录数：", len(resultList))
-}
-
-// TestGetDeviceDetailDataByPage 获取设备数据示例
-func TestGetDeviceDetailDataByPage(t *testing.T) {
-	dataList, total, currentPage := GetDeviceDetailDataByPage(context.Background(), "t20221222", 2, 10)
-	for _, d := range dataList {
-		t.Log(d)
-	}
-	t.Log("记录数：", len(dataList), total, currentPage)
-}
