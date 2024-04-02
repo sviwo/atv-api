@@ -81,7 +81,7 @@ func (tInt TInt) Convert(v interface{}) interface{} {
 	if tInt.TSLParamBase.Min != nil && gconv.Int(*tInt.TSLParamBase.Min) > number {
 		return *tInt.TSLParamBase.Min
 	}
-	if tInt.TSLParamBase.Max != nil && gconv.Int(*tInt.TSLParamBase.Max) > number {
+	if tInt.TSLParamBase.Max != nil && gconv.Int(*tInt.TSLParamBase.Max) < number {
 		return *tInt.TSLParamBase.Max
 	}
 	return number
@@ -97,7 +97,7 @@ func (tLong TLong) Convert(v interface{}) interface{} {
 	if tLong.TSLParamBase.Min != nil && gconv.Float64(*tLong.TSLParamBase.Min) > number {
 		return *tLong.TSLParamBase.Min
 	}
-	if tLong.TSLParamBase.Max != nil && gconv.Float64(*tLong.TSLParamBase.Max) > number {
+	if tLong.TSLParamBase.Max != nil && gconv.Float64(*tLong.TSLParamBase.Max) < number {
 		return *tLong.TSLParamBase.Max
 	}
 	return number
@@ -113,7 +113,7 @@ func (tFloat TFloat) Convert(v interface{}) interface{} {
 	if tFloat.TSLParamBase.Min != nil && gconv.Float32(*tFloat.TSLParamBase.Min) > float32(number) {
 		number = gconv.Float64(*tFloat.TSLParamBase.Min)
 	}
-	if tFloat.TSLParamBase.Max != nil && gconv.Float32(*tFloat.TSLParamBase.Max) > float32(number) {
+	if tFloat.TSLParamBase.Max != nil && gconv.Float32(*tFloat.TSLParamBase.Max) < float32(number) {
 		number = gconv.Float64(*tFloat.TSLParamBase.Max)
 	}
 	defaultDecimal := 2
@@ -134,7 +134,7 @@ func (tDouble TDouble) Convert(v interface{}) interface{} {
 	if tDouble.TSLParamBase.Min != nil && gconv.Float64(*tDouble.TSLParamBase.Min) > number {
 		number = gconv.Float64(*tDouble.TSLParamBase.Min)
 	}
-	if tDouble.TSLParamBase.Max != nil && gconv.Float64(*tDouble.TSLParamBase.Max) > number {
+	if tDouble.TSLParamBase.Max != nil && gconv.Float64(*tDouble.TSLParamBase.Max) < number {
 		number = gconv.Float64(*tDouble.TSLParamBase.Max)
 	}
 	defaultDecimal := 2
