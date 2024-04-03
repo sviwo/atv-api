@@ -41,10 +41,14 @@ func (t TSLValueType) ConvertValue(v interface{}) interface{} {
 		transfer = TLong(t.TSLParam)
 	case consts.TypeFloat:
 		transfer = TFloat(t.TSLParam)
+	case consts.TypeFloat64:
+		transfer = TFloat(t.TSLParam)
 	case consts.TypeDouble:
 		transfer = TDouble(t.TSLParam)
 	case consts.TypeText:
 		transfer = TText(t.TSLParam)
+	case consts.TypeBoolean:
+		transfer = TBoolean(t.TSLParam)
 	case consts.TypeBool:
 		transfer = TBoolean(t.TSLParam)
 	case consts.TypeDate:
@@ -162,17 +166,23 @@ func (tText TText) Convert(v interface{}) interface{} {
 type TBoolean TSLParam
 
 func (tBoolean TBoolean) Convert(v interface{}) interface{} {
-	b, ok := v.(bool)
-	if !ok {
-		return ""
+	floatNumber, floatNumberOk := v.(float64)
+	if !floatNumberOk {
+		return 0
 	}
-	//TODO 这里是返回文字还是类型,暂定是返回映射文字
-	if !b && tBoolean.FalseText != nil {
-		return *tBoolean.FalseText
-	} else if b && tBoolean.TrueText != nil {
-		return *tBoolean.TrueText
+	number := int(floatNumber)
+	return number
+}
+
+type TBool TSLParam
+
+func (tBool TBool) Convert(v interface{}) interface{} {
+	floatNumber, floatNumberOk := v.(float64)
+	if !floatNumberOk {
+		return 0
 	}
-	return ""
+	number := int(floatNumber)
+	return number
 }
 
 type TDate TSLParam
