@@ -2,10 +2,10 @@ package analysis
 
 import (
 	"context"
-	"sagooiot/internal/model"
-	"sagooiot/internal/service"
-	"sagooiot/pkg/cache"
-	"sagooiot/pkg/general"
+	"sviwo/internal/model"
+	"sviwo/internal/service"
+	"sviwo/pkg/cache"
+	"sviwo/pkg/general"
 	"testing"
 )
 

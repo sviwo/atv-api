@@ -54,6 +54,7 @@ var (
 						controller.Car,
 						controller.AppText,
 						controller.AppVideos,
+						controller.DeviceProperty, // 设备属性设置
 					)
 				})
 			})

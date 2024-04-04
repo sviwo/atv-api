@@ -51,9 +51,10 @@ func SetDevicePropertyRequest(ctx context.Context, productKey string, deviceName
 		}()
 		resp, _err := IotClient.SetDevicePropertyWithOptions(pubRequest, runtime)
 		if _err != nil {
+			glog.Printf(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(_err))
 			return _err
 		}
-		glog.Printf(ctx, "parseJson Unmarshal err:%v", util.ToJSONString(resp))
+		glog.Printf(ctx, "SetDevicePropertyRequest resp data:%s", resp.Body.String())
 		return nil
 	}()
 	if tryErr != nil {

@@ -17,7 +17,7 @@ import (
 
 func TestGetTableListByDatabase(t *testing.T) {
 	db := DB()
-	tableList, err := db.GetTableListByDatabase(context.Background(), "sagoo_iot")
+	tableList, err := db.GetTableListByDatabase(context.Background(), "sviwo_iot")
 	if err != nil {
 		t.Error(err)
 	}

@@ -28,7 +28,7 @@ func GetDB() (db Database) {
 	case comm.DBTdEngine:
 		link := g.Cfg().MustGet(context.Background(), "tsd.tdengine.dsn", "root:taosdata@ws(127.0.0.1:6041)/")
 		driverName := g.Cfg().MustGet(context.Background(), "tsd.tdengine.type", "taosWS")
-		dbName := g.Cfg().MustGet(context.Background(), "tsd.tdengine.dbName", "sagoo_iot")
+		dbName := g.Cfg().MustGet(context.Background(), "tsd.tdengine.dbName", "sviwo_iot")
 		option = comm.Option{
 			Database:   dbName.String(),
 			Link:       link.String(),
@@ -36,8 +36,8 @@ func GetDB() (db Database) {
 		}
 	case comm.DBInfluxdb:
 		link := g.Cfg().MustGet(context.Background(), "tsd.influxdb.addr", "http://localhost:8086")
-		org := g.Cfg().MustGet(context.Background(), "tsd.influxdb.org", "sagoo")
-		dbName := g.Cfg().MustGet(context.Background(), "tsd.influxdb.dbName", "sagooiot")
+		org := g.Cfg().MustGet(context.Background(), "tsd.influxdb.org", "sviwo")
+		dbName := g.Cfg().MustGet(context.Background(), "tsd.influxdb.dbName", "sviwoiot")
 		token := g.Cfg().MustGet(context.Background(), "tsd.influxdb.token", "")
 		option = comm.Option{
 			Database: dbName.String(),
