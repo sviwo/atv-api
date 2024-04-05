@@ -35,6 +35,8 @@ var (
 					controller.User.Register,
 					controller.User.UpdatePassword,
 					controller.Device.GetDeviceSecret,
+					controller.DeviceProperty, // 设备属性设置
+					controller.Home,           // 首页数据请求
 				)
 				//需要登录鉴权的路由组
 				group.Group("/api", func(group *ghttp.RouterGroup) {
@@ -54,7 +56,6 @@ var (
 						controller.Car,
 						controller.AppText,
 						controller.AppVideos,
-						controller.DeviceProperty, // 设备属性设置
 					)
 				})
 			})

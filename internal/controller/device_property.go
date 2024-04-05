@@ -12,8 +12,9 @@ type cDeviceProperty struct{}
 
 // Set 设备属性设置
 func (c *cDeviceProperty) Set(ctx context.Context, req *v1.DevicePropertyReq) (res *v1.DevicePropertyRes, err error) {
-	service.DevDeviceProperty().Set(ctx, req.DevicePropertyInput)
-	res = &v1.DevicePropertyRes{}
-	res.DevicePropertyOutput.Data = req.DevicePropertyInput.Params
+	out, err := service.DevDeviceProperty().Set(ctx, req.DevicePropertyInput)
+	res = &v1.DevicePropertyRes{
+		DevicePropertyOutput: out,
+	}
 	return
 }

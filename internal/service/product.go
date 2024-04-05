@@ -46,10 +46,16 @@ type (
 		GetDeviceSecret(ctx context.Context, deviceCode string) (out *model.DeviceSecretOutput)
 		// Get 获取设备详情
 		Get(ctx context.Context, key string) (out *model.DeviceOutput, err error)
+		Detail(ctx context.Context, key string) (out *model.DeviceOutput, err error)
 		// CacheDeviceDetailList 缓存所有设备详情数据
 		CacheDeviceDetailList(ctx context.Context) (err error)
 		List(ctx context.Context, productKey string, keyWord string) (list []*model.DeviceOutput, err error)
 		BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStatusLogList []iotModel.DeviceStatusLog) (err error)
+		// GetLatestProperty 获取设备最新的属性值
+		GetLatestProperty(ctx context.Context, key string) (list []model.DeviceLatestProperty, err error)
+		// GetProperty 获取指定属性值
+		GetProperty(ctx context.Context, in *model.DeviceGetPropertyInput) (out *model.DevicePropertiy, err error)
+
 	}
 )
 

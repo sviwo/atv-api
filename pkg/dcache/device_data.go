@@ -3,6 +3,7 @@ package dcache
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"sviwo/internal/service"
@@ -47,6 +48,70 @@ func GetDeviceDetailDataByLatest(ctx context.Context, deviceKey string) (res iot
 	res, err = service.DevTSLParse().ParseData(ctx, deviceKey, []byte(value.Content))
 	if err != nil {
 		g.Log().Debugf(ctx, "Failed to parse data: %v", err)
+	}
+	return
+}
+
+// GetDeviceDetailDataByPage 按分页获取设备详细数据，分页参数： pageNum 为页码， pageSize 为每页数量
+func GetDeviceDetailDataByPage(ctx context.Context, deviceKey string, pageNum, pageSize int, dataType ...string) (res []iotModel.ReportPropertyData, total, currentPage int) {
+	// 获取 list 的名称
+	listName := DeviceDataCachePrefix + deviceKey
+
+	// 获取 list 的长度
+	num, err := DB().client.LLen(context.Background(), listName).Result()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	total = int(num)
+
+	if pageNum <= 0 {
+		pageNum = 1
+	}
+
+	if pageSize <= 0 {
+		pageSize = 10
+	}
+	currentPage = pageNum
+	// 计算分页的起始位置和结束位置
+	start := (pageNum - 1) * pageSize
+	end := start + pageSize
+
+	if end > total {
+		end = total
+	}
+
+	// 获取分页数据
+	dataList, err := DB().client.LRange(context.Background(), listName, int64(start), int64(end)-1).Result()
+	if err != nil {
+		g.Log().Debugf(ctx, "Failed to get data: %v", err)
+	}
+	for _, data := range dataList {
+		if data == "" {
+			continue
+		}
+		var value = iotModel.DeviceLog{}
+		if err := json.Unmarshal([]byte(data), &value); err != nil {
+			g.Log().Debugf(ctx, "Failed to unmarshal data: %v", err)
+		}
+
+		// 基于物模型解析数据
+		dataContent, err := service.DevTSLParse().ParseData(ctx, deviceKey, []byte(value.Content))
+		if err != nil {
+			return
+		}
+		if dataContent.ListMap.IsEmpty() {
+			continue
+		}
+		if len(dataType) > 0 {
+			for _, vt := range dataType {
+				if vt == value.Type {
+					res = append(res, dataContent)
+				}
+			}
+		} else {
+			res = append(res, dataContent)
+		}
 	}
 	return
 }

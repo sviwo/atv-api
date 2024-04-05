@@ -45,14 +45,14 @@ func PropertySet(ctx context.Context, request topicModel.TopicDownHandlerData) (
 	if err != nil {
 		return nil, err
 	}
-
 	baseLogic.InertTdLog(ctx, consts.MsgTypePropertySet, request.DeviceDetail.DeviceName, r)
-	response, err := baseLogic.SyncRequest(ctx, r.Id, "SetProperty", r, 0)
-	if err != nil {
-		return nil, err
-	} else if res, covertOk := response.(map[string]interface{}); !covertOk {
-		return nil, fmt.Errorf("set property  failed,response: %+v", response)
-	} else {
-		return res, nil
-	}
+	//response, err := baseLogic.SyncRequest(ctx, r.Id, "SetProperty", r, 0)
+	//if err != nil {
+	//	return nil, err
+	//} else if res, covertOk := response.(map[string]interface{}); !covertOk {
+	//	return nil, fmt.Errorf("set property  failed,response: %+v", response)
+	//} else {
+	//	return res, nil
+	//}
+	return nil, nil
 }
