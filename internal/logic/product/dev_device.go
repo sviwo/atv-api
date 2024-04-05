@@ -311,8 +311,8 @@ func (s *sDevDevice) GetLatestProperty(ctx context.Context, key string) (list []
 }
 
 // GetProperty 获取指定属性值
-func (s *sDevDevice) GetProperty(ctx context.Context, in *model.DeviceGetPropertyInput) (out *model.DevicePropertiy, err error) {
-	p, err := s.Detail(ctx, in.DeviceKey)
+func (s *sDevDevice) GetProperty(ctx context.Context, input *model.DeviceGetPropertyInput) (list []model.DeviceLatestProperty, err error) {
+	p, err := s.Detail(ctx, input.DeviceKey)
 	if err != nil {
 		return
 	}
@@ -321,46 +321,46 @@ func (s *sDevDevice) GetProperty(ctx context.Context, in *model.DeviceGetPropert
 		return
 	}
 
+	deviceTable := comm.DeviceTableName(p.DeviceName)
+
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
 
-	sKey := in.PropertyKey
-	in.PropertyKey = strings.ToLower(in.PropertyKey)
-	col := comm.TsdColumnName(in.PropertyKey)
+	for _, i := range input.PropertyKeys {
+		for _, v := range p.TSL.Properties {
+			if v.Key != i {
+				continue
+			}
 
-	deviceTable := comm.DeviceTableName(p.DeviceName)
+			ckey := comm.TsdColumnName(v.Key)
 
-	// 属性上报时间
-	ctime := in.PropertyKey + "_time"
-	ctime = comm.TsdColumnName(ctime)
+			// 获取属性最近有效值
+			sql := "select ? from ? where ? is not null order by ts desc limit 1"
+			rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, deviceTable, ckey)
+			if err != nil {
+				return nil, err
+			}
+			value := rs[strings.ToLower(v.Key)]
+			if value.IsEmpty() {
+				continue
+			}
 
-	// 属性值获取
-	sql := "select ? from ? where ? is not null order by ? desc limit 1"
-	rs, err := tsdDb.GetTableDataOne(ctx, sql, col, deviceTable, col, ctime)
-	if err != nil {
-		return
-	}
+			unit := ""
+			if v.ValueType.TSLParam.Unit != nil {
+				unit = *v.ValueType.TSLParam.Unit
+			}
 
-	var name string
-	var valueType string
-	for _, v := range p.TSL.Properties {
-		if strings.ToLower(v.Key) == in.PropertyKey {
-			name = v.Name
-			valueType = v.ValueType.Type
+			pro := model.DeviceLatestProperty{
+				Key:   v.Key,
+				Name:  v.Name,
+				Type:  v.ValueType.Type,
+				Unit:  unit,
+				Value: value,
+			}
+			list = append(list, pro)
+
 			break
 		}
 	}
-
-	out = new(model.DevicePropertiy)
-	out.Key = sKey
-	out.Name = name
-	out.Type = valueType
-	out.Value = rs[in.PropertyKey]
-
-	// 获取当天属性值列表
-	sql = "select ? from ? where ? >= '?' order by ? desc"
-	ls, _ := tsdDb.GetTableDataAll(ctx, sql, col, deviceTable, ctime, gtime.Now().Format("Y-m-d"), ctime)
-	out.List = ls.Array(in.PropertyKey)
-
 	return
 }

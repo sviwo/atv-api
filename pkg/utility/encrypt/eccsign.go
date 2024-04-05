@@ -1,12 +1,13 @@
 package ecc
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/hex"
-	"github.com/qiniu/x/log"
+	"github.com/gogf/gf/v2/os/glog"
 	"math/big"
 	"runtime"
 	"sviwo/pkg/utility/hash"
@@ -17,9 +18,9 @@ func eccSign(msg []byte, priKey []byte) (rSign []byte, sSign []byte, err error) 
 		if err := recover(); err != nil {
 			switch err.(type) {
 			case runtime.Error:
-				log.Errorf("runtime err=%v,Check that the key or text is correct", err)
+				glog.Errorf(context.Background(), "runtime err=%v,Check that the key or text is correct", err)
 			default:
-				log.Errorf("error=%v,check the cipherText ", err)
+				glog.Errorf(context.Background(), "error=%v,check the cipherText ", err)
 			}
 		}
 	}()
@@ -49,9 +50,9 @@ func eccVerifySign(msg []byte, pubKey []byte, rText, sText []byte) bool {
 		if err := recover(); err != nil {
 			switch err.(type) {
 			case runtime.Error:
-				log.Errorf("runtime err=%v,Check that the key or text is correct", err)
+				glog.Errorf(context.Background(), "runtime err=%v,Check that the key or text is correct", err)
 			default:
-				log.Errorf("error=%v,check the cipherText ", err)
+				glog.Errorf(context.Background(), "error=%v,check the cipherText ", err)
 			}
 		}
 	}()

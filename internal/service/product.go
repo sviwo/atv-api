@@ -54,7 +54,7 @@ type (
 		// GetLatestProperty 获取设备最新的属性值
 		GetLatestProperty(ctx context.Context, key string) (list []model.DeviceLatestProperty, err error)
 		// GetProperty 获取指定属性值
-		GetProperty(ctx context.Context, in *model.DeviceGetPropertyInput) (out *model.DevicePropertiy, err error)
+		GetProperty(ctx context.Context, in *model.DeviceGetPropertyInput) (list []model.DeviceLatestProperty, err error)
 
 	}
 )
