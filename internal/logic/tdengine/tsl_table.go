@@ -85,7 +85,7 @@ func (s *sTSLTable) CreateStable(ctx context.Context, tsl *model.TSL) (err error
 			maxLength = gconv.Int(*v.ValueType.TSLParam.TSLParamBase.MaxLength)
 		}
 		columns = append(columns, s.column(v.ValueType.Type, v.Key, v.Name, maxLength))
-		// 属性上报时间
+		//// 属性上报时间
 		columns = append(columns, s.column("date", v.Key+"_time", "", 0))
 	}
 
