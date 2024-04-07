@@ -283,8 +283,8 @@ func (s *sDevDevice) GetLatestProperty(ctx context.Context, key string) (list []
 		ckey := comm.TsdColumnName(v.Key)
 
 		// 获取属性最近有效值
-		sql := "select ? from ? where ? is not null order by ts desc limit 1"
-		rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, deviceTable, ckey)
+		sql := "select last_row(?) as ? from ? where ? is not null"
+		rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, ckey, deviceTable, ckey)
 		if err != nil {
 			return nil, err
 		}
@@ -335,8 +335,8 @@ func (s *sDevDevice) GetProperty(ctx context.Context, input *model.DeviceGetProp
 			ckey := comm.TsdColumnName(v.Key)
 
 			// 获取属性最近有效值
-			sql := "select ? from ? where ? is not null order by ts desc limit 1"
-			rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, deviceTable, ckey)
+			sql := "select last_row(?) as ? from ? where ? is not null"
+			rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, ckey, deviceTable, ckey)
 			if err != nil {
 				return nil, err
 			}

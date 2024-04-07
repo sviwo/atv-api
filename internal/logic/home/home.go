@@ -26,6 +26,7 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	keys := make([]string, 0)
 	keys = append(keys, "VehSpeed")
 	keys = append(keys, "Light")
+	keys = append(keys, "Mileage")
 	keys = append(keys, "speaker")
 	res, _ := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
 		DeviceKey:    "sviwo_atv",
