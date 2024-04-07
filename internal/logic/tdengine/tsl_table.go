@@ -223,16 +223,16 @@ func (s *sTSLTable) CreateDatabase(ctx context.Context) (err error) {
 		return
 	}
 
-	/*var name string
-	if err = taos.QueryRow("SELECT name FROM information_schema.ins_databases WHERE name = '?' LIMIT 1", dbName).Scan(&name); err != nil {
-		return
-	}
+	//var name string
+	//if err = taos.QueryRow("SELECT name FROM information_schema.ins_databases WHERE name = '?' LIMIT 1", dbName).Scan(&name); err != nil {
+	//	return
+	//}
+	//
+	//if name != "" {
+	//	return
+	//}
 
-	if name != "" {
-		return
-	}*/
-
-	_, err = taos.Exec("CREATE DATABASE IF NOT EXISTS " + dbName)
+	_, err = taos.Exec(" CREATE DATABASE IF NOT EXISTS " + dbName + "  KEEP 365d  CACHEMODEL 'both' ")
 
 	return
 }
