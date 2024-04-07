@@ -12,8 +12,9 @@ func TestSetDevicePropertyRequest(t *testing.T) {
 	ctx := context.Background()
 	InitAliyunIotClient(ctx)
 	maps := make(map[string]interface{})
-	maps["Light"] = 0
-	maps["speaker"] = 0
+	//maps["Light"] = 0
+	//maps["LockedStatus"] = 1
+	maps["BatteryStatus"] = 1
 	marshal, err := json.Marshal(maps)
 	if err != nil {
 		return

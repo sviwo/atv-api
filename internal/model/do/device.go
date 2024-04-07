@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-07 20:24:54
 // =================================================================================
 
 package do
@@ -29,6 +29,4 @@ type Device struct {
 	UpdateTime     *gtime.Time //
 	MetadataTable  interface{} // 是否生成物模型表：0=否，1=是
 	IsDelete       interface{} // 是否删除：true=已删除，false=正常
-	Lng            interface{} // 经度
-	Lat            interface{} // 纬度
 }

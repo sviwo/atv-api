@@ -21,9 +21,9 @@ type sVersion struct{}
 func (s sVersion) GetNewVersion(ctx context.Context) (out []*model.VersionOutput) {
 	err := dao.Version.Ctx(ctx).
 		WhereIn(
-			"version_number",
+			"version_code",
 			dao.Version.Ctx(ctx).
-				Fields("MAX(version_number)").
+				Fields("MAX(version_code)").
 				Where("version_status", 1).
 				Where("is_delete", consts.DeleteOn).
 				Group("version_type"),

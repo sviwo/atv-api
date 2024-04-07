@@ -1,17 +1,15 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-07 20:24:54
 // =================================================================================
 
 package entity
 
 import (
 	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/gogf/gf/v2/util/gmeta"
 )
 
 // Device is the golang structure for table device.
 type Device struct {
-	gmeta.Meta     `orm:"table:sw_device"`
 	DeviceId       uint64      `json:"deviceId"       description:""`
 	ProductId      int64       `json:"productId"      description:"所属产品"`
 	ProductKey     string      `json:"productKey"     description:"对应物联网平台产品的ProductKey"`
@@ -29,6 +27,4 @@ type Device struct {
 	UpdateTime     *gtime.Time `json:"updateTime"     description:""`
 	MetadataTable  bool        `json:"metadataTable"  description:"是否生成物模型表：0=否，1=是"`
 	IsDelete       bool        `json:"isDelete"       description:"是否删除：true=已删除，false=正常"`
-	Lng            string      `json:"lng"            description:"经度"`
-	Lat            string      `json:"lat"            description:"纬度"`
 }
