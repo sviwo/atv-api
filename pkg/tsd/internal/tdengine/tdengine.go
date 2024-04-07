@@ -41,6 +41,7 @@ func (m *TdEngine) Close() {
 		fmt.Println("failed to close TDengine, err:", err)
 		return
 	}
+	m.db = nil
 	//fmt.Println("Closed TdEngine database connection.")
 }
 

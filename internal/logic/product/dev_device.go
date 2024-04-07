@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
+	"strings"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -19,6 +20,8 @@ import (
 	"sviwo/pkg/cache"
 	"sviwo/pkg/dcache"
 	"sviwo/pkg/iotModel"
+	"sviwo/pkg/tsd"
+	"sviwo/pkg/tsd/comm"
 )
 
 type sDevDevice struct{}
@@ -88,6 +91,31 @@ func (s *sDevDevice) Get(ctx context.Context, deviceCode string) (out *model.Dev
 	if out.Status != 0 {
 		out.Status = dcache.GetDeviceStatus(ctx, out.DeviceName) //查询设备状态
 	}
+	if out.Product != nil {
+		out.ProductName = out.Product.ProductName
+		if out.Product.Metadata != "" {
+			err = json.Unmarshal([]byte(out.Product.Metadata), &out.TSL)
+		}
+	}
+	return
+}
+
+func (s *sDevDevice) Detail(ctx context.Context, key string) (out *model.DeviceOutput, err error) {
+	err = dao.Device.Ctx(ctx).WithAll().Where(dao.Device.Columns().DeviceName, key).Scan(&out)
+	if err != nil {
+		return
+	}
+	if out == nil {
+		err = errors.New("设备不存在")
+		return
+	}
+	if out.Status != 0 {
+		out.Status = dcache.GetDeviceStatus(ctx, out.DeviceName) //查询设备状态
+	}
+
+	//如果未设置，获取系统设置的默认超时时间 默认写30s 后期扩展从配置中取
+	out.OnlineTimeout = 30
+
 	if out.Product != nil {
 		out.ProductName = out.Product.ProductName
 		if out.Product.Metadata != "" {
@@ -232,6 +260,107 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 			panic(e)
 		}
 		panic(err)
+	}
+	return
+}
+
+// GetLatestProperty 获取设备最新的属性值
+func (s *sDevDevice) GetLatestProperty(ctx context.Context, key string) (list []model.DeviceLatestProperty, err error) {
+	p, err := s.Get(ctx, key)
+	if err != nil {
+		return
+	}
+	if p.Status == model.DeviceStatusNoEnable {
+		return
+	}
+
+	deviceTable := comm.DeviceTableName(p.DeviceName)
+
+	tsdDb := tsd.DB()
+	defer tsdDb.Close()
+
+	for _, v := range p.TSL.Properties {
+		ckey := comm.TsdColumnName(v.Key)
+
+		// 获取属性最近有效值
+		sql := "select ? from ? where ? is not null order by ts desc limit 1"
+		rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, deviceTable, ckey)
+		if err != nil {
+			return nil, err
+		}
+		value := rs[strings.ToLower(v.Key)]
+		if value.IsEmpty() {
+			continue
+		}
+
+		unit := ""
+		if v.ValueType.TSLParam.Unit != nil {
+			unit = *v.ValueType.TSLParam.Unit
+		}
+
+		pro := model.DeviceLatestProperty{
+			Key:   v.Key,
+			Name:  v.Name,
+			Type:  v.ValueType.Type,
+			Unit:  unit,
+			Value: value,
+		}
+		list = append(list, pro)
+	}
+	return
+}
+
+// GetProperty 获取指定属性值
+func (s *sDevDevice) GetProperty(ctx context.Context, input *model.DeviceGetPropertyInput) (list []model.DeviceLatestProperty, err error) {
+	p, err := s.Detail(ctx, input.DeviceKey)
+	if err != nil {
+		return
+	}
+	if p.Status == model.DeviceStatusNoEnable {
+		err = errors.New("设备未启用")
+		return
+	}
+
+	deviceTable := comm.DeviceTableName(p.DeviceName)
+
+	tsdDb := tsd.DB()
+	defer tsdDb.Close()
+
+	for _, i := range input.PropertyKeys {
+		for _, v := range p.TSL.Properties {
+			if v.Key != i {
+				continue
+			}
+
+			ckey := comm.TsdColumnName(v.Key)
+
+			// 获取属性最近有效值
+			sql := "select ? from ? where ? is not null order by ts desc limit 1"
+			rs, err := tsdDb.GetTableDataOne(ctx, sql, ckey, deviceTable, ckey)
+			if err != nil {
+				return nil, err
+			}
+			value := rs[strings.ToLower(v.Key)]
+			if value.IsEmpty() {
+				continue
+			}
+
+			unit := ""
+			if v.ValueType.TSLParam.Unit != nil {
+				unit = *v.ValueType.TSLParam.Unit
+			}
+
+			pro := model.DeviceLatestProperty{
+				Key:   v.Key,
+				Name:  v.Name,
+				Type:  v.ValueType.Type,
+				Unit:  unit,
+				Value: value,
+			}
+			list = append(list, pro)
+
+			break
+		}
 	}
 	return
 }

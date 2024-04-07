@@ -29,43 +29,6 @@ func InertDeviceLog(ctx context.Context, logType, deviceKey string, obj interfac
 	}
 }
 
-// GetDeviceDetailData 获取设备解析后的详细数据
-func GetDeviceDetailData(ctx context.Context, deviceKey string, dataType ...string) (res []map[string]iotModel.ReportPropertyNode) {
-	// 从设备缓存数据库获取数据
-	dataList, err := DB().GetData(ctx, deviceKey)
-	if err != nil {
-		g.Log().Debugf(ctx, "Failed to get data: %v", err)
-		return
-	}
-	for _, data := range dataList {
-		if data == "" {
-			continue
-		}
-		var value = iotModel.DeviceLog{}
-		if err := json.Unmarshal([]byte(data), &value); err != nil {
-			g.Log().Debugf(ctx, "Failed to unmarshal data: %v", err)
-		}
-		// 基于物模型解析数据
-		dataContent, err := service.DevTSLParse().ParseData(ctx, deviceKey, []byte(value.Content))
-		if err != nil {
-			continue
-		}
-		if len(dataContent) == 0 {
-			continue
-		}
-		if len(dataType) > 0 {
-			for _, vt := range dataType {
-				if vt == value.Type {
-					res = append(res, dataContent)
-				}
-			}
-		} else {
-			res = append(res, dataContent)
-		}
-	}
-	return
-}
-
 // GetDeviceDetailDataByLatest 获取设备解析后的最新一条数据
 func GetDeviceDetailDataByLatest(ctx context.Context, deviceKey string) (res iotModel.ReportPropertyData) {
 	// 从设备缓存数据库获取数据
@@ -90,7 +53,7 @@ func GetDeviceDetailDataByLatest(ctx context.Context, deviceKey string) (res iot
 }
 
 // GetDeviceDetailDataByPage 按分页获取设备详细数据，分页参数： pageNum 为页码， pageSize 为每页数量
-func GetDeviceDetailDataByPage(ctx context.Context, deviceKey string, pageNum, pageSize int, dataType ...string) (res []map[string]iotModel.ReportPropertyNode, total, currentPage int) {
+func GetDeviceDetailDataByPage(ctx context.Context, deviceKey string, pageNum, pageSize int, dataType ...string) (res []iotModel.ReportPropertyData, total, currentPage int) {
 	// 获取 list 的名称
 	listName := DeviceDataCachePrefix + deviceKey
 
@@ -137,7 +100,7 @@ func GetDeviceDetailDataByPage(ctx context.Context, deviceKey string, pageNum, p
 		if err != nil {
 			return
 		}
-		if len(dataContent) == 0 {
+		if dataContent.ListMap.IsEmpty() {
 			continue
 		}
 		if len(dataType) > 0 {

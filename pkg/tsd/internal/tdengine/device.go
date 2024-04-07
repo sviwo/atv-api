@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/pkg/iotModel"
 	"sviwo/pkg/tsd/comm"
 	"time"
@@ -23,8 +24,7 @@ func (m *TdEngine) InsertDeviceData(deviceKey string, data iotModel.ReportProper
 			return err
 		}
 	}
-
-	if len(data) == 0 {
+	if data.ListMap.IsEmpty() {
 		err = errors.New("数据为空")
 		return
 	}
@@ -47,11 +47,12 @@ func (m *TdEngine) InsertDeviceData(deviceKey string, data iotModel.ReportProper
 func getDeviceField(data iotModel.ReportPropertyData) []string {
 	var field = []string{"ts"}
 
-	for k := range data {
-		k = comm.TsdColumnName(k)
-		field = append(field, k)
+	for _, k := range data.ListMap.Keys() {
+		ks := gconv.String(k)
+		ks = comm.TsdColumnName(ks)
+		field = append(field, ks)
 		// 属性上报时间
-		field = append(field, k+"_time")
+		field = append(field, ks+"_time")
 	}
 	return field
 }
@@ -61,9 +62,14 @@ func getDeviceValue(data iotModel.ReportPropertyData) []string {
 	//ts := time.Now().Format("Y-m-d H:i:s")
 	//var value = []string{"'" + ts + "'"}
 	var value []string
-	for _, v := range data {
-		value = append(value, "'"+gvar.New(v.Value).String()+"'")
-		value = append(value, "'"+gtime.New(v.CreateTime).Format("Y-m-d H:i:s")+"'")
+	for _, v := range data.ListMap.Values() {
+		node := v.(iotModel.ReportPropertyNode)
+		str := gvar.New(node.Value).String()
+		if strings.ContainsRune(str, ',') {
+			str = strings.ReplaceAll(str, "'", "\"")
+		}
+		value = append(value, "'"+str+"'")
+		value = append(value, "'"+gtime.New(node.CreateTime).Format("Y-m-d H:i:s")+"'")
 	}
 	return value
 }

@@ -1,6 +1,7 @@
 package iotModel
 
 import (
+	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/os/gtime"
 	"time"
@@ -13,8 +14,14 @@ type (
 	}
 )
 
-// 上报属性数据
-type ReportPropertyData map[string]ReportPropertyNode
+// 上报属性数据 map[string]ReportPropertyNode
+// type ReportPropertyData map[string]ReportPropertyNode
+//type ReportPropertyData *gmap.ListMap
+
+// 上报属性数据 map[string]ReportPropertyNode
+type ReportPropertyData struct {
+	*gmap.ListMap //map[string]ReportPropertyNode
+}
 
 // 属性值
 type ReportPropertyNode struct {

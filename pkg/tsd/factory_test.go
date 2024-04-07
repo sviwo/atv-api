@@ -10,7 +10,7 @@ func TestDatabaseFactory(t *testing.T) {
 
 	// 定义数据库连接选项
 	option := comm.Option{
-		Database:   "sagoo_iot",
+		Database:   "sviwo_iot",
 		Link:       "root:taosdata@ws(127.0.0.1:6041)/",
 		DriverName: "taosWS",
 	}
@@ -26,9 +26,9 @@ func TestDatabaseFactory(t *testing.T) {
 
 	// 定义数据库连接选项
 	option2 := comm.Option{
-		Database: "sagoo_iot",
+		Database: "sviwo_iot",
 		Link:     "http://localhost:8086",
-		Org:      "sagoo",
+		Org:      "sviwo",
 		Token:    "ez4BQ5QQCUpcAp1FDhhdY9jfcvxq2Z9OLkQSuQG_IPOzE9GvGRHfRm_YYwfuHtCaS7TVefxhEnzCOHi_nGtsCw==",
 	}
 	// 使用工厂函数创建 Influxdb 数据库实例

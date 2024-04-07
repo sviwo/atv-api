@@ -2,19 +2,23 @@ package product
 
 import (
 	"context"
+	_ "github.com/gogf/gf/contrib/drivers/mysql/v2"
+	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
+	"sviwo/pkg/aliyun"
+	"sviwo/pkg/cache"
 	"testing"
-
-	_ "github.com/gogf/gf/contrib/drivers/mysql/v2"
 )
 
 func TestSet(t *testing.T) {
+	aliyun.InitAliyunIotClient(context.Background())
+	cache.SetAdapter(context.Background())
 	in := &model.DevicePropertyInput{
-		DeviceKey: "aoxiangTest11",
+		DeviceKey: "sviwo_atv",
 		Params: map[string]any{
-			"a":  9,
-			"bb": true,
+			"speaker": 0,
+			"Light":   0,
 		},
 	}
 	out, err := service.DevDeviceProperty().Set(context.TODO(), in)

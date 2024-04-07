@@ -41,10 +41,14 @@ func (t TSLValueType) ConvertValue(v interface{}) interface{} {
 		transfer = TLong(t.TSLParam)
 	case consts.TypeFloat:
 		transfer = TFloat(t.TSLParam)
+	case consts.TypeFloat64:
+		transfer = TFloat(t.TSLParam)
 	case consts.TypeDouble:
 		transfer = TDouble(t.TSLParam)
 	case consts.TypeText:
 		transfer = TText(t.TSLParam)
+	case consts.TypeBoolean:
+		transfer = TBoolean(t.TSLParam)
 	case consts.TypeBool:
 		transfer = TBoolean(t.TSLParam)
 	case consts.TypeDate:
@@ -81,7 +85,7 @@ func (tInt TInt) Convert(v interface{}) interface{} {
 	if tInt.TSLParamBase.Min != nil && gconv.Int(*tInt.TSLParamBase.Min) > number {
 		return *tInt.TSLParamBase.Min
 	}
-	if tInt.TSLParamBase.Max != nil && gconv.Int(*tInt.TSLParamBase.Max) > number {
+	if tInt.TSLParamBase.Max != nil && gconv.Int(*tInt.TSLParamBase.Max) < number {
 		return *tInt.TSLParamBase.Max
 	}
 	return number
@@ -97,7 +101,7 @@ func (tLong TLong) Convert(v interface{}) interface{} {
 	if tLong.TSLParamBase.Min != nil && gconv.Float64(*tLong.TSLParamBase.Min) > number {
 		return *tLong.TSLParamBase.Min
 	}
-	if tLong.TSLParamBase.Max != nil && gconv.Float64(*tLong.TSLParamBase.Max) > number {
+	if tLong.TSLParamBase.Max != nil && gconv.Float64(*tLong.TSLParamBase.Max) < number {
 		return *tLong.TSLParamBase.Max
 	}
 	return number
@@ -113,7 +117,7 @@ func (tFloat TFloat) Convert(v interface{}) interface{} {
 	if tFloat.TSLParamBase.Min != nil && gconv.Float32(*tFloat.TSLParamBase.Min) > float32(number) {
 		number = gconv.Float64(*tFloat.TSLParamBase.Min)
 	}
-	if tFloat.TSLParamBase.Max != nil && gconv.Float32(*tFloat.TSLParamBase.Max) > float32(number) {
+	if tFloat.TSLParamBase.Max != nil && gconv.Float32(*tFloat.TSLParamBase.Max) < float32(number) {
 		number = gconv.Float64(*tFloat.TSLParamBase.Max)
 	}
 	defaultDecimal := 2
@@ -134,7 +138,7 @@ func (tDouble TDouble) Convert(v interface{}) interface{} {
 	if tDouble.TSLParamBase.Min != nil && gconv.Float64(*tDouble.TSLParamBase.Min) > number {
 		number = gconv.Float64(*tDouble.TSLParamBase.Min)
 	}
-	if tDouble.TSLParamBase.Max != nil && gconv.Float64(*tDouble.TSLParamBase.Max) > number {
+	if tDouble.TSLParamBase.Max != nil && gconv.Float64(*tDouble.TSLParamBase.Max) < number {
 		number = gconv.Float64(*tDouble.TSLParamBase.Max)
 	}
 	defaultDecimal := 2
@@ -162,17 +166,23 @@ func (tText TText) Convert(v interface{}) interface{} {
 type TBoolean TSLParam
 
 func (tBoolean TBoolean) Convert(v interface{}) interface{} {
-	b, ok := v.(bool)
-	if !ok {
-		return ""
+	floatNumber, floatNumberOk := v.(float64)
+	if !floatNumberOk {
+		return 0
 	}
-	//TODO 这里是返回文字还是类型,暂定是返回映射文字
-	if !b && tBoolean.FalseText != nil {
-		return *tBoolean.FalseText
-	} else if b && tBoolean.TrueText != nil {
-		return *tBoolean.TrueText
+	number := int(floatNumber)
+	return number
+}
+
+type TBool TSLParam
+
+func (tBool TBool) Convert(v interface{}) interface{} {
+	floatNumber, floatNumberOk := v.(float64)
+	if !floatNumberOk {
+		return 0
 	}
-	return ""
+	number := int(floatNumber)
+	return number
 }
 
 type TDate TSLParam

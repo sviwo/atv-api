@@ -138,12 +138,12 @@ type DeviceRunStatusOutput struct {
 }
 
 type DevicePropertiy struct {
-	Key   string      `json:"key" dc:"属性标识"`
-	Name  string      `json:"name" dc:"属性名称"`
-	Type  string      `json:"type" dc:"属性值类型"`
-	Unit  string      `json:"unit" dc:"属性值单位"`
-	Value *gvar.Var   `json:"value" dc:"属性值"`
-	List  []*gvar.Var `json:"list" dc:"当天属性值列表"`
+	Key   string    `json:"key" dc:"属性标识"`
+	Name  string    `json:"name" dc:"属性名称"`
+	Type  string    `json:"type" dc:"属性值类型"`
+	Unit  string    `json:"unit" dc:"属性值单位"`
+	Value *gvar.Var `json:"value" dc:"属性值"`
+	//List  []*gvar.Var `json:"list" dc:"当天属性值列表"`
 }
 
 type DeviceLatestProperty struct {
@@ -165,8 +165,8 @@ type DevicePropertiyOut struct {
 }
 
 type DeviceGetPropertyInput struct {
-	DeviceKey   string `json:"device_key" dc:"设备ID" v:"required#设备key不能为空"`
-	PropertyKey string `json:"propertyKey" dc:"属性标识" v:"required#属性标识不能为空"`
+	DeviceKey    string   `json:"device_key" dc:"设备ID" v:"required#设备key不能为空"`
+	PropertyKeys []string `json:"propertyKey" dc:"属性标识" v:"required#属性标识不能为空"`
 }
 
 type DeviceGetPropertyListInput struct {
