@@ -20,14 +20,21 @@ func New() *sHome {
 type sHome struct{}
 
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
-	out = new(model.HomeDataOutput)
-	device := new(entity.Device)
-	if err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
+	out = &model.HomeDataOutput{Version: service.Version().GetNewVersion(ctx)}
+	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
 		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
-		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).Scan(&device); err != nil {
+		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
+	if err != nil {
 		panic(err)
 	}
-	if err := dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
+	if result.IsEmpty() {
+		return
+	}
+	device := new(entity.Device)
+	if err = result.Struct(&device); err != nil {
+		panic(err)
+	}
+	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
 		Where(dao.Device.Columns().DeviceId, device.DeviceId).
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
 		panic(err)
@@ -50,7 +57,7 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	for _, re := range res {
 		switch re.Key {
 		case consts.RemainMile:
-			out.RemainMile = re.Value.Int()
+			out.RemainMile = re.Value.Float32()
 		case consts.Electricity:
 			out.Electricity = re.Value.Int()
 		case consts.BatteryStatus:
@@ -58,11 +65,10 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		case consts.LockedStatus:
 			out.LockedStatus = re.Value.Int()
 		case consts.GeoLocation:
-			out.GeoLocation = re.Value.String()
+			out.GeoLocation = re.Value.Map()
 		default:
 			break
 		}
 	}
-	out.Version = service.Version().GetNewVersion(ctx)
 	return
 }

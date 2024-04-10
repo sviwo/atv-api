@@ -15,3 +15,6 @@
 "验证码已过期" = "El Código de verificación ha expirado"
 "验证码发送失败，请检查网络" = "Falló el envío del Código de verificación, verifique la red"
 "此车辆不存在" = "Este vehículo no existe"
+"设备不在线" = "El dispositivo no está en línea"
+"非法设备" = "Equipo ilegal"
+"您是此车的唯一用户，不可解绑" = "Usted es el único usuario de este automóvil y no se puede desatar."

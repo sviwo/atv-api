@@ -25,9 +25,13 @@ type UserInfoReq struct {
 }
 
 type UserInfoRes struct {
-	Username string `json:"username"          dc:""`
 	UserInfoBase
-	HeadImg string `json:"headImg"           description:""`
+	Username   string  `json:"username"          dc:""`
+	HeadImg    string  `json:"headImg"           dc:""`
+	Nickname   string  `json:"nickname"          dc:"车辆昵称"`
+	DeviceName string  `json:"deviceName"        dc:"车架号"`
+	Mileage    float32 `json:"mileage"           dc:"行驶里程(km)"`
+	AuthStatus int     `json:"authStatus"        dc:"认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败"`
 }
 
 type UpdatePasswordReq struct {

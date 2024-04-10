@@ -15,11 +15,9 @@ type QueryCarOutput struct {
 }
 
 type CtlSwitchDTInput struct {
-	DeviceId        string `json:"deviceId"           dc:""`
-	DrivingModeType int    `json:"drivingModeType"    description:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
+	DrivingModeType int `json:"drivingModeType"    description:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
 }
 
 type CtlSwitchERTInput struct {
-	DeviceId        string `json:"deviceId"           dc:""`
-	DrivingModeType int    `json:"drivingModeType"    description:"动能回收类型：0=无，1=中，2=强"`
+	EnergyRecoveryType int `json:"energyRecoveryType"    description:"动能回收类型：0=无，1=中，2=强"`
 }

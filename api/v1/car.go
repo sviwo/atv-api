@@ -32,7 +32,8 @@ type GetCarInfoRes struct {
 
 type BindingCarReq struct {
 	g.Meta     `path:"/car/binding" method:"post" tags:"车辆相关" sm:"绑定车辆"`
-	DeviceCode string `json:"deviceCode"       dc:"车架号（最大长度20）"          v:"required|max-length:20"`
+	UserId     int64  `json:"userId"           dc:"用户id"                   v:"required"`
+	DeviceCode string `json:"deviceCode"       dc:"车架号（最大长度20）"        v:"required|max-length:20"`
 }
 
 type DelCarReq struct {
@@ -50,22 +51,17 @@ type EnabledSpeedLimitReq struct {
 	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
-type CtlLampReq struct {
-	g.Meta   `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
-	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
-}
-
-type CtlHornReq struct {
-	g.Meta   `path:"/car/control/horn" method:"post" tags:"车辆相关" sm:"控制喇叭"`
-	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
+type CtlCarReq struct {
+	g.Meta       `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
+	Instructions int `json:"instructions"  dc:"指令：0=灯光，1=鸣笛（不可输入其他指令）"   v:"required|between:0,1"`
 }
 
 type CtlSwitchDTReq struct {
-	g.Meta   `path:"/car/control/switch/dt" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
-	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
+	g.Meta          `path:"/car/control/switch/dt" method:"post" tags:"车辆相关" sm:"切换驾驶模式"`
+	DrivingModeType int `json:"drivingModeType"    dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
 }
 
 type CtlSwitchERTReq struct {
-	g.Meta   `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
-	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
+	g.Meta          `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
+	DrivingModeType int `json:"drivingModeType"    description:"动能回收类型：0=无，1=中，2=强"`
 }

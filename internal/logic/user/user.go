@@ -55,8 +55,8 @@ func (s *sUser) Login(ctx context.Context, in model.LoginInput) *uint64 {
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
 	if err := dao.User.Ctx(ctx).
-		Where("username", username).
-		Where("is_delete", consts.DeleteOn).
+		Where(dao.User.Columns().Username, username).
+		Where(dao.User.Columns().IsDelete, consts.DeleteOn).
 		Scan(&user); err != nil {
 		panic(err)
 	}
@@ -127,17 +127,52 @@ func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput
 	}
 	checkVftCode(ctx, in.Username, in.EmailVftCode)
 	operatePwd(userInfo, in.NewPassword)
-	_, err := dao.User.Ctx(ctx).Where("user_id", userInfo.UserId).Update(userInfo)
+	_, err := dao.User.Ctx(ctx).Where(dao.User.Columns().UserId, userInfo.UserId).Update(userInfo)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	if err := dao.User.Ctx(ctx).Where(
-		"user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).Where("is_delete", consts.DeleteOn).Scan(&out); err != nil {
+		dao.User.Columns().UserId, userId,
+	).Where(dao.User.Columns().IsDelete, consts.DeleteOn).Scan(&out); err != nil {
 		panic(err)
+	}
+
+	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
+		Where(dao.UserDevice.Columns().UserId, userId).
+		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
+	if err != nil {
+		panic(err)
+	}
+	if result.IsEmpty() {
+		return
+	}
+	device := new(entity.Device)
+	if err = result.Struct(&device); err != nil {
+		panic(err)
+	}
+	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
+		Where(dao.Device.Columns().DeviceId, device.DeviceId).
+		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
+		panic(err)
+	}
+	out.Nickname = device.Nickname
+	out.DeviceName = device.DeviceName
+	//根据物模型获取所有属性数据 根据情况选择
+	keys := make([]string, 0)
+	keys = append(keys, "Mileage")
+	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
+		DeviceKey:    device.DeviceName,
+		PropertyKeys: keys,
+	})
+	if err != nil {
+		panic(err)
+	}
+	if !res[0].Value.IsEmpty() {
+		out.Mileage = res[0].Value.Float32()
 	}
 	return
 }
@@ -147,7 +182,7 @@ EditInfo 编辑用户资料
 */
 func (s *sUser) EditInfo(ctx context.Context, in model.EditInfoInput) {
 	if _, err := dao.User.Ctx(ctx).OmitNilData().Update(
-		in, "user_id", service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+		in, dao.User.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
 	); err != nil {
 		panic(err)
 	}

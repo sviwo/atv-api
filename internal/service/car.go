@@ -10,13 +10,9 @@ type (
 		GetCarList(ctx context.Context) (out []*model.QueryCarOutput)
 		DelCar(ctx context.Context, deviceId int64)
 		/*
-			CtlLamp 控制车灯
+			CtlLamp 控车
 		*/
-		CtlLamp(ctx context.Context, deviceId int64)
-		/*
-			CtlHorn 控制喇叭
-		*/
-		CtlHorn(ctx context.Context, deviceId int64)
+		CtlCar(ctx context.Context, instructions int)
 		/*
 			CtlSwitchDT 切换驾驶模式
 		*/
@@ -33,7 +29,7 @@ type (
 			EnabledSpeedLimit 开启/关闭速度限制
 		*/
 		EnabledSpeedLimit(ctx context.Context, deviceId int64)
-		BindingCar(ctx context.Context, carFrameCode string)
+		BindingCar(ctx context.Context, userId int64, deviceName string)
 	}
 )
 

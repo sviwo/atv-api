@@ -33,8 +33,12 @@ type RegisterInput struct {
 获取用户信息
 */
 type UserInfoOutput struct {
-	Username string `json:"username"          description:""`
 	UserInfoBase
+	Username   string  `json:"username"          description:""`
+	Nickname   string  `json:"nickname"          dc:"车辆昵称"`
+	DeviceName string  `json:"deviceName"        dc:"车架号"`
+	Mileage    float32 `json:"mileage"           dc:"行驶里程(km)"`
+	AuthStatus int     `json:"authStatus"        dc:"认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败"`
 }
 
 /*

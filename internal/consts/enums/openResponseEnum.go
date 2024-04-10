@@ -56,12 +56,13 @@ var (
 	VftCodeSendFailed = New(2006, "验证码发送失败，请检查网络")
 	CarNotExists      = New(2007, "此车辆不存在")
 	DeviceOffline     = New(2008, "设备不在线")
+	IllegalDevice     = New(2009, "非法设备")
+	UnbindCarError    = New(2010, "您是此车的唯一用户，不可解绑")
 
 	/*
 		   第三方错误码 3000～3999
 			httpStatus = 200
 	*/
-	IllegalDevice = New(3000, "非法设备")
 )
 
 func New(code int, message string) gcode.Code {

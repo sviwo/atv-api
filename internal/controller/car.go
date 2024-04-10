@@ -26,7 +26,7 @@ func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.
 BindingCar 绑定车辆
 */
 func (c cCar) BindingCar(ctx context.Context, req *v1.BindingCarReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().BindingCar(ctx, req.DeviceCode)
+	service.Car().BindingCar(ctx, req.UserId, req.DeviceCode)
 	return
 }
 
@@ -55,18 +55,10 @@ func (c cCar) EnabledSpeedLimit(ctx context.Context, req *v1.EnabledSpeedLimitRe
 }
 
 /*
-CtlLamp 控制车灯
+CtlCar 控车
 */
-func (c cCar) CtlLamp(ctx context.Context, req *v1.CtlLampReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().CtlLamp(ctx, req.DeviceId)
-	return
-}
-
-/*
-CtlHorn 控制喇叭
-*/
-func (c cCar) CtlHorn(ctx context.Context, req *v1.CtlHornReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().CtlHorn(ctx, req.DeviceId)
+func (c cCar) CtlCar(ctx context.Context, req *v1.CtlCarReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().CtlCar(ctx, req.Instructions)
 	return
 }
 

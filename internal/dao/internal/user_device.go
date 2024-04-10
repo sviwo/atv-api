@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-09 20:09:32
 // ==========================================================================
 
 package internal
@@ -20,24 +20,30 @@ type UserDeviceDao struct {
 
 // UserDeviceColumns defines and stores column names for table sw_user_device.
 type UserDeviceColumns struct {
-	Id         string //
-	DeviceId   string //
-	UserId     string //
-	IsSelect   string // 是否选定：false=未选定，true=已选定
-	MobileKey  string // 手机钥匙开关：false=关，true=开
-	SpeedLimit string // 速度限制开关：false=关，true=开
-	CreateTime string //
+	Id             string //
+	DeviceId       string //
+	UserId         string //
+	IsSelect       string // 是否选定：false=未选定，true=已选定
+	MobileKey      string // 手机钥匙开关：false=关，true=开
+	SpeedLimit     string // 速度限制开关：false=关，true=开
+	DrivingMode    string // 驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式
+	EnergyRecovery string // 动能回收类型：0=无，1=中，2=强
+	CreateTime     string //
+	UpdateTime     string //
 }
 
 // userDeviceColumns holds the columns for table sw_user_device.
 var userDeviceColumns = UserDeviceColumns{
-	Id:         "id",
-	DeviceId:   "device_id",
-	UserId:     "user_id",
-	IsSelect:   "is_select",
-	MobileKey:  "mobile_key",
-	SpeedLimit: "speed_limit",
-	CreateTime: "create_time",
+	Id:             "id",
+	DeviceId:       "device_id",
+	UserId:         "user_id",
+	IsSelect:       "is_select",
+	MobileKey:      "mobile_key",
+	SpeedLimit:     "speed_limit",
+	DrivingMode:    "driving_mode",
+	EnergyRecovery: "energy_recovery",
+	CreateTime:     "create_time",
+	UpdateTime:     "update_time",
 }
 
 // NewUserDeviceDao creates and returns a new DAO object for table data access.

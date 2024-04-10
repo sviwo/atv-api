@@ -15,3 +15,6 @@
 "验证码已过期" = "The verification code has expired"
 "验证码发送失败，请检查网络" = "Verification code sending failed, please check the network"
 "此车辆不存在" = "This vehicle does not exist"
+"设备不在线" = "Device not online"
+"非法设备" = "Illegal devices"
+"您是此车的唯一用户，不可解绑" = "You are the only user of this car and cannot be unbound"
