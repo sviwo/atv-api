@@ -8,6 +8,11 @@ import (
 type (
 	ICar interface {
 		GetCarList(ctx context.Context) (out []*model.QueryCarOutput)
+
+		GetCarDetail(ctx context.Context, deviceId *int64) (out *model.UserDeviceOutput)
+
+		SwitchCar(ctx context.Context, deviceId int64)
+
 		DelCar(ctx context.Context, deviceId int64)
 		/*
 			CtlLamp 控车
@@ -24,11 +29,11 @@ type (
 		/*
 			EnabledMobileKey 开启/关闭蓝牙钥匙
 		*/
-		EnabledMobileKey(ctx context.Context, deviceId int64)
+		EnabledMobileKey(ctx context.Context)
 		/*
 			EnabledSpeedLimit 开启/关闭速度限制
 		*/
-		EnabledSpeedLimit(ctx context.Context, deviceId int64)
+		EnabledSpeedLimit(ctx context.Context)
 		BindingCar(ctx context.Context, userId int64, deviceName string)
 	}
 )

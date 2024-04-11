@@ -12,59 +12,50 @@ var Car = cCar{}
 
 type cCar struct{}
 
-/*
-GetCarList 获取用户车辆列表
-*/
-func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.GetCarInfoRes, err error) {
+func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.GetCarListRes, err error) {
 	if err = gconv.Structs(service.Car().GetCarList(ctx), &res); err != nil {
 		panic(err)
 	}
 	return
 }
 
-/*
-BindingCar 绑定车辆
-*/
-func (c cCar) BindingCar(ctx context.Context, req *v1.BindingCarReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().BindingCar(ctx, req.UserId, req.DeviceCode)
+func (c cCar) GetCarDetail(ctx context.Context, req *v1.GetCarDetailReq) (res *v1.GetCarDetailRes, err error) {
+	if err = gconv.Struct(service.Car().GetCarDetail(ctx, req.DeviceId), &res); err != nil {
+		panic(err)
+	}
 	return
 }
 
-/*
-DelCar 删除（解绑）车辆
-*/
+func (c cCar) SwitchCar(ctx context.Context, req *v1.SwitchCarReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().SwitchCar(ctx, req.DeviceId)
+	return
+}
+
+func (c cCar) BindingCar(ctx context.Context, req *v1.BindingCarReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().BindingCar(ctx, req.UserId, req.DeviceName)
+	return
+}
+
 func (c cCar) DelCar(ctx context.Context, req *v1.DelCarReq) (res *v1.EmptyFieldRes, err error) {
 	service.Car().DelCar(ctx, req.DeviceId)
 	return
 }
 
-/*
-EnabledMobileKey 开启/关闭蓝牙钥匙
-*/
 func (c cCar) EnabledMobileKey(ctx context.Context, req *v1.EnabledMobileKeyReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().EnabledMobileKey(ctx, req.DeviceId)
+	service.Car().EnabledMobileKey(ctx)
 	return
 }
 
-/*
-EnabledSpeedLimit 开启/关闭速度限制
-*/
 func (c cCar) EnabledSpeedLimit(ctx context.Context, req *v1.EnabledSpeedLimitReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().EnabledSpeedLimit(ctx, req.DeviceId)
+	service.Car().EnabledSpeedLimit(ctx)
 	return
 }
 
-/*
-CtlCar 控车
-*/
 func (c cCar) CtlCar(ctx context.Context, req *v1.CtlCarReq) (res *v1.EmptyFieldRes, err error) {
 	service.Car().CtlCar(ctx, req.Instructions)
 	return
 }
 
-/*
-CtlSwitchDriveType 切换驾驶模式
-*/
 func (c cCar) CtlSwitchDriveType(ctx context.Context, req *v1.CtlSwitchDTReq) (res *v1.EmptyFieldRes, err error) {
 	data := model.CtlSwitchDTInput{}
 	if err = gconv.Struct(req, &data); err != nil {
@@ -74,9 +65,6 @@ func (c cCar) CtlSwitchDriveType(ctx context.Context, req *v1.CtlSwitchDTReq) (r
 	return
 }
 
-/*
-CtlSwitchEnergyRecoveryType 切换动能回收模式
-*/
 func (c cCar) CtlSwitchEnergyRecoveryType(ctx context.Context, req *v1.CtlSwitchERTReq) (
 	res *v1.EmptyFieldRes, err error) {
 	data := model.CtlSwitchERTInput{}

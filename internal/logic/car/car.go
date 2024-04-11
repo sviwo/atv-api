@@ -4,7 +4,9 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
@@ -27,21 +29,73 @@ func New() *sCar {
 type sCar struct{}
 
 func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
-	if err := dao.UserDevice.Ctx(ctx).Where(
-		dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).ScanList(&out, "UserDeviceOutput"); err != nil {
+	deviceIds, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
+		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).All()
+	if err != nil {
 		panic(err)
 	}
-	if out != nil {
-		if err := dao.Device.Ctx(ctx).Where(
-			dao.Device.Columns().DeviceId, gdb.ListItemValuesUnique(out, "UserDeviceOutput", "DeviceId"),
-		).ScanList(
-			&out, "DeviceBase", "UserDeviceOutput", "device_id:DeviceId",
-		); err != nil {
-			panic(err)
-		}
+	if deviceIds.IsEmpty() {
+		return
+	}
+	if err = dao.Device.Ctx(ctx).
+		WhereIn(dao.Device.Columns().DeviceId, deviceIds.Array(dao.Device.Columns().DeviceId)).
+		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&out); err != nil {
+		panic(err)
+	}
+	for _, ot := range out {
+		ot.Mileage = findMileage(ctx, ot.DeviceName)
 	}
 	return
+}
+
+func findMileage(ctx context.Context, deviceName string) float32 {
+	keys := make([]string, 0)
+	keys = append(keys, "Mileage")
+	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
+		DeviceKey:    deviceName,
+		PropertyKeys: keys,
+	})
+	if err != nil {
+		panic(err)
+	}
+	if !gutil.IsEmpty(res) {
+		return res[0].Value.Float32()
+	}
+	return 0
+}
+
+func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.UserDeviceOutput) {
+	if err := gconv.Struct(findDeviceInfo(ctx, deviceId), &out); err != nil {
+		panic(err)
+	}
+	out.Mileage = findMileage(ctx, out.DeviceName)
+	out.WarrantyTime = out.ActivateTime.AddDate(1, 0, 0)
+	return
+}
+
+func (s sCar) SwitchCar(ctx context.Context, deviceId int64) {
+	if err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+		result, err := dao.UserDevice.Ctx(ctx).Data(dao.UserDevice.Columns().IsSelect, consts.CarSelectNo).
+			Where(dao.UserDevice.Columns().UserId, userId).
+			Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
+			WhereNot(dao.UserDevice.Columns().DeviceId, deviceId).
+			Update()
+		if err != nil {
+			return err
+		}
+		if affected, _ := result.RowsAffected(); affected > 0 {
+			if _, err = dao.UserDevice.Ctx(ctx).Data(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
+				Where(dao.UserDevice.Columns().UserId, userId).
+				Where(dao.UserDevice.Columns().DeviceId, deviceId).
+				Update(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}); err != nil {
+		panic(err)
+	}
 }
 
 func (s sCar) DelCar(ctx context.Context, deviceId int64) {
@@ -60,7 +114,7 @@ func (s sCar) DelCar(ctx context.Context, deviceId int64) {
 }
 
 func (s sCar) CtlCar(ctx context.Context, instructions int) {
-	device := findDeviceInfo(ctx)
+	device := findDeviceInfo(ctx, nil)
 	mp := make(map[string]any)
 	switch instructions {
 	case consts.Light:
@@ -80,21 +134,22 @@ func (s sCar) CtlCar(ctx context.Context, instructions int) {
 	}
 }
 
-func findDeviceInfo(ctx context.Context) (device *entity.Device) {
-	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
-		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
-		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
-	if err != nil {
-		panic(err)
+func findDeviceInfo(ctx context.Context, deviceId *int64) (device *entity.Device) {
+	if deviceId == nil {
+		result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
+			Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
+			Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
+		if err != nil {
+			panic(err)
+		}
+		if result.IsEmpty() {
+			return
+		}
+		getVar := result.GMap().GetVar(dao.Device.Columns().DeviceId).Int64()
+		deviceId = &getVar
 	}
-	if result.IsEmpty() {
-		panic(gerror.NewCode(enums.IllegalOperation))
-	}
-	if err = result.Struct(&device); err != nil {
-		panic(err)
-	}
-	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().DeviceName).
-		Where(dao.Device.Columns().DeviceId, device.DeviceId).
+	if err := dao.Device.Ctx(ctx).
+		Where(dao.Device.Columns().DeviceId, &deviceId).
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
 		panic(err)
 	}
@@ -125,8 +180,8 @@ func (s sCar) CtlSwitchERT(ctx context.Context, in model.CtlSwitchERTInput) {
 	}
 }
 
-func (s sCar) EnabledMobileKey(ctx context.Context, deviceId int64) {
-	userDevice := findUserDevice(ctx, deviceId)
+func (s sCar) EnabledMobileKey(ctx context.Context) {
+	userDevice := findUserDevice(ctx)
 	var mobileKey = true
 	if userDevice.MobileKey {
 		mobileKey = consts.CarMobileKeyNo
@@ -137,11 +192,12 @@ func (s sCar) EnabledMobileKey(ctx context.Context, deviceId int64) {
 	}
 }
 
-func findUserDevice(ctx context.Context, deviceId int64) entity.UserDevice {
+func findUserDevice(ctx context.Context) entity.UserDevice {
 	userDevice := *new(entity.UserDevice)
-	if err := dao.UserDevice.Ctx(ctx).Where(dao.UserDevice.Columns().DeviceId, deviceId).Where(
-		dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).Scan(&userDevice); err != nil {
+	if err := dao.UserDevice.Ctx(ctx).
+		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
+		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
+		Scan(&userDevice); err != nil {
 		panic(err)
 	}
 	if gutil.IsEmpty(userDevice) {
@@ -150,8 +206,8 @@ func findUserDevice(ctx context.Context, deviceId int64) entity.UserDevice {
 	return userDevice
 }
 
-func (s sCar) EnabledSpeedLimit(ctx context.Context, deviceId int64) {
-	userDevice := findUserDevice(ctx, deviceId)
+func (s sCar) EnabledSpeedLimit(ctx context.Context) {
+	userDevice := findUserDevice(ctx)
 	var speedLimit = true
 	if userDevice.SpeedLimit {
 		speedLimit = consts.CarSpeedLimitNo

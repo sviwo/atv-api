@@ -6,7 +6,7 @@ import (
 
 type DeviceSecretReq struct {
 	g.Meta     `path:"/device/get/secret" method:"get" tags:"设备相关" sm:"获取注册设备到指定产品下所需要的证书"`
-	DeviceCode string `json:"deviceCode" dc:"设备的唯一标识" v:"required"`
+	DeviceName string `json:"deviceName" dc:"设备的唯一标识(车架号)" v:"required"`
 }
 
 type DeviceSecretRes struct {
