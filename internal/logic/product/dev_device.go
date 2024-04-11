@@ -10,7 +10,6 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"strings"
-	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -23,6 +22,7 @@ import (
 	"sviwo/pkg/iotModel"
 	"sviwo/pkg/tsd"
 	"sviwo/pkg/tsd/comm"
+	"sviwo/pkg/utility"
 )
 
 type sDevDevice struct{}
@@ -251,7 +251,7 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 		}
 
 		if _, err = dao.UserDevice.Ctx(ctx).Insert(
-			dao.UserDevice.Columns().Id, boot.GID.Generate().Int64(),
+			dao.UserDevice.Columns().Id, utility.GID.Generate().Int64(),
 			dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
 			dao.UserDevice.Columns().DeviceId, device.DeviceId,
 			dao.UserDevice.Columns().IsSelect, consts.CarSelectYes,

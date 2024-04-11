@@ -6,7 +6,6 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gutil"
-	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -14,6 +13,7 @@ import (
 	"sviwo/internal/model/do"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
+	"sviwo/pkg/utility"
 )
 
 func init() {
@@ -182,7 +182,7 @@ func (s sCar) BindingCar(ctx context.Context, userId int64, deviceName string) {
 		panic(err)
 	}
 	userDevice := do.UserDevice{
-		Id: boot.GID.Generate().Int64(), UserId: userId, DeviceId: device.DeviceId, CreateTime: gtime.Now(),
+		Id: utility.GID.Generate().Int64(), UserId: userId, DeviceId: device.DeviceId, CreateTime: gtime.Now(),
 	}
 	if count == 0 {
 		userDevice.IsSelect = consts.CarSelectYes

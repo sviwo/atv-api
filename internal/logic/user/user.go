@@ -9,7 +9,6 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
-	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -80,7 +79,7 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 		if err != nil {
 			panic(err)
 		}
-		userAuth := entity.UserAuth{AuthId: boot.GID.Generate().Int64(), UserId: userId, CreateTime: gtime.Now()}
+		userAuth := entity.UserAuth{AuthId: utility.GID.Generate().Int64(), UserId: userId, CreateTime: gtime.Now()}
 		//初始化用户实名认证信息
 		if _, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert(); err != nil {
 			panic(err)

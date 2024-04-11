@@ -8,9 +8,9 @@ import (
 	"github.com/gogf/gf/v2/os/glog"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/api/v1"
-	"sviwo/internal/boot"
 	"sviwo/internal/consts"
 	"sviwo/internal/service"
+	"sviwo/pkg/utility"
 	ecc2 "sviwo/pkg/utility/encrypt"
 	"sviwo/pkg/utility/file"
 )
@@ -47,7 +47,7 @@ func (cCommon) GetEccPublicKey(ctx context.Context, req *v1.EccPublicKeyReq) (re
 	if err != nil {
 		panic(err)
 	}
-	publicCode := boot.GID.Generate().String()
+	publicCode := utility.GID.Generate().String()
 	if err = g.Redis().SetEX(
 		ctx, fmt.Sprintf(consts.RedisEccPrivateKey, publicCode), key.PrivateKey, 120,
 	); err != nil {

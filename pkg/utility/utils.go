@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/container/glist"
 	"github.com/gogf/gf/v2/crypto/gaes"
 	"github.com/gogf/gf/v2/crypto/gmd5"
@@ -19,7 +20,6 @@ import (
 	"gopkg.in/gomail.v2"
 	"strconv"
 	"strings"
-	"sviwo/internal/boot"
 	"sviwo/internal/consts/enums"
 	"time"
 )
@@ -275,6 +275,18 @@ func ToStr(value interface{}) string {
 	return key
 }
 
+var NewDialer *gomail.Dialer
+
+func InitSendEmail(ctx context.Context) error {
+	NewDialer = gomail.NewDialer(
+		g.Cfg().MustGet(ctx, "email.host").String(),
+		g.Cfg().MustGet(ctx, "email.port").Int(),
+		g.Cfg().MustGet(ctx, "email.username").String(),
+		g.Cfg().MustGet(ctx, "email.password").String(),
+	)
+	return nil
+}
+
 // 发送邮件
 func SendEmail(subject, body, to string) error {
 	m := gomail.NewMessage()
@@ -287,7 +299,7 @@ func SendEmail(subject, body, to string) error {
 	//内容
 	m.SetBody("text/html", body)
 	// 发送邮件
-	if err := boot.NewDialer.DialAndSend(m); err != nil {
+	if err := NewDialer.DialAndSend(m); err != nil {
 		glog.Error(context.Background(), "验证发送失败，错误原因==", err)
 		return gerror.NewCode(enums.VftCodeSendFailed)
 	}
@@ -391,4 +403,15 @@ func FileSize(fileSize int64) string {
 		size /= 1024
 	}
 	return fmt.Sprintf("%.2f %s", size, units[i])
+}
+
+var GID *snowflake.Node
+
+func InitSnowflake(ctx context.Context) error {
+	Node, err := snowflake.NewNode(1)
+	if err != nil {
+		return err
+	}
+	GID = Node
+	return nil
 }

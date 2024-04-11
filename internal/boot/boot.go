@@ -8,6 +8,7 @@ import (
 	"sviwo/internal/logic/tdengine"
 	"sviwo/internal/network/core/logic/model"
 	"sviwo/pkg/aliyun"
+	"sviwo/pkg/utility"
 )
 
 /*
@@ -58,8 +59,8 @@ func Boot(ctx context.Context) {
 var InitFuncNoDeferListForIotCore = []NoDeferFunc{
 	{AllSystemInit, "初始化系统变量"},
 	{model.InitCoreLogic, "核心处理逻辑"},
-	{InitSnowflake, "雪花算法ID"},
-	{InitSendEmail, "发送邮件"},
+	{utility.InitSnowflake, "雪花算法ID"},
+	{utility.InitSendEmail, "发送邮件"},
 	{aliyun.InitAliyunIotClient, "阿里云iot"},
 	{InitAmqp, "Amqp"},
 	{tdengine.TslTableNew().CreateDatabase, "时序数据库创建"},
