@@ -58,7 +58,7 @@ type EnabledSpeedLimitReq struct {
 }
 
 type CtlCarReq struct {
-	g.Meta       `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车灯"`
+	g.Meta       `path:"/car/control/lamp" method:"post" tags:"车辆相关" sm:"控制车辆"`
 	Instructions int `json:"instructions"  dc:"指令：0=灯光，1=鸣笛（不可输入其他指令）"   v:"required|between:0,1"`
 }
 
