@@ -100,7 +100,7 @@ func GetDeviceDetailDataByPage(ctx context.Context, deviceKey string, pageNum, p
 		if err != nil {
 			return
 		}
-		if dataContent.ListMap.IsEmpty() {
+		if len(dataContent) == 0 {
 			continue
 		}
 		if len(dataType) > 0 {

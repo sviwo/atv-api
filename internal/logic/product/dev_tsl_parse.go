@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/frame/g"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
@@ -55,8 +54,7 @@ func (s *sDevTSLParse) ParseData(ctx context.Context, deviceKey string, data []b
 
 // HandleProperties 处理属性
 func (s *sDevTSLParse) HandleProperties(ctx context.Context, device *model.DeviceOutput, properties map[string]interface{}) (reportDataInfo iotModel.ReportPropertyData, err error) {
-	//reportDataInfo = make(iotModel.ReportPropertyData)
-	reportDataInfo.ListMap = gmap.NewListMap(true)
+	reportDataInfo = make(iotModel.ReportPropertyData)
 	nowTime := time.Now()
 	for k, v := range properties {
 		for _, property := range device.TSL.Properties {
@@ -78,10 +76,10 @@ func (s *sDevTSLParse) HandleProperties(ctx context.Context, device *model.Devic
 				}
 
 				// 构建数据
-				reportDataInfo.Set(k, iotModel.ReportPropertyNode{
+				reportDataInfo[k] = iotModel.ReportPropertyNode{
 					CreateTime: createTimestamp,
 					Value:      value,
-				})
+				}
 				break
 			}
 		}

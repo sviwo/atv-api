@@ -55,7 +55,7 @@ func (s *sAnalysisDeviceData) GetDeviceDataForProductByLatest(ctx context.Contex
 	for _, key := range deviceKeys {
 		var deviceData model.DeviceDataRes
 		data := dcache.GetDeviceDetailDataByLatest(ctx, key)
-		if data.ListMap.IsEmpty() {
+		if data != nil {
 			deviceData.DeviceKey = key
 			deviceData.DeviceData = data
 			res = append(res, deviceData)
