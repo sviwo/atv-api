@@ -232,7 +232,7 @@ func (s *sTSLTable) CreateDatabase(ctx context.Context) (err error) {
 	//	return
 	//}
 
-	_, err = taos.Exec(" CREATE DATABASE IF NOT EXISTS " + dbName + "  KEEP 365d  CACHEMODEL 'both' ")
+	_, err = taos.Exec(" CREATE DATABASE IF NOT EXISTS " + dbName + " KEEP 365d  CACHEMODEL 'both' ")
 
 	return
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/gogf/gf/v2/container/gvar"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/gogf/gf/v2/util/gconv"
+	"sort"
 	"sviwo/pkg/iotModel"
 	"sviwo/pkg/tsd/comm"
 	"time"
@@ -24,7 +24,7 @@ func (m *TdEngine) InsertDeviceData(deviceKey string, data iotModel.ReportProper
 			return err
 		}
 	}
-	if data.ListMap.IsEmpty() {
+	if len(data) == 0 {
 		err = errors.New("数据为空")
 		return
 	}
@@ -45,15 +45,14 @@ func (m *TdEngine) InsertDeviceData(deviceKey string, data iotModel.ReportProper
 
 // getDeviceField 获取设备数据字段
 func getDeviceField(data iotModel.ReportPropertyData) []string {
-	var field = []string{"ts"}
-
-	for _, k := range data.ListMap.Keys() {
-		ks := gconv.String(k)
-		ks = comm.TsdColumnName(ks)
-		field = append(field, ks)
+	var field []string
+	for k := range data {
+		k = comm.TsdColumnName(k)
+		field = append(field, k)
 		// 属性上报时间
-		field = append(field, ks+"_time")
+		field = append(field, k+"_time")
 	}
+	sort.Strings(field)
 	return field
 }
 
@@ -62,14 +61,19 @@ func getDeviceValue(data iotModel.ReportPropertyData) []string {
 	//ts := time.Now().Format("Y-m-d H:i:s")
 	//var value = []string{"'" + ts + "'"}
 	var value []string
-	for _, v := range data.ListMap.Values() {
-		node := v.(iotModel.ReportPropertyNode)
-		str := gvar.New(node.Value).String()
-		if strings.ContainsRune(str, ',') {
-			str = strings.ReplaceAll(str, "'", "\"")
-		}
-		value = append(value, "'"+str+"'")
-		value = append(value, "'"+gtime.New(node.CreateTime).Format("Y-m-d H:i:s")+"'")
+
+	var keys []string
+	// 提取map中的键
+	for k := range data {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	// 给key排序后，从map取值
+	for _, k := range keys {
+		v := data[k]
+		value = append(value, "'"+gvar.New(v.Value).String()+"'")
+		value = append(value, "'"+gtime.New(v.CreateTime).Format("Y-m-d H:i:s")+"'")
 	}
 	return value
 }
@@ -151,7 +155,8 @@ func (m *TdEngine) BatchInsertMultiDeviceData(multiDeviceDataList map[string][]i
 	for deviceKey, deviceData := range multiDeviceDataList {
 
 		table := comm.DeviceTableName(deviceKey)
-		field := getDeviceField(deviceData[0])
+		var field = []string{"ts"}
+		field = append(field, getDeviceField(deviceData[0])...)
 
 		ts++
 
