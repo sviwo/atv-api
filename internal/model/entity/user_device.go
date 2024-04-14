@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-09 20:09:32
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-14 22:19:23
 // =================================================================================
 
 package entity
@@ -14,6 +14,7 @@ type UserDevice struct {
 	DeviceId       int64       `json:"deviceId"       description:""`
 	UserId         int64       `json:"userId"         description:""`
 	IsSelect       bool        `json:"isSelect"       description:"是否选定：false=未选定，true=已选定"`
+	UserDeviceType int         `json:"userDeviceType" description:"设备用户类型：0=主用户，1=从用户"`
 	MobileKey      bool        `json:"mobileKey"      description:"手机钥匙开关：false=关，true=开"`
 	SpeedLimit     bool        `json:"speedLimit"     description:"速度限制开关：false=关，true=开"`
 	DrivingMode    int         `json:"drivingMode"    description:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
