@@ -56,4 +56,7 @@ const (
 	//是否生成物模型表或子表：1，0 否
 	MetadataTable   = 1
 	DeMetadataTable = 0
+
+	// 设备主用户标识
+	MainUserDeviceType = "0"
 )

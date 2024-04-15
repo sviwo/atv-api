@@ -44,3 +44,25 @@ func (c cTravelRecord) Delete(ctx context.Context, req *v1.TravelRecordDeleteReq
 	}
 	return
 }
+
+func (c cTravelRecord) Online(ctx context.Context, req *v1.TravelRecordOnlineReq) (res *v1.EmptyFieldRes, err error) {
+	tData := model.TravelRecordOnline{}
+	if err = gconv.Struct(req, &tData); err != nil {
+		panic(err)
+	}
+	if err = service.TravelRecord().CreateOnline(ctx, tData); err != nil {
+		panic(err)
+	}
+	return
+}
+
+func (c cTravelRecord) Offline(ctx context.Context, req *v1.TravelRecordOfflineReq) (res *v1.EmptyFieldRes, err error) {
+	tData := model.TravelRecordOnline{}
+	if err = gconv.Struct(req, &tData); err != nil {
+		panic(err)
+	}
+	if err = service.TravelRecord().UpdateOnlineToOffline(ctx, tData); err != nil {
+		panic(err)
+	}
+	return
+}
