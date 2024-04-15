@@ -99,6 +99,13 @@ func online(ctx context.Context, device *model.DeviceOutput) (err error) {
 		if err != nil {
 			g.Log().Errorf(ctx, "告警检测失败: %s", err.Error())
 		}
+		trData := model.TravelRecordOnline{
+			DeviceName: device.DeviceName,
+		}
+		err = service.TravelRecord().CreateOnline(ctx, trData)
+		if err != nil {
+			g.Log().Errorf(ctx, "加入行程失败: %s", err.Error())
+		}
 	}()
 
 	return
@@ -119,6 +126,13 @@ func offline(ctx context.Context, device *model.DeviceOutput) (err error) {
 	}
 	if err == nil {
 		err = service.AlarmRule().Check(ctx, device.ProductKey, device.DeviceName, consts.AlarmTriggerTypeOffline, data)
+	}
+	trData := model.TravelRecordOnline{
+		DeviceName: device.DeviceName,
+	}
+	err = service.TravelRecord().UpdateOnlineToOffline(ctx, trData)
+	if err != nil {
+		g.Log().Errorf(ctx, "结束行程失败: %s", err.Error())
 	}
 	return
 }
