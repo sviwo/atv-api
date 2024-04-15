@@ -76,6 +76,16 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 	userDevice := new(entity.UserDevice)
 	result.Struct(&userDevice)
 
+	trRes, err := dao.TravelRecord.Ctx(ctx).Where(g.Map{
+		"device_id": p.DeviceId,
+		"user_id":   userDevice.UserId,
+		"is_delete": consts.DeleteOn,
+		"end_time":  nil,
+	}).One()
+	if trRes != nil {
+		return
+	}
+
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
 	if err != nil {
@@ -143,24 +153,24 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	electricityValue := res[strings.ToLower(consts.Electricity)].Int()
 
 	// 获取开机开机第一条数据
-	firstSql := fmt.Sprintf("select %s as %s,%s as %s,%s as %s from %s where ts > %s", geoLocation, geoLocation, remainMile, remainMile, electricity, electricity, deviceTable, travelRecord.StartTime)
+	firstSql := fmt.Sprintf("select %s,%s,%s from %s where ts > %d order by ts limit 1", geoLocation, remainMile, electricity, deviceTable, travelRecord.StartTime.Time.UnixMilli())
 	fRes, err := tsdDb.GetTableDataOne(ctx, firstSql)
 	fRemainMileValue := fRes[strings.ToLower(consts.RemainMile)].Int()
 	fElectricityValue := fRes[strings.ToLower(consts.Electricity)].Int()
 
+	travelRecord.EndTime = gtime.Now()
+	travelRecord.UpdateTime = gtime.Now()
 	travelTimeInMinutes := travelRecord.EndTime.Sub(travelRecord.StartTime).Minutes()
 	if travelTimeInMinutes <= 1 {
 		travelTimeInMinutes = 1
 	}
+	travelRecord.MileageDriven = (fRemainMileValue - remainMileValue) * 1000
+	travelRecord.Consumption = fElectricityValue - electricityValue
 	avgSpeed := float64(travelRecord.MileageDriven) / float64(travelTimeInMinutes)
-	integerAverageSpeed := math.Floor(avgSpeed)
+	integerAverageSpeed := math.Floor(avgSpeed * 60)
 	fmt.Println(integerAverageSpeed)
 	travelRecord.EndPoint = geoValue
-	travelRecord.MileageDriven = (remainMileValue - fRemainMileValue) * 1000
-	travelRecord.Consumption = electricityValue - fElectricityValue
 	travelRecord.AvgSpeed = strconv.FormatFloat(integerAverageSpeed, 'f', 0, 64)
-	travelRecord.EndTime = gtime.Now()
-	travelRecord.UpdateTime = gtime.Now()
 	if _, err = dao.TravelRecord.Ctx(ctx).Data(travelRecord).Where("travel_record_id", travelRecord.TravelRecordId).Update(); err != nil {
 		panic(err)
 	}
