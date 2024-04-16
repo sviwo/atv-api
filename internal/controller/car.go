@@ -20,9 +20,19 @@ func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.
 }
 
 func (c cCar) GetCarDetail(ctx context.Context, req *v1.GetCarDetailReq) (res *v1.GetCarDetailRes, err error) {
-	if err = gconv.Struct(service.Car().GetCarDetail(ctx, req.DeviceId), &res); err != nil {
+	if err = gconv.Scan(service.Car().GetCarDetail(ctx, req.DeviceId), &res); err != nil {
 		panic(err)
 	}
+	return
+}
+
+func (c cCar) GetCarKey(ctx context.Context, req *v1.CarKeyReq) (res *v1.CarKeyRes, err error) {
+	res = &v1.CarKeyRes{CarKey: service.Car().GetCarKey(ctx)}
+	return
+}
+
+func (c cCar) InviteBindCar(ctx context.Context, req *v1.InviteBindCarReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().InviteBindCar(ctx, req.CarKey)
 	return
 }
 
@@ -31,13 +41,8 @@ func (c cCar) SwitchCar(ctx context.Context, req *v1.SwitchCarReq) (res *v1.Empt
 	return
 }
 
-func (c cCar) BindingCar(ctx context.Context, req *v1.BindingCarReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().BindingCar(ctx, req.UserId, req.DeviceName)
-	return
-}
-
 func (c cCar) DelCar(ctx context.Context, req *v1.DelCarReq) (res *v1.EmptyFieldRes, err error) {
-	service.Car().DelCar(ctx, req.DeviceId)
+	service.Car().RemoveCar(ctx, req.UserDeviceId, req.DeviceId)
 	return
 }
 

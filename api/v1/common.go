@@ -11,7 +11,7 @@ EmptyFieldRes 无字段返回结构体，所有无字段返回的Res均使用此
 type EmptyFieldRes struct{}
 
 type VftCodeReq struct {
-	g.Meta `path:"/common/getVftCode" method:"get" tags:"公共接口" sm:"获取验证码"`
+	g.Meta `path:"/common/getVftCode" method:"get" tags:"公共接口" sm:"获取验证码" dc:"此接口限制60秒访问一次"`
 	Email  string `json:"email"    dc:"请输入邮箱（标准邮箱格式）" v:"required|email"`
 }
 
@@ -25,7 +25,7 @@ type ImgUploadRes struct {
 }
 
 type EccPublicKeyReq struct {
-	g.Meta `path:"/common/getEccPublicKey" method:"get" tags:"公共接口" sm:"获取eccK公钥"`
+	g.Meta `path:"/common/get/ecc/public/key" method:"get" tags:"公共接口" sm:"获取eccK公钥"`
 }
 
 type EccPublicKeyRes struct {

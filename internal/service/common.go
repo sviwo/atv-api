@@ -6,7 +6,12 @@ import (
 
 type (
 	ICommon interface {
-		GetVftCode(ctx context.Context, email string) error
+		/*
+			GetVftCode获取验证码
+		*/
+		GetVftCode(ctx context.Context, email string)
+
+		GetEccPublicKey(ctx context.Context) (publicKey, publicCode string)
 	}
 )
 

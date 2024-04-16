@@ -255,6 +255,7 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 			dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
 			dao.UserDevice.Columns().DeviceId, device.DeviceId,
 			dao.UserDevice.Columns().IsSelect, consts.CarSelectYes,
+			dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceTypeMain,
 			dao.UserDevice.Columns().CreateTime, gtime.Now(),
 		); err != nil {
 			return err

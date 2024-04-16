@@ -14,6 +14,7 @@ type GetCarListRes struct {
 	Nickname   string  `json:"nickname"           dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
 	Mileage    float32 `json:"mileage"            dc:"行驶里程（km）"`
 	DeviceName string  `json:"deviceName"         dc:"设备名称（同于车架号）"`
+	IsSelect   bool    `json:"isSelect"           dc:"是否选定：false=未选定，true=已选定"`
 }
 
 type GetCarDetailReq struct {
@@ -22,21 +23,37 @@ type GetCarDetailReq struct {
 }
 
 type GetCarDetailRes struct {
-	DeviceId       string      `json:"deviceId"        dc:""`
-	DeviceName     string      `json:"deviceName"      dc:"设备名称（同于车架号）"`
-	MobileKey      int         `json:"mobileKey"       dc:"手机钥匙开关：0=关，1=开"`
-	SpeedLimit     int         `json:"speedLimit"      dc:"速度限制开关：0=关，1=开"`
-	DrivingMode    int         `json:"drivingMode"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
-	EnergyRecovery int         `json:"energyRecovery"  dc:"动能回收类型：0=无，1=中，2=强"`
-	ActivateTime   *gtime.Time `json:"activateTime"    dc:"激活时间"`
-	WarrantyTime   *gtime.Time `json:"warrantyTime"    dc:"保修时间"`
-	Mileage        float32     `json:"mileage"         dc:"行驶里程（km）"`
+	DeviceId       string          `json:"deviceId"        dc:""`
+	DeviceName     string          `json:"deviceName"      dc:"设备名称（同于车架号）"`
+	MobileKey      int             `json:"mobileKey"       dc:"手机钥匙开关：0=关，1=开"`
+	SpeedLimit     int             `json:"speedLimit"      dc:"速度限制开关：0=关，1=开"`
+	DrivingMode    int             `json:"drivingMode"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
+	EnergyRecovery int             `json:"energyRecovery"  dc:"动能回收类型：0=无，1=中，2=强"`
+	UserDeviceType int             `json:"userDeviceType"  dc:"设备用户类型：0=主用户，1=从用户"`
+	ActivateTime   *gtime.Time     `json:"activateTime"    dc:"激活时间"`
+	WarrantyTime   *gtime.Time     `json:"warrantyTime"    dc:"保修时间"`
+	Mileage        float32         `json:"mileage"         dc:"行驶里程（km）"`
+	UserCarKeyList []UserCarKeyRes `json:"userCarKeyList"  dc:"车辆钥匙组"`
 }
 
-type BindingCarReq struct {
-	g.Meta     `path:"/car/binding" method:"post" tags:"车辆相关" sm:"绑定车辆"`
-	UserId     int64  `json:"userId"           dc:"用户id"                   v:"required"`
-	DeviceName string `json:"deviceName"       dc:"车架号（最大长度20）"        v:"required|max-length:20"`
+type UserCarKeyRes struct {
+	UserDeviceId string `json:"userDeviceId"        dc:""`
+	FirstName    string `json:"firstName"           dc:""`
+	LastName     string `json:"lastName"            dc:""`
+	HeadImg      string `json:"headImg"             dc:""`
+}
+
+type CarKeyReq struct {
+	g.Meta `path:"/car/get/key" method:"get" tags:"车辆相关" sm:"获取车钥匙" dc:"此接口限制30秒访问一次"`
+}
+
+type CarKeyRes struct {
+	CarKey string `json:"carKey"    dc:"车钥匙（有效期一小时）"`
+}
+
+type InviteBindCarReq struct {
+	g.Meta `path:"/car/invite/bind" method:"post" tags:"车辆相关" sm:"邀请绑定车辆"`
+	CarKey string `json:"carKey"    dc:"车钥匙（长度限制32位）"  v:"required|max-length:32"`
 }
 
 type SwitchCarReq struct {
@@ -45,8 +62,9 @@ type SwitchCarReq struct {
 }
 
 type DelCarReq struct {
-	g.Meta   `path:"/car/del" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
-	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
+	g.Meta       `path:"/car/del" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
+	UserDeviceId *int64 `json:"userDeviceId"           dc:"钥匙id"`
+	DeviceId     *int64 `json:"deviceId"               dc:""`
 }
 
 type EnabledMobileKeyReq struct {
@@ -69,5 +87,5 @@ type CtlSwitchDTReq struct {
 
 type CtlSwitchERTReq struct {
 	g.Meta             `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
-	EnergyRecoveryType int `json:"energyRecoveryType"    description:"动能回收类型：0=无，1=中，2=强"`
+	EnergyRecoveryType int `json:"energyRecoveryType"    dc:"动能回收类型：0=无，1=中，2=强"`
 }

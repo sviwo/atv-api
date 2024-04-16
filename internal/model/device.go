@@ -1,10 +1,11 @@
 package model
 
 type QueryCarOutput struct {
-	DeviceId   uint64  `json:"deviceId"    description:""`
-	Mileage    float32 `json:"mileage"     description:"行驶里程（km）"`
-	DeviceName string  `json:"deviceName"  description:"设备名称（同于车架号）"`
-	Nickname   string  `json:"nickname"    description:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
+	DeviceId   uint64  `json:"deviceId"        description:""`
+	Mileage    float32 `json:"mileage"         description:"行驶里程（km）"`
+	DeviceName string  `json:"deviceName"      description:"设备名称（同于车架号）"`
+	Nickname   string  `json:"nickname"        description:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
+	IsSelect   bool    `json:"isSelect"       description:"是否选定：false=未选定，true=已选定"`
 }
 
 type CtlSwitchDTInput struct {

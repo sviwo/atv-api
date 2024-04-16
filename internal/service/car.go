@@ -13,7 +13,16 @@ type (
 
 		SwitchCar(ctx context.Context, deviceId int64)
 
-		DelCar(ctx context.Context, deviceId int64)
+		EditCarNickname(ctx context.Context, nickname string)
+
+		RemoveCar(ctx context.Context, userDeviceId, deviceId *int64)
+
+		/*
+			GetCarKey 获取车辆钥匙
+		*/
+		GetCarKey(ctx context.Context) (carKey string)
+
+		InviteBindCar(ctx context.Context, carKey string)
 		/*
 			CtlLamp 控车
 		*/
@@ -34,7 +43,6 @@ type (
 			EnabledSpeedLimit 开启/关闭速度限制
 		*/
 		EnabledSpeedLimit(ctx context.Context)
-		BindingCar(ctx context.Context, userId int64, deviceName string)
 	}
 )
 

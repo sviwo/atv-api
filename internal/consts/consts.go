@@ -57,6 +57,7 @@ const (
 	MetadataTable   = 1
 	DeMetadataTable = 0
 
-	// 设备主用户标识
-	MainUserDeviceType = "0"
+	//设备用户类型：0=主用户，1=从用户
+	UserDeviceTypeMain = 0
+	UserDeviceChild    = 1
 )

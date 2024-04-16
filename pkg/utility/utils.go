@@ -20,6 +20,7 @@ import (
 	"gopkg.in/gomail.v2"
 	"strconv"
 	"strings"
+	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"time"
 )
@@ -414,4 +415,26 @@ func InitSnowflake(ctx context.Context) error {
 	}
 	GID = Node
 	return nil
+}
+
+/*
+MethodReqLimit
+接口频繁请求限制
+*/
+func MethodReqLimit(ctx context.Context, method string, key interface{}, second int64) {
+	value, err := g.Redis().Get(ctx, fmt.Sprintf(consts.RedisMethodReqLimit+method, key))
+	if err != nil {
+		panic(err)
+	}
+	if !value.IsEmpty() {
+		panic(gerror.NewCode(enums.MethodReqLimitError))
+	}
+	if err = g.Redis().SetEX(
+		ctx,
+		fmt.Sprintf(consts.RedisMethodReqLimit+method, key),
+		key,
+		second,
+	); err != nil {
+		panic(err)
+	}
 }

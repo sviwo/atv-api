@@ -21,7 +21,7 @@ type sHome struct{}
 
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	out = &model.HomeDataOutput{Version: service.Version().GetNewVersion(ctx)}
-	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
+	result, err := dao.UserDevice.Ctx(ctx).
 		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
 		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
 	if err != nil {
@@ -30,15 +30,19 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	if result.IsEmpty() {
 		return
 	}
-	device := new(entity.Device)
-	if err = result.Struct(&device); err != nil {
+	userDevice := new(entity.UserDevice)
+	if err = result.Struct(&userDevice); err != nil {
 		panic(err)
 	}
+	out.UserDeviceType = userDevice.UserDeviceType
+
+	device := new(entity.Device)
 	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
-		Where(dao.Device.Columns().DeviceId, device.DeviceId).
+		Where(dao.Device.Columns().DeviceId, userDevice.DeviceId).
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
 		panic(err)
 	}
+	out.IsHavingCar = true
 	out.Nickname = device.Nickname
 	//根据物模型获取所有属性数据 根据情况选择
 	keys := make([]string, 0)

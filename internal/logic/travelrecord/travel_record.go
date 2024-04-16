@@ -69,7 +69,7 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 	}
 	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().UserId).
 		Where(dao.UserDevice.Columns().DeviceId, p.DeviceId).
-		Where(dao.UserDevice.Columns().UserDeviceType, consts.MainUserDeviceType).One()
+		Where(dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceTypeMain).One()
 	if err != nil {
 		panic(err)
 	}
@@ -122,7 +122,7 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 
 	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().UserId).
 		Where(dao.UserDevice.Columns().DeviceId, p.DeviceId).
-		Where(dao.UserDevice.Columns().UserDeviceType, consts.MainUserDeviceType).One()
+		Where(dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceTypeMain).One()
 	if err != nil {
 		panic(err)
 	}

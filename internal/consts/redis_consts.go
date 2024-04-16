@@ -10,9 +10,10 @@ const (
 	RedisUserLoginToken = "u:%s:token"
 	RedisTaskRemindMsg  = "t:%s:msg"
 	RedisEccPrivateKey  = "ecc:%s:private"
+	RedisCarKey         = "car:%s:key"
 
 	/**
 	 * 缓存资源数据
 	 **/
-	RedisMethodCommonServiceGetvftcode = "method:commonService:getvftcode:%s"
+	RedisMethodReqLimit = "method:%s:"
 )
