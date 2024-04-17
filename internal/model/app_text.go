@@ -1,12 +1,12 @@
 package model
 
 type AppTextTreeOutput struct {
-	Id        int64                `json:"id"      description:""`
-	ParentId  int64                `json:"parentId"    description:""`
-	TextTitle string               `json:"textTitle"   description:"文本标题"`
-	Children  []*AppTextTreeOutput `json:"children"    description:""`
+	Id        int64                `json:"id"      dc:""`
+	ParentId  int64                `json:"parentId"    dc:""`
+	TextTitle string               `json:"textTitle"   dc:"文本标题"`
+	Children  []*AppTextTreeOutput `json:"children"    dc:""`
 }
 
 type AppTextDetailOutput struct {
-	TextContent string `json:"textContent" description:"文本内容"`
+	TextContent string `json:"textContent" dc:"文本内容"`
 }

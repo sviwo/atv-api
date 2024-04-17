@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
+	"sort"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -51,6 +52,9 @@ func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
 	for _, ot := range out {
 		ot.Mileage = s.findMileage(ctx, ot.DeviceName)
 	}
+	sort.Slice(out, func(i, j int) bool {
+		return gconv.Int(out[i].IsSelect) > gconv.Int(out[j].IsSelect)
+	})
 	return
 }
 
@@ -81,6 +85,7 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	all, err := dao.UserDevice.Ctx(ctx).
 		Where(dao.UserDevice.Columns().DeviceId, device.DeviceId).
 		Where(dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceChild).
+		Where(dao.UserDevice.Columns().MobileKey, consts.CarMobileKeyYes).
 		All()
 	if err != nil {
 		panic(err)
@@ -105,6 +110,19 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	}
 	out.Mileage = s.findMileage(ctx, device.DeviceName)
 	out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0)
+
+	keys := make([]string, 0)
+	keys = append(keys, "Limit")
+	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
+		DeviceKey:    device.DeviceName,
+		PropertyKeys: keys,
+	})
+	if err != nil {
+		panic(err)
+	}
+	if !res[0].Value.IsEmpty() {
+		out.TopSpeedHour = res[0].Value.Int()
+	}
 	return
 }
 
@@ -161,10 +179,29 @@ func (s sCar) RemoveCar(ctx context.Context, userDeviceId, deviceId *int64) {
 	if userDevice.UserDeviceType == consts.UserDeviceTypeMain {
 		panic(gerror.NewCode(enums.UnbindCarError))
 	}
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	if _, err := dao.UserDevice.Ctx(ctx).
-		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
-		Where(dao.UserDevice.Columns().DeviceId, userDevice.DeviceId).Delete(); err != nil {
+		Where(dao.UserDevice.Columns().UserId, userId).
+		Where(dao.UserDevice.Columns().DeviceId, userDevice.DeviceId).
+		Delete(); err != nil {
 		panic(err)
+	}
+
+	count, err := dao.UserDevice.Ctx(ctx).
+		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
+		Where(dao.UserDevice.Columns().UserId, userId).
+		Count()
+	if err != nil {
+		panic(err)
+	}
+	if count == 0 {
+		if _, err = dao.UserDevice.Ctx(ctx).
+			Data(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
+			Where(dao.UserDevice.Columns().UserId, userId).
+			Limit(1).
+			Update(); err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -186,7 +223,7 @@ func (s sCar) GetCarKey(ctx context.Context) (carKey string) {
 	deviceId := result.GMap().GetVar(dao.Device.Columns().DeviceId).Int64()
 	s.checkCarKeyLimit(ctx, deviceId)
 
-	carKey = grand.S(32)
+	carKey = consts.CarKeyPrefix + grand.S(32)
 	if err = g.Redis().SetEX(
 		ctx,
 		fmt.Sprintf(consts.RedisCarKey, carKey),
@@ -276,8 +313,7 @@ func (s sCar) CtlCar(ctx context.Context, instructions int) {
 		DeviceKey: device.DeviceName,
 		Params:    mp,
 	}
-	_, err := service.DevDeviceProperty().Set(ctx, in)
-	if err != nil {
+	if _, err := service.DevDeviceProperty().Set(ctx, in); err != nil {
 		panic(err)
 	}
 }
@@ -363,9 +399,19 @@ func (s sCar) EnabledSpeedLimit(ctx context.Context) {
 	if userDevice == nil {
 		panic(gerror.NewCode(enums.IllegalOperation))
 	}
+	mp := make(map[string]any)
+	mp = map[string]any{"Limit": 10}
 	var speedLimit = true
 	if userDevice.SpeedLimit {
+		mp = map[string]any{"Limit": 60}
 		speedLimit = consts.CarSpeedLimitNo
+	}
+	in := &model.DevicePropertyInput{
+		DeviceKey: s.findDeviceInfo(ctx, &userDevice.DeviceId).DeviceName,
+		Params:    mp,
+	}
+	if _, err := service.DevDeviceProperty().Set(ctx, in); err != nil {
+		panic(err)
 	}
 	if _, err := dao.UserDevice.Ctx(ctx).Data(dao.UserDevice.Columns().SpeedLimit, speedLimit).
 		Where(dao.UserDevice.Columns().Id, userDevice.Id).Update(); err != nil {

@@ -3,29 +3,29 @@ package model
 import "github.com/gogf/gf/v2/os/gtime"
 
 type UserInfoBase struct {
-	FirstName   string  `json:"firstName"         description:""`
-	LastName    string  `json:"lastName"          description:""`
-	HeadImg     *string `json:"headImg"           description:""`
-	MobilePhone string  `json:"mobilePhone"       description:""`
-	UserAddress string  `json:"userAddress"       description:""`
+	FirstName   string  `json:"firstName"         dc:""`
+	LastName    string  `json:"lastName"          dc:""`
+	HeadImg     *string `json:"headImg"           dc:""`
+	MobilePhone string  `json:"mobilePhone"       dc:""`
+	UserAddress string  `json:"userAddress"       dc:""`
 }
 
 type LoginInput struct {
-	Username  string `json:"username"     description:"用户名"`
-	Password  string `json:"password"     description:"密码"`
-	LoginType uint8  `json:"LoginType"    description:"登陆类型：1=账号+密码，2=第三方"`
+	Username  string `json:"username"     dc:"用户名"`
+	Password  string `json:"password"     dc:"密码"`
+	LoginType uint8  `json:"LoginType"    dc:"登陆类型：1=账号+密码，2=第三方"`
 }
 
 type RegisterInput struct {
-	Username        string `json:"username"          description:""`
-	Password        string `json:"password"          description:""`
-	ConfirmPassword string `json:"confirmPassword"   description:""`
-	EmailVftCode    string `json:"emailVftCode"      description:""`
+	Username        string `json:"username"          dc:""`
+	Password        string `json:"password"          dc:""`
+	ConfirmPassword string `json:"confirmPassword"   dc:""`
+	EmailVftCode    string `json:"emailVftCode"      dc:""`
 }
 
 type UserInfoOutput struct {
 	UserInfoBase
-	Username   string  `json:"username"          description:""`
+	Username   string  `json:"username"          dc:""`
 	Nickname   string  `json:"nickname"          dc:"车辆昵称"`
 	DeviceName string  `json:"deviceName"        dc:"车架号"`
 	Mileage    float32 `json:"mileage"           dc:"行驶里程(km)"`
@@ -33,10 +33,10 @@ type UserInfoOutput struct {
 }
 
 type UpdatePasswordInput struct {
-	Username        string `json:"username"       description:""`
-	NewPassword     string `json:"newPassword"     description:""`
-	ConfirmPassword string `json:"confirmPassword"     description:""`
-	EmailVftCode    string `json:"emailVftCode"     description:""`
+	Username        string `json:"username"        dc:""`
+	NewPassword     string `json:"newPassword"     dc:""`
+	ConfirmPassword string `json:"confirmPassword" dc:""`
+	EmailVftCode    string `json:"emailVftCode"    dc:""`
 }
 
 type EditInfoInput struct {

@@ -10,11 +10,11 @@ import (
 
 // AppParam is the golang structure for table app_param.
 type AppParam struct {
-	ParamId    int64       `json:"paramId"    description:""`
-	ParentId   int64       `json:"parentId"   description:""`
-	ParamName  string      `json:"paramName"  description:"参数名称"`
-	ParamValue string      `json:"paramValue" description:"参数值"`
-	CreateTime *gtime.Time `json:"createTime" description:""`
-	UpdateTime *gtime.Time `json:"updateTime" description:""`
-	IsDelete   bool        `json:"isDelete"   description:"是否删除：true=已删除，false=正常"`
+	ParamId    int64       `json:"paramId"    dc:""`
+	ParentId   int64       `json:"parentId"   dc:""`
+	ParamName  string      `json:"paramName"  dc:"参数名称"`
+	ParamValue string      `json:"paramValue" dc:"参数值"`
+	CreateTime *gtime.Time `json:"createTime" dc:""`
+	UpdateTime *gtime.Time `json:"updateTime" dc:""`
+	IsDelete   bool        `json:"isDelete"   dc:"是否删除：true=已删除，false=正常"`
 }

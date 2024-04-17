@@ -18,7 +18,7 @@ type DeviceInput struct {
 	Key        string `json:"key" dc:"设备标识"`
 	Name       string `json:"name" dc:"设备名称"`
 	ProductKey string `json:"productKey" dc:"所属产品"`
-	TunnelId   int    `json:"tunnelId"       description:"tunnelId"`
+	TunnelId   int    `json:"tunnelId"       dc:"tunnelId"`
 	Status     string `p:"status"` //设备状态
 }
 

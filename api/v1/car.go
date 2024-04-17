@@ -18,7 +18,7 @@ type GetCarListRes struct {
 }
 
 type GetCarDetailReq struct {
-	g.Meta   `path:"/car/get/detail" method:"get" tags:"车辆相关" sm:"获取车况信息"`
+	g.Meta   `path:"/car/get/detail" method:"get" tags:"车辆相关" sm:"获取车况信息" dc:"车况信息、动能模式、安全性"`
 	DeviceId *int64 `json:"deviceId"           dc:""`
 }
 
@@ -33,6 +33,7 @@ type GetCarDetailRes struct {
 	ActivateTime   *gtime.Time     `json:"activateTime"    dc:"激活时间"`
 	WarrantyTime   *gtime.Time     `json:"warrantyTime"    dc:"保修时间"`
 	Mileage        float32         `json:"mileage"         dc:"行驶里程（km）"`
+	TopSpeedHour   int             `json:"topSpeedHour"    dc:"最高时速"`
 	UserCarKeyList []UserCarKeyRes `json:"userCarKeyList"  dc:"车辆钥匙组"`
 }
 

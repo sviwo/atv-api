@@ -17,5 +17,6 @@ type HomeDataRes struct {
 	GeoLocation    map[string]interface{} `json:"geoLocation"      dc:"地理位置"`
 	IsHavingCar    bool                   `json:"isHavingCar"      dc:"是否有车：false=没有，true=有"`
 	UserDeviceType int                    `json:"userDeviceType"   dc:"设备用户类型：0=主用户，1=从用户"`
+	AuthStatus     int                    `json:"authStatus"       dc:"认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败"`
 	Version        []*VersionRes          `json:"version"          dc:"新版本信息"`
 }

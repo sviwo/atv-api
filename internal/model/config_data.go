@@ -11,31 +11,31 @@ type ConfigDoInput struct {
 }
 
 type SysConfigRes struct {
-	ConfigId       uint        `json:"configId"    description:"参数主键"`
-	ConfigName     string      `json:"configName"  description:"参数名称"`
-	ConfigKey      string      `json:"configKey"   description:"参数键名"`
-	ConfigValue    string      `json:"configValue" description:"参数键值"`
-	ConfigType     int         `json:"configType"  description:"系统内置（Y是 N否）"`
-	ModuleClassify string      `json:"moduleClassify" description:"字典分类编码"`
-	CreatedBy      uint        `json:"createdBy"    description:"创建者"`
-	UpdatedBy      uint        `json:"updatedBy"    description:"更新者"`
-	Remark         string      `json:"remark"      description:"备注"`
-	CreatedAt      *gtime.Time `json:"createdAt"   description:"创建时间"`
-	UpdatedAt      *gtime.Time `json:"updatedAt"   description:"修改时间"`
+	ConfigId       uint        `json:"configId"    dc:"参数主键"`
+	ConfigName     string      `json:"configName"  dc:"参数名称"`
+	ConfigKey      string      `json:"configKey"   dc:"参数键名"`
+	ConfigValue    string      `json:"configValue" dc:"参数键值"`
+	ConfigType     int         `json:"configType"  dc:"系统内置（Y是 N否）"`
+	ModuleClassify string      `json:"moduleClassify" dc:"字典分类编码"`
+	CreatedBy      uint        `json:"createdBy"    dc:"创建者"`
+	UpdatedBy      uint        `json:"updatedBy"    dc:"更新者"`
+	Remark         string      `json:"remark"      dc:"备注"`
+	CreatedAt      *gtime.Time `json:"createdAt"   dc:"创建时间"`
+	UpdatedAt      *gtime.Time `json:"updatedAt"   dc:"修改时间"`
 }
 
 type SysConfigOut struct {
-	ConfigId       uint        `json:"configId"    description:"参数主键"`
-	ConfigName     string      `json:"configName"  description:"参数名称"`
-	ConfigKey      string      `json:"configKey"   description:"参数键名"`
-	ConfigValue    string      `json:"configValue" description:"参数键值"`
-	ConfigType     int         `json:"configType"  description:"系统内置（Y是 N否）"`
-	ModuleClassify string      `json:"moduleClassify" description:"字典分类编码"`
-	CreatedBy      uint        `json:"createdBy"    description:"创建者"`
-	UpdatedBy      uint        `json:"updatedBy"    description:"更新者"`
-	Remark         string      `json:"remark"      description:"备注"`
-	CreatedAt      *gtime.Time `json:"createdAt"   description:"创建时间"`
-	UpdatedAt      *gtime.Time `json:"updatedAt"   description:"修改时间"`
+	ConfigId       uint        `json:"configId"    dc:"参数主键"`
+	ConfigName     string      `json:"configName"  dc:"参数名称"`
+	ConfigKey      string      `json:"configKey"   dc:"参数键名"`
+	ConfigValue    string      `json:"configValue" dc:"参数键值"`
+	ConfigType     int         `json:"configType"  dc:"系统内置（Y是 N否）"`
+	ModuleClassify string      `json:"moduleClassify" dc:"字典分类编码"`
+	CreatedBy      uint        `json:"createdBy"    dc:"创建者"`
+	UpdatedBy      uint        `json:"updatedBy"    dc:"更新者"`
+	Remark         string      `json:"remark"      dc:"备注"`
+	CreatedAt      *gtime.Time `json:"createdAt"   dc:"创建时间"`
+	UpdatedAt      *gtime.Time `json:"updatedAt"   dc:"修改时间"`
 }
 
 type AddConfigInput struct {

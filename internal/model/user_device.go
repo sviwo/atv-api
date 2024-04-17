@@ -3,22 +3,23 @@ package model
 import "github.com/gogf/gf/v2/os/gtime"
 
 type UserDeviceOutput struct {
-	DeviceId       int64              `json:"deviceId"        description:""`
-	DeviceName     string             `json:"deviceName"      description:"设备名称（同于车架号）"`
-	MobileKey      int                `json:"mobileKey"       description:"手机钥匙开关：0=关，1=开"`
-	SpeedLimit     int                `json:"speedLimit"      description:"速度限制开关：0=关，1=开"`
-	DrivingMode    int                `json:"drivingMode"     description:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
-	EnergyRecovery int                `json:"energyRecovery"  description:"动能回收类型：0=无，1=中，2=强"`
-	UserDeviceType int                `json:"userDeviceType"  description:"设备用户类型：0=主用户，1=从用户"`
-	ActivateTime   *gtime.Time        `json:"activateTime"    description:"激活时间"`
-	WarrantyTime   *gtime.Time        `json:"warrantyTime"    description:"保修时间"`
-	Mileage        float32            `json:"mileage"         description:"行驶里程（km）"`
-	UserCarKeyList []UserCarKeyOutput `json:"userCarKeyList"  description:"车辆钥匙组"`
+	DeviceId       int64              `json:"deviceId"        dc:""`
+	DeviceName     string             `json:"deviceName"      dc:"设备名称（同于车架号）"`
+	MobileKey      int                `json:"mobileKey"       dc:"手机钥匙开关：0=关，1=开"`
+	SpeedLimit     int                `json:"speedLimit"      dc:"速度限制开关：0=关，1=开"`
+	DrivingMode    int                `json:"drivingMode"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
+	EnergyRecovery int                `json:"energyRecovery"  dc:"动能回收类型：0=无，1=中，2=强"`
+	UserDeviceType int                `json:"userDeviceType"  dc:"设备用户类型：0=主用户，1=从用户"`
+	ActivateTime   *gtime.Time        `json:"activateTime"    dc:"激活时间"`
+	WarrantyTime   *gtime.Time        `json:"warrantyTime"    dc:"保修时间"`
+	Mileage        float32            `json:"mileage"         dc:"行驶里程（km）"`
+	TopSpeedHour   int                `json:"topSpeedHour"    dc:"最高时速"`
+	UserCarKeyList []UserCarKeyOutput `json:"userCarKeyList"  dc:"车辆钥匙组"`
 }
 
 type UserCarKeyOutput struct {
-	UserDeviceId int64  `json:"userDeviceId"        description:""`
-	FirstName    string `json:"firstName"         description:""`
-	LastName     string `json:"lastName"          description:""`
-	HeadImg      string `json:"headImg"              description:""`
+	UserDeviceId int64  `json:"userDeviceId"        dc:""`
+	FirstName    string `json:"firstName"         dc:""`
+	LastName     string `json:"lastName"          dc:""`
+	HeadImg      string `json:"headImg"              dc:""`
 }

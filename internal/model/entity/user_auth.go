@@ -10,16 +10,16 @@ import (
 
 // UserAuth is the golang structure for table user_auth.
 type UserAuth struct {
-	AuthId              int64       `json:"authId"              description:""`
-	UserId              int64       `json:"userId"              description:""`
-	AuthFirstName       string      `json:"authFirstName"       description:""`
-	AuthLastName        string      `json:"authLastName"        description:""`
-	CertificateFrontImg string      `json:"certificateFrontImg" description:"证件正面照片"`
-	CertificateBackImg  string      `json:"certificateBackImg"  description:"证件背面照片"`
-	AuthStatus          uint        `json:"authStatus"          description:"认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败"`
-	AuthFailReason      string      `json:"authFailReason"      description:"认证失败原因"`
-	AuthTime            *gtime.Time `json:"authTime"            description:"认证时间"`
-	VerifyTime          *gtime.Time `json:"verifyTime"          description:"审核时间"`
-	CreateTime          *gtime.Time `json:"createTime"          description:""`
-	UpdateTime          *gtime.Time `json:"updateTime"          description:""`
+	AuthId              int64       `json:"authId"              dc:""`
+	UserId              int64       `json:"userId"              dc:""`
+	AuthFirstName       string      `json:"authFirstName"       dc:""`
+	AuthLastName        string      `json:"authLastName"        dc:""`
+	CertificateFrontImg string      `json:"certificateFrontImg" dc:"证件正面照片"`
+	CertificateBackImg  string      `json:"certificateBackImg"  dc:"证件背面照片"`
+	AuthStatus          uint        `json:"authStatus"          dc:"认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败"`
+	AuthFailReason      string      `json:"authFailReason"      dc:"认证失败原因"`
+	AuthTime            *gtime.Time `json:"authTime"            dc:"认证时间"`
+	VerifyTime          *gtime.Time `json:"verifyTime"          dc:"审核时间"`
+	CreateTime          *gtime.Time `json:"createTime"          dc:""`
+	UpdateTime          *gtime.Time `json:"updateTime"          dc:""`
 }

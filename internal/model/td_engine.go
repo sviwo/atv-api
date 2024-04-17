@@ -3,20 +3,20 @@ package model
 import "github.com/gogf/gf/v2/os/gtime"
 
 type TDEngineTablesList struct {
-	TableName  string      `json:"tableName"        description:"表名"`
-	DbName     string      `json:"dbName"        description:"数据库名"`
-	StableName string      `json:"stableName"        description:"超级表名"`
-	CreateTime *gtime.Time `json:"createTime" description:"创建时间"`
+	TableName  string      `json:"tableName"        dc:"表名"`
+	DbName     string      `json:"dbName"        dc:"数据库名"`
+	StableName string      `json:"stableName"        dc:"超级表名"`
+	CreateTime *gtime.Time `json:"createTime" dc:"创建时间"`
 }
 
 type TDEngineTableInfo struct {
-	Field  string `json:"field"        description:"字段名"`
-	Type   string `json:"type"        description:"类型"`
-	Length int    `json:"length"        description:"长度"`
-	Note   string `json:"note" description:"note"`
+	Field  string `json:"field"        dc:"字段名"`
+	Type   string `json:"type"        dc:"类型"`
+	Length int    `json:"length"        dc:"长度"`
+	Note   string `json:"note" dc:"note"`
 }
 
 type TableDataInfo struct {
-	Filed []string                 `json:"filed"        description:"字段"`
-	Info  []map[string]interface{} `json:"info"        description:"数据"`
+	Filed []string                 `json:"filed"        dc:"字段"`
+	Info  []map[string]interface{} `json:"info"        dc:"数据"`
 }

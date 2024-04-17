@@ -103,7 +103,7 @@ type ExtendInput struct {
 
 type ScriptInfoInput struct {
 	Key        string `json:"key" dc:"产品标识" v:"required#请输入产品标识"`
-	ScriptInfo string `json:"scriptInfo"        description:"脚本信息"`
+	ScriptInfo string `json:"scriptInfo"        dc:"脚本信息"`
 }
 
 type DeviceConnectIntroOutput struct {

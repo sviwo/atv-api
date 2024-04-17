@@ -20,9 +20,10 @@ func New() *sHome {
 type sHome struct{}
 
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	out = &model.HomeDataOutput{Version: service.Version().GetNewVersion(ctx)}
 	result, err := dao.UserDevice.Ctx(ctx).
-		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
+		Where(dao.UserDevice.Columns().UserId, userId).
 		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
 	if err != nil {
 		panic(err)
@@ -35,6 +36,15 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		panic(err)
 	}
 	out.UserDeviceType = userDevice.UserDeviceType
+
+	userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
+		One(dao.UserAuth.Columns().UserId, userId)
+	if err != nil {
+		panic(err)
+	}
+	if !userAuthStatus.IsEmpty() {
+		out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
+	}
 
 	device := new(entity.Device)
 	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
