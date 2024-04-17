@@ -69,7 +69,7 @@ type RemoveCarReq struct {
 }
 
 type EditCarNicknameReq struct {
-	g.Meta   `path:"/car/edit/nickname" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
+	g.Meta   `path:"/car/edit/nickname" method:"post" tags:"车辆相关" sm:"编辑车辆昵称"`
 	Nickname string `json:"nickname"        dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
 }
 
