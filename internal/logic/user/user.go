@@ -180,8 +180,8 @@ func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 EditInfo 编辑用户资料
 */
 func (s *sUser) EditInfo(ctx context.Context, in model.EditInfoInput) {
-	if _, err := dao.User.Ctx(ctx).OmitEmptyData().Update(
-		in, dao.User.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+	if _, err := dao.User.Ctx(ctx).OmitNilData().OmitEmptyData().Update(
+		&in, dao.User.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
 	); err != nil {
 		panic(err)
 	}
