@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/api/v1"
+	"sviwo/internal/consts"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
 	"sviwo/pkg/utility/file"
@@ -33,6 +34,7 @@ func (c cUser) Info(ctx context.Context, req *v1.UserInfoReq) (res *v1.UserInfoR
 	if err = gconv.Struct(service.User().Info(ctx), &res); err != nil {
 		panic(err)
 	}
+	res.HeadImg += consts.AliYunFilePrefix
 	return
 }
 
