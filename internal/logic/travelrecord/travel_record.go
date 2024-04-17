@@ -33,17 +33,17 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	err = g.Try(ctx, func(ctx context.Context) {
 		m := dao.TravelRecord.Ctx(ctx)
-		m = m.Where("user_id", userId)
+		m = m.Where(dao.TravelRecord.Columns().UserId, userId)
 		if in.DeviceId != 0 {
-			m = m.Where("device_id", in.DeviceId)
+			m = m.Where(dao.TravelRecord.Columns().DeviceId, in.DeviceId)
 		}
-		m = m.Where("is_delete", consts.DeleteOn)
+		m = m.Where(dao.TravelRecord.Columns().IsDelete, consts.DeleteOn)
 		total, err = m.Count()
 		if err != nil {
 			panic(err)
 		}
 
-		err = m.Page(in.PageNum, in.PageSize).OrderDesc("create_time").Scan(&out)
+		err = m.Page(in.PageNum, in.PageSize).OrderDesc(dao.TravelRecord.Columns().CreateTime).Scan(&out)
 		if err != nil {
 			panic(err)
 		}
@@ -54,8 +54,8 @@ func (s sTravelRecord) GetTravelRecordList(ctx context.Context, in model.TravelR
 func (s sTravelRecord) Delete(ctx context.Context, travelRecordId int64) (err error) {
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	_, err = dao.TravelRecord.Ctx(ctx).
-		Data(g.Map{"is_delete": consts.DeleteYes}).
-		Where(g.Map{"travel_record_id": travelRecordId, "user_id": userId}).
+		Data(g.Map{dao.TravelRecord.Columns().IsDelete: consts.DeleteYes}).
+		Where(g.Map{dao.TravelRecord.Columns().TravelRecordId: travelRecordId, dao.TravelRecord.Columns().UserId: userId}).
 		Update()
 	return
 }
@@ -76,15 +76,15 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 	result.Struct(&userDevice)
 
 	trRes, err := dao.TravelRecord.Ctx(ctx).Where(g.Map{
-		"device_id": p.DeviceId,
-		"user_id":   userDevice.UserId,
-		"is_delete": consts.DeleteOn,
-		"end_time":  nil,
+		dao.TravelRecord.Columns().DeviceId: p.DeviceId,
+		dao.TravelRecord.Columns().UserId:   userDevice.UserId,
+		dao.TravelRecord.Columns().IsDelete: consts.DeleteOn,
+		dao.TravelRecord.Columns().EndTime:  nil,
 	}).One()
 	if !trRes.IsEmpty() {
 		dao.TravelRecord.Ctx(ctx).
-			Data(g.Map{"is_delete": consts.DeleteYes}).
-			Where(g.Map{"travel_record_id": trRes.GMap().Get(dao.TravelRecord.Columns().TravelRecordId)}).
+			Data(g.Map{dao.TravelRecord.Columns().IsDelete: consts.DeleteYes}).
+			Where(g.Map{dao.TravelRecord.Columns().TravelRecordId: trRes.GMap().Get(dao.TravelRecord.Columns().TravelRecordId)}).
 			Update()
 	}
 
@@ -133,10 +133,10 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 
 	travelRecord := entity.TravelRecord{}
 	err = dao.TravelRecord.Ctx(ctx).Where(g.Map{
-		"device_id": p.DeviceId,
-		"user_id":   userDevice.UserId,
-		"is_delete": consts.DeleteOn,
-		"end_time":  nil,
+		dao.TravelRecord.Columns().DeviceId: p.DeviceId,
+		dao.TravelRecord.Columns().UserId:   userDevice.UserId,
+		dao.TravelRecord.Columns().IsDelete: consts.DeleteOn,
+		dao.TravelRecord.Columns().EndTime:  nil,
 	}).Scan(&travelRecord)
 	if err != nil {
 		panic(err)
@@ -165,9 +165,10 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	travelTimeInMinutes := travelRecord.EndTime.Sub(travelRecord.StartTime).Minutes()
 	if travelTimeInMinutes <= 1 {
 		dao.TravelRecord.Ctx(ctx).
-			Data(g.Map{"is_delete": consts.DeleteYes}).
-			Where(g.Map{"travel_record_id": travelRecord.TravelRecordId}).
+			Data(g.Map{dao.TravelRecord.Columns().IsDelete: consts.DeleteYes}).
+			Where(g.Map{dao.TravelRecord.Columns().TravelRecordId: travelRecord.TravelRecordId}).
 			Update()
+		return
 	}
 	travelRecord.MileageDriven = fRemainMileValue - remainMileValue
 	travelRecord.Consumption = fElectricityValue - electricityValue
@@ -177,7 +178,7 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	travelRecord.EndPoint = geoValue
 	//travelRecord.AvgSpeed = strconv.FormatFloat(integerAverageSpeed, 'f', 2, 32)
 	travelRecord.AvgSpeed = integerAverageSpeed
-	if _, err = dao.TravelRecord.Ctx(ctx).Data(travelRecord).Where("travel_record_id", travelRecord.TravelRecordId).Update(); err != nil {
+	if _, err = dao.TravelRecord.Ctx(ctx).Data(travelRecord).Where(dao.TravelRecord.Columns().TravelRecordId, travelRecord.TravelRecordId).Update(); err != nil {
 		panic(err)
 	}
 	return
