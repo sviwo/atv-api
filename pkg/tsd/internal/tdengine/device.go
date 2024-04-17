@@ -72,7 +72,11 @@ func getDeviceValue(data iotModel.ReportPropertyData) []string {
 	// 给key排序后，从map取值
 	for _, k := range keys {
 		v := data[k]
-		value = append(value, "'"+gvar.New(v.Value).String()+"'")
+		str := gvar.New(v.Value).String()
+		if strings.ContainsRune(str, ',') {
+			str = strings.ReplaceAll(str, "'", "\"")
+		}
+		value = append(value, "'"+str+"'")
 		value = append(value, "'"+gtime.New(v.CreateTime).Format("Y-m-d H:i:s")+"'")
 	}
 	return value
