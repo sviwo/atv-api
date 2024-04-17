@@ -18,7 +18,7 @@ type TravelRecord struct {
 	MileageDriven  int         `json:"mileageDriven"  description:"行驶里程，单位（m）"`
 	StartTime      *gtime.Time `json:"startTime"      description:"行程开始时间"`
 	EndTime        *gtime.Time `json:"endTime"        description:"行程结束时间"`
-	AvgSpeed       string      `json:"avgSpeed"       description:"平均时速，单位（m）"`
+	AvgSpeed       float64     `json:"avgSpeed"       description:"平均时速，单位（km/h）"`
 	Consumption    int         `json:"consumption"    description:"使用电量"`
 	CreateTime     *gtime.Time `json:"createTime"     description:""`
 	UpdateTime     *gtime.Time `json:"updateTime"     description:""`

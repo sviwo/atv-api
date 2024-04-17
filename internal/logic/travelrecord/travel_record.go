@@ -6,7 +6,6 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"math"
-	"strconv"
 	"strings"
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
@@ -164,13 +163,14 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	if travelTimeInMinutes <= 1 {
 		travelTimeInMinutes = 1
 	}
-	travelRecord.MileageDriven = (fRemainMileValue - remainMileValue) * 1000
+	travelRecord.MileageDriven = fRemainMileValue - remainMileValue
 	travelRecord.Consumption = fElectricityValue - electricityValue
 	avgSpeed := float64(travelRecord.MileageDriven) / float64(travelTimeInMinutes)
 	integerAverageSpeed := math.Floor(avgSpeed * 60)
-	fmt.Println(integerAverageSpeed)
+	//fmt.Println(integerAverageSpeed)
 	travelRecord.EndPoint = geoValue
-	travelRecord.AvgSpeed = strconv.FormatFloat(integerAverageSpeed, 'f', 0, 64)
+	//travelRecord.AvgSpeed = strconv.FormatFloat(integerAverageSpeed, 'f', 2, 32)
+	travelRecord.AvgSpeed = integerAverageSpeed
 	if _, err = dao.TravelRecord.Ctx(ctx).Data(travelRecord).Where("travel_record_id", travelRecord.TravelRecordId).Update(); err != nil {
 		panic(err)
 	}
