@@ -68,6 +68,7 @@ services:
       - "./nginx/logs/:/var/log/nginx/"
   sviwo-api: # 业务模块  商品服务
     container_name: sviwo-api # 业务模块  商品服务名
+    restart: always
     build: # 业务模块  商品服务配置
       context: ./sviwo
       dockerfile: Dockerfile
