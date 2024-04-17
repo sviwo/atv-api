@@ -25,6 +25,7 @@ type GetCarDetailReq struct {
 type GetCarDetailRes struct {
 	DeviceId       string          `json:"deviceId"        dc:""`
 	DeviceName     string          `json:"deviceName"      dc:"设备名称（同于车架号）"`
+	Nickname       string          `json:"nickname"        dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
 	MobileKey      int             `json:"mobileKey"       dc:"手机钥匙开关：0=关，1=开"`
 	SpeedLimit     int             `json:"speedLimit"      dc:"速度限制开关：0=关，1=开"`
 	DrivingMode    int             `json:"drivingMode"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
@@ -39,8 +40,7 @@ type GetCarDetailRes struct {
 
 type UserCarKeyRes struct {
 	UserDeviceId string `json:"userDeviceId"        dc:""`
-	FirstName    string `json:"firstName"           dc:""`
-	LastName     string `json:"lastName"            dc:""`
+	Name         string `json:"name"                dc:""`
 	HeadImg      string `json:"headImg"             dc:""`
 }
 
@@ -54,7 +54,7 @@ type CarKeyRes struct {
 
 type InviteBindCarReq struct {
 	g.Meta `path:"/car/invite/bind" method:"post" tags:"车辆相关" sm:"邀请绑定车辆"`
-	CarKey string `json:"carKey"    dc:"车钥匙（长度限制32位）"  v:"required|max-length:32"`
+	CarKey string `json:"carKey"    dc:"车钥匙（长度限制38位）"  v:"required|max-length:38"`
 }
 
 type SwitchCarReq struct {
@@ -62,10 +62,15 @@ type SwitchCarReq struct {
 	DeviceId int64 `json:"deviceId"           dc:""          v:"required"`
 }
 
-type DelCarReq struct {
-	g.Meta       `path:"/car/del" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
+type RemoveCarReq struct {
+	g.Meta       `path:"/car/remove" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
 	UserDeviceId *int64 `json:"userDeviceId"           dc:"钥匙id"`
 	DeviceId     *int64 `json:"deviceId"               dc:""`
+}
+
+type EditCarNicknameReq struct {
+	g.Meta   `path:"/car/edit/nickname" method:"post" tags:"车辆相关" sm:"删除（解绑）车辆"`
+	Nickname string `json:"nickname"        dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
 }
 
 type EnabledMobileKeyReq struct {

@@ -41,8 +41,13 @@ func (c cCar) SwitchCar(ctx context.Context, req *v1.SwitchCarReq) (res *v1.Empt
 	return
 }
 
-func (c cCar) DelCar(ctx context.Context, req *v1.DelCarReq) (res *v1.EmptyFieldRes, err error) {
+func (c cCar) RemoveCar(ctx context.Context, req *v1.RemoveCarReq) (res *v1.EmptyFieldRes, err error) {
 	service.Car().RemoveCar(ctx, req.UserDeviceId, req.DeviceId)
+	return
+}
+
+func (c cCar) EditCarNickname(ctx context.Context, req *v1.EditCarNicknameReq) (res *v1.EmptyFieldRes, err error) {
+	service.Car().EditCarNickname(ctx, req.Nickname)
 	return
 }
 

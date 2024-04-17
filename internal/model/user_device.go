@@ -5,6 +5,7 @@ import "github.com/gogf/gf/v2/os/gtime"
 type UserDeviceOutput struct {
 	DeviceId       int64              `json:"deviceId"        dc:""`
 	DeviceName     string             `json:"deviceName"      dc:"设备名称（同于车架号）"`
+	Nickname       string             `json:"nickname"        dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
 	MobileKey      int                `json:"mobileKey"       dc:"手机钥匙开关：0=关，1=开"`
 	SpeedLimit     int                `json:"speedLimit"      dc:"速度限制开关：0=关，1=开"`
 	DrivingMode    int                `json:"drivingMode"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
@@ -19,7 +20,6 @@ type UserDeviceOutput struct {
 
 type UserCarKeyOutput struct {
 	UserDeviceId int64  `json:"userDeviceId"        dc:""`
-	FirstName    string `json:"firstName"         dc:""`
-	LastName     string `json:"lastName"          dc:""`
-	HeadImg      string `json:"headImg"              dc:""`
+	Name         string `json:"name"                dc:""`
+	HeadImg      string `json:"headImg"             dc:""`
 }
