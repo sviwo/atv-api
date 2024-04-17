@@ -81,8 +81,11 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 		"is_delete": consts.DeleteOn,
 		"end_time":  nil,
 	}).One()
-	if trRes != nil {
-		return
+	if !trRes.IsEmpty() {
+		dao.TravelRecord.Ctx(ctx).
+			Data(g.Map{"is_delete": consts.DeleteYes}).
+			Where(g.Map{"travel_record_id": trRes.GMap().Get(dao.TravelRecord.Columns().TravelRecordId)}).
+			Update()
 	}
 
 	tsdDb := tsd.DB()
@@ -151,7 +154,7 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	remainMileValue := res[strings.ToLower(consts.RemainMile)].Int()
 	electricityValue := res[strings.ToLower(consts.Electricity)].Int()
 
-	// 获取开机开机第一条数据
+	// 获取开机第一条数据
 	firstSql := fmt.Sprintf("select %s,%s,%s from %s where ts > %d order by ts limit 1", geoLocation, remainMile, electricity, deviceTable, travelRecord.StartTime.Time.UnixMilli())
 	fRes, err := tsdDb.GetTableDataOne(ctx, firstSql)
 	fRemainMileValue := fRes[strings.ToLower(consts.RemainMile)].Int()
@@ -161,7 +164,10 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	travelRecord.UpdateTime = gtime.Now()
 	travelTimeInMinutes := travelRecord.EndTime.Sub(travelRecord.StartTime).Minutes()
 	if travelTimeInMinutes <= 1 {
-		travelTimeInMinutes = 1
+		dao.TravelRecord.Ctx(ctx).
+			Data(g.Map{"is_delete": consts.DeleteYes}).
+			Where(g.Map{"travel_record_id": travelRecord.TravelRecordId}).
+			Update()
 	}
 	travelRecord.MileageDriven = fRemainMileValue - remainMileValue
 	travelRecord.Consumption = fElectricityValue - electricityValue
