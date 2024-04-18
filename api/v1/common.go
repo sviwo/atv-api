@@ -21,7 +21,7 @@ type ImgUploadReq struct {
 }
 
 type ImgUploadRes struct {
-	Uri string `json:"uri"    dc:"Uri"`
+	Uri *string `json:"uri"    dc:"Uri"`
 }
 
 type EccPublicKeyReq struct {

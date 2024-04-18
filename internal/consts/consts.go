@@ -14,9 +14,6 @@ const (
 	CarKeyPrefix             = "SVIWO_"           // 车钥匙邀请码前缀
 	FileMaxUploadCountMinute = 10                 // 同一用户1分钟之内最大上传数量
 
-	//阿里云oss前缀
-	AliYunFilePrefix = "https://test-sviwo-car-oss.oss-cn-chengdu.aliyuncs.com/"
-
 	//登陆类型：1=密码，2=第三方
 	LoginTypePwd   = 1
 	LoginTypeThird = 2

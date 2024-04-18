@@ -18,11 +18,7 @@ func (cCommon) GetVftCode(ctx context.Context, req *v1.VftCodeReq) (res *v1.Empt
 }
 
 func (cCommon) ImgUpload(ctx context.Context, req *v1.ImgUploadReq) (res *v1.ImgUploadRes, err error) {
-	uri, err := file.UploadFile(req.File)
-	if err != nil {
-		panic(err)
-	}
-	res = &v1.ImgUploadRes{Uri: uri}
+	res = &v1.ImgUploadRes{Uri: file.UploadFile(req.File)}
 	return
 }
 

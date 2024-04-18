@@ -2,10 +2,10 @@ package controller
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/api/v1"
-	"sviwo/internal/consts"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
 	"sviwo/pkg/utility/file"
@@ -34,7 +34,7 @@ func (c cUser) Info(ctx context.Context, req *v1.UserInfoReq) (res *v1.UserInfoR
 	if err = gconv.Struct(service.User().Info(ctx), &res); err != nil {
 		panic(err)
 	}
-	res.HeadImg = consts.AliYunFilePrefix + res.HeadImg
+	res.HeadImg = g.Cfg().MustGet(ctx, "aliyun.oss.fileUrlPrefix").String() + res.HeadImg
 	return
 }
 
@@ -59,11 +59,7 @@ func (c cUser) EditInfo(ctx context.Context, req *v1.EditInfoReq) (res *v1.Empty
 		panic(err)
 	}
 	if req.HeadImg != nil {
-		uri, err2 := file.UploadFile(req.HeadImg)
-		if err2 != nil {
-			panic(err2)
-		}
-		data.HeadImg = &uri
+		data.HeadImg = file.UploadFile(req.HeadImg)
 	}
 	service.User().EditInfo(ctx, data)
 	return

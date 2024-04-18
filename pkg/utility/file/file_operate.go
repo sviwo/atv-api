@@ -58,9 +58,9 @@ func init() {
 /*
 UploadFile 上传文件
 */
-func UploadFile(file *ghttp.UploadFile) (uri string, err error) {
+func UploadFile(file *ghttp.UploadFile) (uri *string) {
 	if gutil.IsEmpty(file.Filename) {
-		return "", gerror.NewCode(enums.RequestMissingParam)
+		panic(gerror.NewCode(enums.RequestMissingParam))
 	}
 	open, err := file.Open()
 	if err != nil {
@@ -71,7 +71,7 @@ func UploadFile(file *ghttp.UploadFile) (uri string, err error) {
 	if err != nil {
 		panic(err)
 	}
-	return filename, err
+	return &filename
 }
 
 /*

@@ -27,20 +27,12 @@ func (c cUserAuth) GetUserAuthInfo(ctx context.Context, req *v1.GetUserAuthReq) 
 SubmitUserAuth 提交用户实名信息
 */
 func (c cUserAuth) SubmitUserAuth(ctx context.Context, req *v1.SubmitUserAuthReq) (res *v1.EmptyFieldRes, err error) {
-	data := model.UserAuthInput{}
-	if err = gconv.Struct(req, &data); err != nil {
-		panic(err)
+	data := model.UserAuthInput{
+		AuthFirstName:       req.AuthFirstName,
+		AuthLastName:        req.AuthLastName,
+		CertificateFrontImg: file.UploadFile(req.CertificateFrontImg),
+		CertificateBackImg:  file.UploadFile(req.CertificateBackImg),
 	}
-	certificateFrontImgUri, e := file.UploadFile(req.CertificateFrontImg)
-	if e != nil {
-		panic(e)
-	}
-	certificateBackImgUri, e := file.UploadFile(req.CertificateBackImg)
-	if e != nil {
-		panic(e)
-	}
-	data.CertificateFrontImg = &certificateFrontImgUri
-	data.CertificateBackImg = &certificateBackImgUri
 	service.UserAuth().SubmitUserAuth(ctx, data)
 	return
 }

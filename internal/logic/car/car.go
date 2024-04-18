@@ -104,7 +104,8 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 		for i, user := range users {
 			userCarKeyList[i].Name = user.GMap().GetVar(dao.User.Columns().LastName).String() +
 				" " + user.GMap().GetVar(dao.User.Columns().FirstName).String()
-			userCarKeyList[i].HeadImg = consts.AliYunFilePrefix + user.GMap().GetVar(dao.User.Columns().HeadImg).String()
+			userCarKeyList[i].HeadImg = g.Cfg().MustGet(ctx, "aliyun.oss.fileUrlPrefix").String() +
+				user.GMap().GetVar(dao.User.Columns().HeadImg).String()
 		}
 		out.UserCarKeyList = userCarKeyList
 	}
