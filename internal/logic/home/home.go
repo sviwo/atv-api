@@ -20,8 +20,8 @@ func New() *sHome {
 type sHome struct{}
 
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
-	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	out = &model.HomeDataOutput{Version: service.Version().GetNewVersion(ctx)}
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	result, err := dao.UserDevice.Ctx(ctx).
 		Where(dao.UserDevice.Columns().UserId, userId).
 		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
@@ -31,11 +31,13 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	if result.IsEmpty() {
 		return
 	}
-	userDevice := new(entity.UserDevice)
-	if err = result.Struct(&userDevice); err != nil {
+	if err = result.Struct(&out); err != nil {
 		panic(err)
 	}
-	out.UserDeviceType = userDevice.UserDeviceType
+	if consts.UserDeviceChild == out.UserDeviceType {
+		out.SpeedLimit = nil
+		out.MobileKey = nil
+	}
 
 	userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
 		One(dao.UserAuth.Columns().UserId, userId)
@@ -48,12 +50,18 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 
 	device := new(entity.Device)
 	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
-		Where(dao.Device.Columns().DeviceId, userDevice.DeviceId).
+		Where(dao.Device.Columns().DeviceId, result.GMap().GetVar(dao.UserDevice.Columns().DeviceId).Int64()).
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
 		panic(err)
 	}
 	out.IsHavingCar = true
 	out.Nickname = device.Nickname
+
+	s.findTDDeviceInfo(ctx, device.DeviceName, out)
+	return
+}
+
+func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *model.HomeDataOutput) {
 	//根据物模型获取所有属性数据 根据情况选择
 	keys := make([]string, 0)
 	keys = append(keys, "RemainMile")
@@ -62,7 +70,7 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	keys = append(keys, "LockedStatus")
 	keys = append(keys, "GeoLocation")
 	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
-		DeviceKey:    device.DeviceName,
+		DeviceKey:    deviceName,
 		PropertyKeys: keys,
 	})
 	if err != nil {
@@ -84,5 +92,4 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 			break
 		}
 	}
-	return
 }

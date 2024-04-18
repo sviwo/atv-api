@@ -360,7 +360,7 @@ func (s sCar) CtlSwitchERT(ctx context.Context, in model.CtlSwitchERTInput) {
 
 func (s sCar) EnabledMobileKey(ctx context.Context) {
 	userDevice := s.findUserDevice(ctx, nil)
-	if userDevice == nil {
+	if userDevice == nil || consts.UserDeviceChild == userDevice.UserDeviceType {
 		panic(gerror.NewCode(enums.IllegalOperation))
 	}
 	var mobileKey = true
@@ -368,7 +368,7 @@ func (s sCar) EnabledMobileKey(ctx context.Context) {
 		mobileKey = consts.CarMobileKeyNo
 	}
 	if _, err := dao.UserDevice.Ctx(ctx).Data(dao.UserDevice.Columns().MobileKey, mobileKey).
-		Where(dao.UserDevice.Columns().Id, userDevice.Id).Update(); err != nil {
+		Where(dao.UserDevice.Columns().DeviceId, userDevice.DeviceId).Update(); err != nil {
 		panic(err)
 	}
 }
@@ -396,7 +396,7 @@ func (s sCar) findUserDevice(ctx context.Context, deviceId *int64) (userDevice *
 
 func (s sCar) EnabledSpeedLimit(ctx context.Context) {
 	userDevice := s.findUserDevice(ctx, nil)
-	if userDevice == nil {
+	if userDevice == nil || consts.UserDeviceChild == userDevice.UserDeviceType {
 		panic(gerror.NewCode(enums.IllegalOperation))
 	}
 	mp := make(map[string]any)
@@ -414,7 +414,7 @@ func (s sCar) EnabledSpeedLimit(ctx context.Context) {
 		panic(err)
 	}
 	if _, err := dao.UserDevice.Ctx(ctx).Data(dao.UserDevice.Columns().SpeedLimit, speedLimit).
-		Where(dao.UserDevice.Columns().Id, userDevice.Id).Update(); err != nil {
+		Where(dao.UserDevice.Columns().DeviceId, userDevice.DeviceId).Update(); err != nil {
 		panic(err)
 	}
 }
