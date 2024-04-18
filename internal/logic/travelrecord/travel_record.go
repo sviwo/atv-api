@@ -94,13 +94,13 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 		return
 	}
 	deviceTable := comm.DeviceTableName(p.DeviceName)
-	ckey := comm.TsdColumnName(consts.GeoLocation)
+	ckey := comm.TsdColumnName(consts.GeoLocationStr)
 	sql := "select last(?) as ? from ?"
 	res, err := tsdDb.GetTableDataOne(ctx, sql, ckey, ckey, deviceTable)
 	if err != nil {
 		panic(err)
 	}
-	value := res[strings.ToLower(consts.GeoLocation)]
+	value := res[strings.ToLower(consts.GeoLocationStr)]
 	travelRecord := do.TravelRecord{
 		TravelRecordId: utility.GID.Generate().Int64(),
 		UserId:         userDevice.UserId,
@@ -145,20 +145,20 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	defer tsdDb.Close()
 	// 获取最近的用车数据
 	deviceTable := comm.DeviceTableName(p.DeviceName)
-	geoLocation := comm.TsdColumnName(consts.GeoLocation)
-	remainMile := comm.TsdColumnName(consts.RemainMile)
-	electricity := comm.TsdColumnName(consts.Electricity)
+	geoLocation := comm.TsdColumnName(consts.GeoLocationStr)
+	remainMile := comm.TsdColumnName(consts.RemainMileStr)
+	electricity := comm.TsdColumnName(consts.ElectricityStr)
 	sql := fmt.Sprintf("select last(%s) as %s,last(%s) as %s,last(%s) as %s from %s", geoLocation, geoLocation, remainMile, remainMile, electricity, electricity, deviceTable)
 	res, err := tsdDb.GetTableDataOne(ctx, sql)
-	geoValue := res[strings.ToLower(consts.GeoLocation)].String()
-	remainMileValue := res[strings.ToLower(consts.RemainMile)].Int()
-	electricityValue := res[strings.ToLower(consts.Electricity)].Int()
+	geoValue := res[strings.ToLower(consts.GeoLocationStr)].String()
+	remainMileValue := res[strings.ToLower(consts.RemainMileStr)].Int()
+	electricityValue := res[strings.ToLower(consts.ElectricityStr)].Int()
 
 	// 获取开机第一条数据
 	firstSql := fmt.Sprintf("select %s,%s,%s from %s where ts > %d order by ts limit 1", geoLocation, remainMile, electricity, deviceTable, travelRecord.StartTime.Time.UnixMilli())
 	fRes, err := tsdDb.GetTableDataOne(ctx, firstSql)
-	fRemainMileValue := fRes[strings.ToLower(consts.RemainMile)].Int()
-	fElectricityValue := fRes[strings.ToLower(consts.Electricity)].Int()
+	fRemainMileValue := fRes[strings.ToLower(consts.RemainMileStr)].Int()
+	fElectricityValue := fRes[strings.ToLower(consts.ElectricityStr)].Int()
 
 	travelRecord.EndTime = gtime.Now()
 	travelRecord.UpdateTime = gtime.Now()

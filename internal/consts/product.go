@@ -8,17 +8,27 @@ const (
 		物模型标识符
 	*/
 	//剩余里程（km）
-	RemainMile = "RemainMile"
+	RemainMileStr = "RemainMile"
 	//电池电量
-	Electricity = "Electricity"
-	//电池状态：0=放电，1=充电
-	BatteryStatus = "BatteryStatus"
-	//锁车状态：0=关机，1=开机
-	LockedStatus = "LockedStatus"
+	ElectricityStr = "Electricity"
 	//地理位置
-	GeoLocation = "GeoLocation"
+	GeoLocationStr = "GeoLocation"
+	//总里程
+	MileageStr = "Mileage"
+	//时速
+	LimitStr = "Limit"
+	//电池状态：0=放电，1=充电
+	BatteryStatusStr       = "BatteryStatus"
+	BatteryStatusCharging  = 0
+	BatteryStatusDischarge = 1
+	//锁车状态：0=关机，1=开机
+	LockedStatusStr = "LockedStatus"
+	LockedStatusOff = 0
+	LockedStatusOn  = 1
 	//灯光
-	Light = 0
+	LightStr  = "Light"
+	LightCode = 0
 	//鸣笛
-	Speaker = 1
+	SpeakerStr  = "speaker"
+	SpeakerCode = 1
 )

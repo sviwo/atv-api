@@ -134,11 +134,20 @@ func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput
 
 func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-	if err := dao.User.Ctx(ctx).Where(
-		dao.User.Columns().UserId, userId,
-	).Where(dao.User.Columns().IsDelete, consts.DeleteOn).Scan(&out); err != nil {
+	if err := dao.User.Ctx(ctx).
+		Where(dao.User.Columns().UserId, userId).
+		Where(dao.User.Columns().IsDelete, consts.DeleteOn).
+		Scan(&out); err != nil {
 		panic(err)
 	}
+	if result, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
+		Where(dao.UserAuth.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
+		One(); err != nil {
+		panic(err)
+	} else {
+		out.AuthStatus = result.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
+	}
+
 	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
 		Where(dao.UserDevice.Columns().UserId, userId).
 		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
@@ -161,7 +170,7 @@ func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 	out.DeviceName = device.DeviceName
 	//根据物模型获取所有属性数据 根据情况选择
 	keys := make([]string, 0)
-	keys = append(keys, "Mileage")
+	keys = append(keys, consts.MileageStr)
 	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
 		DeviceKey:    device.DeviceName,
 		PropertyKeys: keys,

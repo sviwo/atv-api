@@ -64,11 +64,11 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *model.HomeDataOutput) {
 	//根据物模型获取所有属性数据 根据情况选择
 	keys := make([]string, 0)
-	keys = append(keys, "RemainMile")
-	keys = append(keys, "Electricity")
-	keys = append(keys, "BatteryStatus")
-	keys = append(keys, "LockedStatus")
-	keys = append(keys, "GeoLocation")
+	keys = append(keys, consts.RemainMileStr)
+	keys = append(keys, consts.ElectricityStr)
+	keys = append(keys, consts.BatteryStatusStr)
+	keys = append(keys, consts.LockedStatusStr)
+	keys = append(keys, consts.GeoLocationStr)
 	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
 		DeviceKey:    deviceName,
 		PropertyKeys: keys,
@@ -78,15 +78,15 @@ func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *mod
 	}
 	for _, re := range res {
 		switch re.Key {
-		case consts.RemainMile:
+		case consts.RemainMileStr:
 			out.RemainMile = re.Value.Float32()
-		case consts.Electricity:
+		case consts.ElectricityStr:
 			out.Electricity = re.Value.Int()
-		case consts.BatteryStatus:
+		case consts.BatteryStatusStr:
 			out.BatteryStatus = re.Value.Int()
-		case consts.LockedStatus:
+		case consts.LockedStatusStr:
 			out.LockedStatus = re.Value.Int()
-		case consts.GeoLocation:
+		case consts.GeoLocationStr:
 			out.GeoLocation = re.Value.Map()
 		default:
 			break

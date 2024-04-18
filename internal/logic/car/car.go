@@ -60,7 +60,7 @@ func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
 
 func (s sCar) findMileage(ctx context.Context, deviceName string) float32 {
 	keys := make([]string, 0)
-	keys = append(keys, "Mileage")
+	keys = append(keys, consts.MileageStr)
 	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
 		DeviceKey:    deviceName,
 		PropertyKeys: keys,
@@ -113,7 +113,7 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0)
 
 	keys := make([]string, 0)
-	keys = append(keys, "Limit")
+	keys = append(keys, consts.LimitStr)
 	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
 		DeviceKey:    device.DeviceName,
 		PropertyKeys: keys,
@@ -303,10 +303,10 @@ func (s sCar) CtlCar(ctx context.Context, instructions int) {
 	}
 	mp := make(map[string]any)
 	switch instructions {
-	case consts.Light:
-		mp = map[string]any{"Light": 1}
-	case consts.Speaker:
-		mp = map[string]any{"speaker": 1}
+	case consts.LightCode:
+		mp = map[string]any{consts.LightStr: 1}
+	case consts.SpeakerCode:
+		mp = map[string]any{consts.SpeakerStr: 1}
 	default:
 		panic(gerror.NewCode(enums.IllegalOperation))
 	}
@@ -401,10 +401,10 @@ func (s sCar) EnabledSpeedLimit(ctx context.Context) {
 		panic(gerror.NewCode(enums.IllegalOperation))
 	}
 	mp := make(map[string]any)
-	mp = map[string]any{"Limit": 10}
+	mp = map[string]any{consts.LimitStr: 10}
 	var speedLimit = true
 	if userDevice.SpeedLimit {
-		mp = map[string]any{"Limit": 60}
+		mp = map[string]any{consts.LimitStr: 60}
 		speedLimit = consts.CarSpeedLimitNo
 	}
 	in := &model.DevicePropertyInput{
