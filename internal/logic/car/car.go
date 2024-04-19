@@ -79,38 +79,16 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	if device == nil {
 		return
 	}
-	if err := gconv.Struct(device, &out); err != nil {
+	if err := gconv.Scan(device, &out); err != nil {
 		panic(err)
 	}
-	all, err := dao.UserDevice.Ctx(ctx).
-		Where(dao.UserDevice.Columns().DeviceId, device.DeviceId).
-		Where(dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceChild).
-		Where(dao.UserDevice.Columns().MobileKey, consts.CarMobileKeyYes).
-		All()
-	if err != nil {
+	if err := gconv.Scan(s.findUserDevice(ctx, nil), &out); err != nil {
 		panic(err)
 	}
-	if !all.IsEmpty() {
-		userCarKeyList := make([]model.UserCarKeyOutput, all.Len())
-		for i, record := range all {
-			userCarKeyList[i].UserDeviceId = record.GMap().GetVar(dao.UserDevice.Columns().Id).Int64()
-		}
-		users, err := dao.User.Ctx(ctx).
-			WhereIn(dao.User.Columns().UserId, all.Array(dao.UserDevice.Columns().UserId)).
-			All()
-		if err != nil {
-			panic(err)
-		}
-		for i, user := range users {
-			userCarKeyList[i].Name = user.GMap().GetVar(dao.User.Columns().LastName).String() +
-				" " + user.GMap().GetVar(dao.User.Columns().FirstName).String()
-			userCarKeyList[i].HeadImg = g.Cfg().MustGet(ctx, "aliyun.oss.fileUrlPrefix").String() +
-				user.GMap().GetVar(dao.User.Columns().HeadImg).String()
-		}
-		out.UserCarKeyList = userCarKeyList
-	}
-	out.Mileage = s.findMileage(ctx, device.DeviceName)
+
 	out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0)
+	out.UserCarKeyList = s.findCarKeyList(ctx, device.DeviceId)
+	out.Mileage = s.findMileage(ctx, device.DeviceName)
 
 	keys := make([]string, 0)
 	keys = append(keys, consts.LimitStr)
@@ -123,6 +101,38 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	}
 	if !res[0].Value.IsEmpty() {
 		out.TopSpeedHour = res[0].Value.Int()
+	}
+	return
+}
+
+func (s sCar) findCarKeyList(ctx context.Context, deviceId uint64) (userCarKeys []model.UserCarKeyOutput) {
+	all, err := dao.UserDevice.Ctx(ctx).
+		Where(dao.UserDevice.Columns().DeviceId, deviceId).
+		Where(dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceChild).
+		All()
+	if err != nil {
+		panic(err)
+	}
+	if !all.IsEmpty() {
+		userCarKeys = make([]model.UserCarKeyOutput, all.Len())
+		for i, record := range all {
+			userCarKeys[i].UserDeviceId = record.GMap().GetVar(dao.UserDevice.Columns().Id).Int64()
+		}
+		users, err := dao.User.Ctx(ctx).
+			WhereIn(dao.User.Columns().UserId, all.Array(dao.UserDevice.Columns().UserId)).
+			All()
+		if err != nil {
+			panic(err)
+		}
+		for i, user := range users {
+			userCarKeys[i].Name = user.GMap().GetVar(dao.User.Columns().LastName).String() +
+				" " + user.GMap().GetVar(dao.User.Columns().FirstName).String()
+			headImg := user.GMap().GetVar(dao.User.Columns().HeadImg)
+			if !gutil.IsEmpty(headImg) {
+				userCarKeys[i].HeadImg = g.Cfg().MustGet(ctx, "aliyun.oss.fileUrlPrefix").String() +
+					headImg.String()
+			}
+		}
 	}
 	return
 }
@@ -208,7 +218,7 @@ func (s sCar) RemoveCar(ctx context.Context, userDeviceId, deviceId *int64) {
 
 func (s sCar) GetCarKey(ctx context.Context) (carKey string) {
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-	utility.MethodReqLimit(ctx, "GetCarKey", userId, 30)
+	utility.MethodReqLimit(ctx, "GetCarKey", userId, 5)
 
 	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
 		Where(dao.UserDevice.Columns().UserId, userId).
@@ -224,14 +234,21 @@ func (s sCar) GetCarKey(ctx context.Context) (carKey string) {
 	deviceId := result.GMap().GetVar(dao.Device.Columns().DeviceId).Int64()
 	s.checkCarKeyLimit(ctx, deviceId)
 
-	carKey = consts.CarKeyPrefix + grand.S(32)
-	if err = g.Redis().SetEX(
-		ctx,
-		fmt.Sprintf(consts.RedisCarKey, carKey),
-		deviceId,
-		60*60,
-	); err != nil {
+	val, err := g.Redis().Get(ctx, fmt.Sprintf(consts.RedisCarKey, gconv.String(deviceId)))
+	if err != nil {
 		panic(err)
+	}
+	if !val.IsEmpty() {
+		carKey = val.String()
+	} else {
+		carKey = consts.CarKeyPrefix + grand.S(32)
+		if err = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisCarKey, carKey), deviceId, 60*60); err != nil {
+			panic(err)
+		}
+		if err = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisCarKey, gconv.String(deviceId)),
+			carKey, 60*60); err != nil {
+			panic(err)
+		}
 	}
 	return
 }
@@ -248,20 +265,16 @@ func (s sCar) checkCarKeyLimit(ctx context.Context, deviceId int64) {
 }
 
 func (s sCar) InviteBindCar(ctx context.Context, carKey string) {
-	result, err := g.Redis().Get(
-		ctx,
-		fmt.Sprintf(consts.RedisCarKey, carKey),
+	deviceId, err := g.Redis().Get(
+		ctx, fmt.Sprintf(consts.RedisCarKey, carKey),
 	)
 	if err != nil {
 		panic(err)
 	}
-	if result.IsEmpty() {
+	if deviceId.IsEmpty() {
 		panic(gerror.NewCode(enums.CarKeyInvalidError))
 	}
-
-	deviceId := result.Int64()
-	s.checkCarKeyLimit(ctx, deviceId)
-
+	s.checkCarKeyLimit(ctx, deviceId.Int64())
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	cot, err := dao.UserDevice.Ctx(ctx).
 		Where(dao.UserDevice.Columns().DeviceId, deviceId).
@@ -292,6 +305,9 @@ func (s sCar) InviteBindCar(ctx context.Context, carKey string) {
 		panic(err)
 	}
 	if _, err = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisCarKey, carKey)); err != nil {
+		panic(err)
+	}
+	if _, err = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisCarKey, deviceId.String())); err != nil {
 		panic(err)
 	}
 }

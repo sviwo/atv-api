@@ -70,7 +70,13 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 		panic(gerror.NewCode(enums.UserExists))
 	}
 	checkVftCode(ctx, in.Username, in.EmailVftCode)
-	userInfo := entity.User{Username: in.Username, Enable: true, CreateTime: gtime.Now(), IsDelete: false}
+	userInfo := entity.User{
+		Username:   in.Username,
+		Enable:     true,
+		CreateTime: gtime.Now(),
+		FirstName:  grand.Letters(3),
+		LastName:   grand.Letters(3),
+	}
 	operatePwd(&userInfo, in.Password)
 
 	if err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
