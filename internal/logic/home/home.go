@@ -30,6 +30,8 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	}
 	if result.IsEmpty() {
 		return
+	} else {
+		out.IsHavingCar = true
 	}
 	if err = result.Struct(&out); err != nil {
 		panic(err)
@@ -54,7 +56,6 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
 		panic(err)
 	}
-	out.IsHavingCar = true
 	out.Nickname = device.Nickname
 
 	s.findTDDeviceInfo(ctx, device.DeviceName, out)
