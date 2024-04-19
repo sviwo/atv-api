@@ -15,7 +15,7 @@ const (
 	GeoLocationStr = "GeoLocation"
 	//总里程
 	MileageStr = "Mileage"
-	//时速
+	//速度阀值设置
 	LimitStr = "Limit"
 	//电池状态：0=放电，1=充电
 	BatteryStatusStr       = "BatteryStatus"

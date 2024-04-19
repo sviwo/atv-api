@@ -99,7 +99,7 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	if err != nil {
 		panic(err)
 	}
-	if !res[0].Value.IsEmpty() {
+	if res != nil && !res[0].Value.IsEmpty() {
 		out.TopSpeedHour = res[0].Value.Int()
 	}
 	return
