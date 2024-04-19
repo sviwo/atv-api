@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/api/v1"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
@@ -34,7 +35,9 @@ func (c cUser) Info(ctx context.Context, req *v1.UserInfoReq) (res *v1.UserInfoR
 	if err = gconv.Struct(service.User().Info(ctx), &res); err != nil {
 		panic(err)
 	}
-	res.HeadImg = g.Cfg().MustGet(ctx, "aliyun.oss.fileUrlPrefix").String() + res.HeadImg
+	if !gutil.IsEmpty(res.HeadImg) {
+		res.HeadImg = g.Cfg().MustGet(ctx, "aliyun.oss.fileUrlPrefix").String() + res.HeadImg
+	}
 	return
 }
 

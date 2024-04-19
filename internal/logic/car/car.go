@@ -259,7 +259,7 @@ func (s sCar) checkCarKeyLimit(ctx context.Context, deviceId int64) {
 	if err != nil {
 		panic(err)
 	}
-	if cot > 4 {
+	if cot >= 4 {
 		panic(gerror.NewCode(enums.CarKeyLimitError))
 	}
 }
