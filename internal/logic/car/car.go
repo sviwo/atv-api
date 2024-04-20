@@ -391,15 +391,15 @@ func (s sCar) EnabledMobileKey(ctx context.Context) {
 }
 
 func (s sCar) findUserDevice(ctx context.Context, deviceId *int64) (userDevice *entity.UserDevice) {
-	sql := dao.UserDevice.Ctx(ctx)
-	if deviceId == nil {
-		sql.Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes)
-	} else {
-		sql.Where(dao.UserDevice.Columns().DeviceId, deviceId)
-	}
-	result, err := sql.Where(
+	sql := dao.UserDevice.Ctx(ctx).Where(
 		dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
-	).One()
+	)
+	if deviceId == nil {
+		sql = sql.Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes)
+	} else {
+		sql = sql.Where(dao.UserDevice.Columns().DeviceId, deviceId)
+	}
+	result, err := sql.One()
 	if err != nil {
 		panic(err)
 	}
