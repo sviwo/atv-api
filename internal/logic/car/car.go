@@ -10,7 +10,6 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
-	"sort"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -32,29 +31,24 @@ func New() *sCar {
 type sCar struct{}
 
 func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
-	all, err := dao.UserDevice.Ctx(ctx).
-		Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
-		All()
-	if err != nil {
-		panic(err)
-	}
-	if all.IsEmpty() {
-		return
-	}
-	if err = all.Structs(&out); err != nil {
-		panic(err)
-	}
-	if err = dao.Device.Ctx(ctx).
-		WhereIn(dao.Device.Columns().DeviceId, all.Array(dao.Device.Columns().DeviceId)).
-		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&out); err != nil {
+	var (
+		udTable = dao.UserDevice.Table()
+		udCls   = dao.UserDevice.Columns()
+		dTable  = dao.Device.Table()
+		dCls    = dao.Device.Columns()
+	)
+	orm := dao.UserDevice.Ctx(ctx).FieldsPrefix(udTable, udCls.IsSelect, udCls.UserDeviceType).
+		FieldsPrefix(dTable, dCls.DeviceId, dCls.Nickname, dCls.DeviceName).
+		LeftJoinOnField(dTable, dCls.DeviceId).
+		WherePrefix(dTable, dCls.IsDelete, consts.DeleteOn).
+		WherePrefix(udTable, udCls.UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
+		OrderDesc(udCls.IsSelect)
+	if err := orm.Scan(&out); err != nil {
 		panic(err)
 	}
 	for _, ot := range out {
 		ot.Mileage = s.findMileage(ctx, ot.DeviceName)
 	}
-	sort.Slice(out, func(i, j int) bool {
-		return gconv.Int(out[i].IsSelect) > gconv.Int(out[j].IsSelect)
-	})
 	return
 }
 
