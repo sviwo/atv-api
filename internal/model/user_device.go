@@ -1,13 +1,11 @@
 package model
 
-import "github.com/gogf/gf/v2/os/gtime"
-
 type UserDeviceOutput struct {
 	DeviceId       int64              `json:"deviceId"        dc:""`
 	DeviceName     string             `json:"deviceName"      dc:"设备名称（同于车架号）"`
 	Nickname       string             `json:"nickname"        dc:"产品昵称（目前只有ATV，则等同于车辆昵称）"`
-	ActivateTime   *gtime.Time        `json:"activateTime"    dc:"激活时间"`
-	WarrantyTime   *gtime.Time        `json:"warrantyTime"    dc:"保修时间"`
+	ActivateTime   string             `json:"activateTime"    dc:"激活时间"`
+	WarrantyTime   string             `json:"warrantyTime"    dc:"保修时间"`
 	MobileKey      bool               `json:"mobileKey"       dc:"手机钥匙开关：false=关，true=开"`
 	SpeedLimit     bool               `json:"speedLimit"      dc:"速度限制开关：false=关，true=开"`
 	UserDeviceType int                `json:"userDeviceType"  dc:"设备用户类型：0=主用户，1=从用户"`

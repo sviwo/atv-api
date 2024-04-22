@@ -2,7 +2,6 @@ package v1
 
 import (
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type GetCarInfoReq struct {
@@ -32,8 +31,8 @@ type GetCarDetailRes struct {
 	DrivingMode    int             `json:"drivingMode"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
 	EnergyRecovery int             `json:"energyRecovery"  dc:"动能回收类型：0=无，1=中，2=强"`
 	UserDeviceType int             `json:"userDeviceType"  dc:"设备用户类型：0=主用户，1=从用户"`
-	ActivateTime   *gtime.Time     `json:"activateTime"    dc:"激活时间"`
-	WarrantyTime   *gtime.Time     `json:"warrantyTime"    dc:"保修时间"`
+	ActivateTime   string          `json:"activateTime"    dc:"激活时间"`
+	WarrantyTime   string          `json:"warrantyTime"    dc:"保修时间"`
 	Mileage        float32         `json:"mileage"         dc:"行驶里程（km）"`
 	TopSpeedHour   int             `json:"topSpeedHour"    dc:"最高时速"`
 	UserCarKeyList []UserCarKeyRes `json:"userCarKeyList"  dc:"车辆钥匙组"`

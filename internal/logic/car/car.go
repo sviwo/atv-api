@@ -80,7 +80,8 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 		panic(err)
 	}
 
-	out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0)
+	out.ActivateTime = device.ActivateTime.Format("n/d/Y")
+	out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0).Format("n/d/Y")
 	out.UserCarKeyList = s.findCarKeyList(ctx, device.DeviceId)
 	out.Mileage = s.findMileage(ctx, device.DeviceName)
 
