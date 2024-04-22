@@ -1,5 +1,9 @@
 package model
 
+type VersionInput struct {
+	CommonPaginationInput
+}
+
 type VersionOutput struct {
 	VersionId         int64  `json:"versionId"         dc:""`
 	VersionCode       string `json:"versionCode"       dc:"版本编码"`

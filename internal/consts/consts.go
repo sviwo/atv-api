@@ -61,4 +61,13 @@ const (
 	//设备用户类型：0=主用户，1=从用户
 	UserDeviceTypeMain = 0
 	UserDeviceChild    = 1
+
+	//版本发布状态：0=待发布，1=已发布，2=已过期
+	VersionReleaseStatusWait    = 0
+	VersionReleaseStatusYes     = 1
+	VersionReleaseStatusExpired = 2
+
+	//版本类型：0=APP更新，1=固件升级
+	VersionTypeApp      = 0
+	VersionTypeFirmware = 1
 )

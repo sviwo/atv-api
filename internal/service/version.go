@@ -7,6 +7,7 @@ import (
 
 type (
 	IVersion interface {
+		GetVersionList(ctx context.Context, in *model.VersionInput) (totalCount int, out []*model.VersionOutput)
 		GetNewVersion(ctx context.Context) (out []*model.VersionOutput)
 	}
 )
