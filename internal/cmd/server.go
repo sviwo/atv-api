@@ -77,13 +77,6 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 				fmt.Println("panic 产生，错误:", err)
 			}
 		}()
-		// https
-		https := g.Cfg().MustGet(ctx, "server.https").Bool()
-		if https {
-			certFile := g.Cfg().MustGet(ctx, "server.httpsCertFile").String()
-			keyFile := g.Cfg().MustGet(ctx, "server.httpsKeyFile").String()
-			s.EnableHTTPS(certFile, keyFile)
-		}
 
 		go s.Run()
 		select {
