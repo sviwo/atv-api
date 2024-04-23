@@ -2,14 +2,15 @@ package cmd
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/net/ghttp"
+	"fmt"
 	"github.com/gogf/gf/v2/os/gcmd"
+	"os"
+	"os/signal"
 	"sviwo/internal/boot"
 	"sviwo/internal/consts"
-	"sviwo/internal/controller"
 	"sviwo/internal/logic/tdengine"
-	"sviwo/internal/service"
+	"syscall"
+	"time"
 )
 
 var (
@@ -18,50 +19,19 @@ var (
 		Usage: consts.ProjectUsage,
 		Brief: consts.ProjectBrief,
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
-			s := g.Server()
-			s.Group("/", func(group *ghttp.RouterGroup) {
-				group.Middleware(
-					service.Middleware().CORSHandler,
-					service.Middleware().CtxHandler,
-					service.Middleware().I18NHandler,
-					service.Middleware().ResponseHandler,
-					service.Middleware().ErrorHandler,
-					//service.Middleware().DecodeData,
-				)
-				//不需要登录的路由组绑定
-				group.Bind(
-					controller.Common.GetVftCode,
-					controller.Common.GetEccPublicKey,
-					controller.User.Register,
-					controller.User.UpdatePassword,
-					controller.DeviceProperty, // 设备属性设置
-				)
-				//需要登录鉴权的路由组
-				group.Group("/api", func(group *ghttp.RouterGroup) {
-					err := StartGToken(ctx).Middleware(ctx, group)
-					if err != nil {
-						panic(err)
-					}
-					//需要登录鉴权的接口放到这里
-					group.Bind(
-						controller.Common.ImgUpload,
-						controller.User.Info,
-						controller.User.EditInfo,
-						controller.Device.GetDeviceSecret,
-						controller.Home,
-						controller.UserAuth,
-						controller.Version,
-						controller.TravelRecord,
-						controller.Car,
-						controller.AppText,
-						controller.AppVideos,
-					)
-				})
-			})
+			var signalChannel = make(chan os.Signal, 1)
+
+			RunServer(ctx, signalChannel)
+
 			boot.Boot(ctx)
-			s.Run()
+
+			signal.Notify(signalChannel, os.Interrupt, os.Kill, syscall.SIGTERM)
+			fmt.Println("收到关闭服务信号:", <-signalChannel)
+			time.Sleep(time.Second * 3)
 			tdengine.Close()
-			return nil
+			fmt.Println("成功关闭服务器")
+
+			return
 		},
 	}
 )
