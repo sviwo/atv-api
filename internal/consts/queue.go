@@ -6,4 +6,5 @@ const (
 	QueueDeviceAlarmLogTopic    = "device_alarm_log"               // 设备日志
 	QueueDeviceDataSaveTopic    = "task.device.data.save"          // 设备数据保存
 	QueueDeviceStatusInfoUpdate = "task.device.status.info.update" // 设备信息更新
+	QueueBlueToothTopic         = "bluetooth_data"                 // 蓝牙推送的数据
 )
