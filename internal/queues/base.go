@@ -5,5 +5,5 @@ func Run() {
 	ScheduledSysOperLogRun()
 	TaskDeviceDataTsdSaveRun()
 	DeviceInfoUpdateRun()
-	ScheduledBluetoothRun()
+	ScheduledBluetoothDataRun()
 }

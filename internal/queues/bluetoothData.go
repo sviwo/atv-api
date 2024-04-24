@@ -7,10 +7,10 @@ import (
 	"sviwo/pkg/worker"
 )
 
-var ScheduledBluetooth = new(worker.Scheduled)
+var ScheduledBluetoothData = new(worker.Scheduled)
 
-func ScheduledBluetoothRun() {
-	ScheduledBluetooth = worker.RegisterProcess(DeviceBluetoothData)
+func ScheduledBluetoothDataRun() {
+	ScheduledBluetoothData = worker.RegisterProcess(DeviceBluetoothData)
 }
 
 // DeviceBluetoothData 蓝牙数据
@@ -26,6 +26,5 @@ func (q *qBluetoothData) GetTopic() string {
 // Handle 处理消息
 func (q *qBluetoothData) Handle(ctx context.Context, p worker.Payload) (err error) {
 	g.Log().Debugf(ctx, "bluetooth_data_Handle: Payload(%s)", p.Payload)
-
 	return
 }
