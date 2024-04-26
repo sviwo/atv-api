@@ -9,9 +9,9 @@ type TravelRecordBase struct {
 	DeviceId       uint64            `json:"deviceId"       dc:""`
 	StartPoint     map[string]string `json:"startPoint"     dc:"起点"`
 	EndPoint       map[string]string `json:"endPoint"       dc:"终点"`
-	MileageDriven  int               `json:"mileageDriven"  dc:"行驶里程，单位（m）"`
+	MileageDriven  int               `json:"mileageDriven"  dc:"行驶里程，单位（km/h）"`
 	Duration       int               `json:"duration"       dc:"时长，单位（min）"`
-	AvgSpeed       string            `json:"avgSpeed"       dc:"平均时速，单位（m）"`
+	AvgSpeed       string            `json:"avgSpeed"       dc:"平均时速，单位（km/h）"`
 	Consumption    int               `json:"consumption"    dc:"使用电量"`
 }
 
