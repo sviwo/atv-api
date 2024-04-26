@@ -36,7 +36,7 @@ func StartGToken(ctx context.Context) *gtoken.GfToken {
 func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 	username := r.Get("username").String()
 	password := r.Get("password").String()
-	loginType := r.Get("loginType").Uint8()
+	loginType := r.Get("loginType").Int()
 	if gutil.IsEmpty(username) || gutil.IsEmpty(loginType) {
 		response.JsonExit(r, enums.RequestMissingParam, nil)
 	}

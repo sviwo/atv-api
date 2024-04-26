@@ -19,7 +19,7 @@ func New() *sHome {
 
 type sHome struct{}
 
-func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
+/*func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	out = &model.HomeDataOutput{Version: service.Version().GetNewVersion(ctx)}
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	result, err := dao.UserDevice.Ctx(ctx).
@@ -57,7 +57,47 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		panic(err)
 	}
 	out.Nickname = device.Nickname
+	s.findTDDeviceInfo(ctx, device.DeviceName, out)
+	return
+}*/
 
+func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+	result, err := dao.UserDevice.Ctx(ctx).
+		Where(dao.UserDevice.Columns().UserId, userId).
+		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
+	if err != nil {
+		panic(err)
+	}
+	if result.IsEmpty() {
+		return
+	} else {
+		out.IsHavingCar = true
+	}
+	if err = result.Struct(&out); err != nil {
+		panic(err)
+	}
+	if consts.UserDeviceChild == out.UserDeviceType {
+		out.SpeedLimit = nil
+		out.MobileKey = nil
+	}
+
+	userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
+		One(dao.UserAuth.Columns().UserId, userId)
+	if err != nil {
+		panic(err)
+	}
+	if !userAuthStatus.IsEmpty() {
+		out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
+	}
+
+	device := new(entity.Device)
+	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
+		Where(dao.Device.Columns().DeviceId, result.GMap().GetVar(dao.UserDevice.Columns().DeviceId).Int64()).
+		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
+		panic(err)
+	}
+	out.Nickname = device.Nickname
 	s.findTDDeviceInfo(ctx, device.DeviceName, out)
 	return
 }
@@ -93,4 +133,5 @@ func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *mod
 			break
 		}
 	}
+	return
 }

@@ -32,11 +32,11 @@ type TravelRecordDeleteReq struct {
 }
 
 type TravelRecordOnlineReq struct {
-	g.Meta      `path:"/travelRecord/online" method:"post" tags:"行程相关" sm:"删除行程"`
+	g.Meta      `path:"/travelRecord/online" method:"post" tags:"行程相关" sm:"内部接口"`
 	TDeviceName string `json:"deviceName"       dc:"对应物联网平台颁发的设备证书的DeviceName"`
 }
 
 type TravelRecordOfflineReq struct {
-	g.Meta      `path:"/travelRecord/offline" method:"post" tags:"行程相关" sm:"删除行程"`
+	g.Meta      `path:"/travelRecord/offline" method:"post" tags:"行程相关" sm:"内部接口"`
 	TDeviceName string `json:"deviceName"       dc:"对应物联网平台颁发的设备证书的DeviceName"`
 }

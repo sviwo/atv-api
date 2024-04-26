@@ -13,7 +13,7 @@ type UserInfoBase struct {
 type LoginInput struct {
 	Username  string `json:"username"     dc:"用户名"`
 	Password  string `json:"password"     dc:"密码"`
-	LoginType uint8  `json:"LoginType"    dc:"登陆类型：1=账号+密码，2=第三方"`
+	LoginType int    `json:"loginType"    dc:"登陆类型：1=账号+密码，2=第三方"`
 }
 
 type RegisterInput struct {
