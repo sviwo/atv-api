@@ -171,6 +171,13 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 		return
 	}
 	travelRecord.MileageDriven = fRemainMileValue - remainMileValue
+	if travelRecord.MileageDriven == 0 {
+		dao.TravelRecord.Ctx(ctx).
+			Data(g.Map{dao.TravelRecord.Columns().IsDelete: consts.DeleteYes}).
+			Where(g.Map{dao.TravelRecord.Columns().TravelRecordId: travelRecord.TravelRecordId}).
+			Update()
+		return
+	}
 	travelRecord.Consumption = fElectricityValue - electricityValue
 	avgSpeed := float64(travelRecord.MileageDriven) / float64(travelTimeInMinutes)
 	integerAverageSpeed := math.Floor(avgSpeed * 60)
