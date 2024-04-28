@@ -42,6 +42,7 @@ var (
 	RequestMethodTypeError    = New(1003, "请求方式错误")
 	RequestThirdInterFaceFail = New(1004, "请求第三方接口失败")
 	MethodReqLimitError       = New(1005, "请勿频繁请求")
+	RequestTimeoutError       = New(1006, "请求超时，请检查网络")
 	TransactionUserError      = New(1999, "用户重复请求或伪造请求")
 
 	/*

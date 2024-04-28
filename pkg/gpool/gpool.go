@@ -2,6 +2,8 @@ package gpool
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/errors/gerror"
+	"sviwo/internal/consts/enums"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -23,6 +25,16 @@ func NewGPool(capacity int) *GPool {
 		activeJobs: new(int32),
 		ctx:        ctx,
 		cancel:     cancel,
+		errChan:    make(chan error, capacity), // 错误通道容量设置为工作池的容量
+	}
+}
+
+func NewSyncParallelGPool(capacity int, ctx context.Context) *GPool {
+	return &GPool{
+		sem:        make(chan struct{}, capacity),
+		activeJobs: new(int32),
+		ctx:        ctx,
+		cancel:     nil,
 		errChan:    make(chan error, capacity), // 错误通道容量设置为工作池的容量
 	}
 }
@@ -71,9 +83,11 @@ func (p *GPool) Wait(timeout time.Duration) bool {
 }
 
 func (p *GPool) Shutdown() {
-	p.cancel()                    // 发送取消信号
+	if p.cancel != nil {
+		p.cancel() // 发送取消信号
+	}
 	if !p.Wait(5 * time.Second) { // 设置超时时间为5秒
-		// 超时处理逻辑（可根据需要自定义）
+		panic(gerror.NewCode(enums.RequestTimeoutError))
 	}
 	close(p.errChan) // 关闭错误通道
 }

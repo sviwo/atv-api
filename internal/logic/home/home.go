@@ -5,8 +5,8 @@ import (
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
-	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
+	"sviwo/pkg/gpool"
 )
 
 func init() {
@@ -20,44 +20,63 @@ func New() *sHome {
 type sHome struct{}
 
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
-	out = &model.HomeDataOutput{Version: service.Version().GetNewVersion(ctx)}
+	goPool := gpool.NewSyncParallelGPool(100, ctx)
+	defer func() {
+		// 关闭工作池并处理错误
+		goPool.Shutdown()
+		// 从错误通道处理和打印错误
+		for err := range goPool.ErrChan() {
+			panic(err)
+		}
+	}()
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-	result, err := dao.UserDevice.Ctx(ctx).
-		Where(dao.UserDevice.Columns().UserId, userId).
-		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
-	if err != nil {
-		panic(err)
-	}
-	if result.IsEmpty() {
-		return
-	} else {
+	out = &model.HomeDataOutput{}
+	goPool.Go(func(ctx context.Context) error {
+		out.Version = service.Version().GetNewVersion(ctx)
+		return nil
+	})
+	goPool.Go(func(ctx context.Context) error {
+		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
+			One(dao.UserAuth.Columns().UserId, userId)
+		if err != nil {
+			return err
+		}
+		if !userAuthStatus.IsEmpty() {
+			out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
+		}
+		return err
+	})
+	goPool.Go(func(ctx context.Context) error {
+		var (
+			udTable = dao.UserDevice.Table()
+			udCls   = dao.UserDevice.Columns()
+			dTable  = dao.Device.Table()
+			dCls    = dao.Device.Columns()
+		)
+		result, err := dao.UserDevice.Ctx(ctx).
+			FieldsPrefix(udTable, udCls).
+			FieldsPrefix(dTable, dCls.Nickname, dCls.DeviceName).
+			LeftJoinOnField(dTable, dCls.DeviceId).
+			WherePrefix(dTable, dCls.IsDelete, consts.DeleteOn).
+			WherePrefix(udTable, udCls.UserId, userId).
+			WherePrefix(udTable, udCls.IsSelect, consts.CarSelectYes).One()
+		if err != nil {
+			return err
+		}
+		if result.IsEmpty() {
+			return nil
+		}
+		if err = result.Struct(&out); err != nil {
+			return err
+		}
+		if consts.UserDeviceChild == out.UserDeviceType {
+			out.SpeedLimit = nil
+			out.MobileKey = nil
+		}
 		out.IsHavingCar = true
-	}
-	if err = result.Struct(&out); err != nil {
-		panic(err)
-	}
-	if consts.UserDeviceChild == out.UserDeviceType {
-		out.SpeedLimit = nil
-		out.MobileKey = nil
-	}
-
-	userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
-		One(dao.UserAuth.Columns().UserId, userId)
-	if err != nil {
-		panic(err)
-	}
-	if !userAuthStatus.IsEmpty() {
-		out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
-	}
-
-	device := new(entity.Device)
-	if err = dao.Device.Ctx(ctx).Fields(dao.Device.Columns().Nickname, dao.Device.Columns().DeviceName).
-		Where(dao.Device.Columns().DeviceId, result.GMap().GetVar(dao.UserDevice.Columns().DeviceId).Int64()).
-		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).Scan(&device); err != nil {
-		panic(err)
-	}
-	out.Nickname = device.Nickname
-	s.findTDDeviceInfo(ctx, device.DeviceName, out)
+		s.findTDDeviceInfo(ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out)
+		return nil
+	})
 	return
 }
 
