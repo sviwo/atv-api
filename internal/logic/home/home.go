@@ -19,23 +19,87 @@ func New() *sHome {
 
 type sHome struct{}
 
-func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
-	goPool := gpool.NewSyncParallelGPool(100, ctx)
+/*func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
+	wg := sync.WaitGroup{}
+	wg.Add(3)
+	errChan := make(chan error, 4)
 	defer func() {
-		// 关闭工作池并处理错误
-		goPool.Shutdown()
-		// 从错误通道处理和打印错误
-		for err := range goPool.ErrChan() {
+		wg.Wait()
+		select {
+		case err := <-errChan:
+			panic(err)
+		default:
+			close(errChan)
+		}
+	}()
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+	out = &model.HomeDataOutput{}
+	go func(ctx context.Context) {
+		defer wg.Done()
+		out.Version = service.Version().GetNewVersion(ctx)
+	}(ctx)
+	go func(ctx context.Context) {
+		defer wg.Done()
+		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
+			One(dao.UserAuth.Columns().UserId, userId)
+		if err != nil {
+			errChan <- err
+		}
+		if !userAuthStatus.IsEmpty() {
+			out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
+		}
+	}(ctx)
+	go func(ctx context.Context) {
+		defer wg.Done()
+		var (
+			udTable = dao.UserDevice.Table()
+			udCls   = dao.UserDevice.Columns()
+			dTable  = dao.Device.Table()
+			dCls    = dao.Device.Columns()
+		)
+		result, err := dao.UserDevice.Ctx(ctx).
+			FieldsPrefix(udTable, udCls).
+			FieldsPrefix(dTable, dCls.Nickname, dCls.DeviceName).
+			LeftJoinOnField(dTable, dCls.DeviceId).
+			WherePrefix(dTable, dCls.IsDelete, consts.DeleteOn).
+			WherePrefix(udTable, udCls.UserId, userId).
+			WherePrefix(udTable, udCls.IsSelect, consts.CarSelectYes).One()
+		if err != nil {
+			errChan <- err
+		}
+		if !result.IsEmpty() {
+			if err = result.Struct(&out); err != nil {
+				errChan <- err
+			}
+			if consts.UserDeviceChild == out.UserDeviceType {
+				out.SpeedLimit = nil
+				out.MobileKey = nil
+			}
+			out.IsHavingCar = true
+			if err = s.findTDDeviceInfo(
+				ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
+			); err != nil {
+				errChan <- err
+			}
+		}
+	}(ctx)
+	return
+}*/
+
+func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
+	gPool := gpool.NewGPool2(4, ctx)
+	defer func() {
+		if err := gPool.Shutdown2(); err != nil {
 			panic(err)
 		}
 	}()
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	out = &model.HomeDataOutput{}
-	goPool.Go(func(ctx context.Context) error {
+	gPool.Go(func(ctx context.Context) error {
 		out.Version = service.Version().GetNewVersion(ctx)
 		return nil
 	})
-	goPool.Go(func(ctx context.Context) error {
+	gPool.Go(func(ctx context.Context) error {
 		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
 			One(dao.UserAuth.Columns().UserId, userId)
 		if err != nil {
@@ -44,9 +108,9 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		if !userAuthStatus.IsEmpty() {
 			out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
 		}
-		return err
+		return nil
 	})
-	goPool.Go(func(ctx context.Context) error {
+	gPool.Go(func(ctx context.Context) error {
 		var (
 			udTable = dao.UserDevice.Table()
 			udCls   = dao.UserDevice.Columns()
@@ -63,24 +127,28 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		if err != nil {
 			return err
 		}
-		if result.IsEmpty() {
-			return nil
+		if !result.IsEmpty() {
+			if err = result.Struct(&out); err != nil {
+				return err
+			}
+			if consts.UserDeviceChild == out.UserDeviceType {
+				out.SpeedLimit = nil
+				out.MobileKey = nil
+			}
+			out.IsHavingCar = true
+			if err = s.findTDDeviceInfo(
+				//ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
+				ctx, "sdasda", out,
+			); err != nil {
+				return err
+			}
 		}
-		if err = result.Struct(&out); err != nil {
-			return err
-		}
-		if consts.UserDeviceChild == out.UserDeviceType {
-			out.SpeedLimit = nil
-			out.MobileKey = nil
-		}
-		out.IsHavingCar = true
-		s.findTDDeviceInfo(ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out)
 		return nil
 	})
 	return
 }
 
-func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *model.HomeDataOutput) {
+func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *model.HomeDataOutput) error {
 	//根据物模型获取所有属性数据 根据情况选择
 	keys := make([]string, 0)
 	keys = append(keys, consts.RemainMileStr)
@@ -93,7 +161,7 @@ func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *mod
 		PropertyKeys: keys,
 	})
 	if err != nil {
-		panic(err)
+		return err
 	}
 	for _, re := range res {
 		switch re.Key {
@@ -111,5 +179,5 @@ func (s sHome) findTDDeviceInfo(ctx context.Context, deviceName string, out *mod
 			break
 		}
 	}
-	return
+	return nil
 }

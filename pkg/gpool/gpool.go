@@ -29,12 +29,11 @@ func NewGPool(capacity int) *GPool {
 	}
 }
 
-func NewSyncParallelGPool(capacity int, ctx context.Context) *GPool {
+func NewGPool2(capacity int, ctx context.Context) *GPool {
 	return &GPool{
 		sem:        make(chan struct{}, capacity),
 		activeJobs: new(int32),
 		ctx:        ctx,
-		cancel:     nil,
 		errChan:    make(chan error, capacity), // 错误通道容量设置为工作池的容量
 	}
 }
@@ -73,7 +72,6 @@ func (p *GPool) Wait(timeout time.Duration) bool {
 		p.wg.Wait()
 		close(done)
 	}()
-
 	select {
 	case <-done:
 		return true // 所有任务完成
@@ -83,13 +81,28 @@ func (p *GPool) Wait(timeout time.Duration) bool {
 }
 
 func (p *GPool) Shutdown() {
-	if p.cancel != nil {
-		p.cancel() // 发送取消信号
-	}
+	p.cancel()                    // 发送取消信号
 	if !p.Wait(5 * time.Second) { // 设置超时时间为5秒
 		panic(gerror.NewCode(enums.RequestTimeoutError))
 	}
 	close(p.errChan) // 关闭错误通道
+}
+
+func (p *GPool) Shutdown2() (err error) {
+	defer func() {
+		select {
+		case err = <-p.ErrChan():
+			close(p.sem)
+			close(p.errChan)
+		default:
+			close(p.sem)
+			close(p.errChan)
+		}
+	}()
+	if !p.Wait(5 * time.Second) { // 设置超时时间为5秒
+		return gerror.NewCode(enums.RequestTimeoutError)
+	}
+	return
 }
 
 // ErrChan 提供一个错误通道的访问方法
