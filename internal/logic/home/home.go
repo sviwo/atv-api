@@ -2,11 +2,11 @@ package home
 
 import (
 	"context"
+	"golang.org/x/sync/errgroup"
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
-	"sviwo/pkg/gpool"
 )
 
 func init() {
@@ -22,16 +22,15 @@ type sHome struct{}
 /*func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	wg := sync.WaitGroup{}
 	wg.Add(3)
-	errChan := make(chan error, 4)
+	//group := errgroup.Group{}
+	//errChan := make(chan error, 4)
 	defer func() {
 		wg.Wait()
-		select {
-		case err := <-errChan:
+		if err := recover(); err != nil {
 			panic(err)
-		default:
-			close(errChan)
 		}
 	}()
+
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	out = &model.HomeDataOutput{}
 	go func(ctx context.Context) {
@@ -43,7 +42,8 @@ type sHome struct{}
 		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
 			One(dao.UserAuth.Columns().UserId, userId)
 		if err != nil {
-			errChan <- err
+			//errChan <- err
+			panic(err)
 		}
 		if !userAuthStatus.IsEmpty() {
 			out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
@@ -65,11 +65,13 @@ type sHome struct{}
 			WherePrefix(udTable, udCls.UserId, userId).
 			WherePrefix(udTable, udCls.IsSelect, consts.CarSelectYes).One()
 		if err != nil {
-			errChan <- err
+			//errChan <- err
+			panic(err)
 		}
 		if !result.IsEmpty() {
 			if err = result.Struct(&out); err != nil {
-				errChan <- err
+				//errChan <- err
+				panic(err)
 			}
 			if consts.UserDeviceChild == out.UserDeviceType {
 				out.SpeedLimit = nil
@@ -77,9 +79,11 @@ type sHome struct{}
 			}
 			out.IsHavingCar = true
 			if err = s.findTDDeviceInfo(
-				ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
+				//ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
+				ctx, "asd", out,
 			); err != nil {
-				errChan <- err
+				panic(err)
+				//errChan <- err
 			}
 		}
 	}(ctx)
@@ -87,19 +91,19 @@ type sHome struct{}
 }*/
 
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
-	gPool := gpool.NewGPool2(4, ctx)
+	withContext, _ := errgroup.WithContext(ctx)
 	defer func() {
-		if err := gPool.Shutdown2(); err != nil {
+		if err := withContext.Wait(); err != nil {
 			panic(err)
 		}
 	}()
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	out = &model.HomeDataOutput{}
-	gPool.Go(func(ctx context.Context) error {
+	withContext.Go(func() error {
 		out.Version = service.Version().GetNewVersion(ctx)
 		return nil
 	})
-	gPool.Go(func(ctx context.Context) error {
+	withContext.Go(func() error {
 		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
 			One(dao.UserAuth.Columns().UserId, userId)
 		if err != nil {
@@ -110,7 +114,7 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		}
 		return nil
 	})
-	gPool.Go(func(ctx context.Context) error {
+	withContext.Go(func() error {
 		var (
 			udTable = dao.UserDevice.Table()
 			udCls   = dao.UserDevice.Columns()
