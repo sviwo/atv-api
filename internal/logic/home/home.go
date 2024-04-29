@@ -19,77 +19,6 @@ func New() *sHome {
 
 type sHome struct{}
 
-/*func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
-	wg := sync.WaitGroup{}
-	wg.Add(3)
-	//group := errgroup.Group{}
-	//errChan := make(chan error, 4)
-	defer func() {
-		wg.Wait()
-		if err := recover(); err != nil {
-			panic(err)
-		}
-	}()
-
-	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-	out = &model.HomeDataOutput{}
-	go func(ctx context.Context) {
-		defer wg.Done()
-		out.Version = service.Version().GetNewVersion(ctx)
-	}(ctx)
-	go func(ctx context.Context) {
-		defer wg.Done()
-		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
-			One(dao.UserAuth.Columns().UserId, userId)
-		if err != nil {
-			//errChan <- err
-			panic(err)
-		}
-		if !userAuthStatus.IsEmpty() {
-			out.AuthStatus = userAuthStatus.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
-		}
-	}(ctx)
-	go func(ctx context.Context) {
-		defer wg.Done()
-		var (
-			udTable = dao.UserDevice.Table()
-			udCls   = dao.UserDevice.Columns()
-			dTable  = dao.Device.Table()
-			dCls    = dao.Device.Columns()
-		)
-		result, err := dao.UserDevice.Ctx(ctx).
-			FieldsPrefix(udTable, udCls).
-			FieldsPrefix(dTable, dCls.Nickname, dCls.DeviceName).
-			LeftJoinOnField(dTable, dCls.DeviceId).
-			WherePrefix(dTable, dCls.IsDelete, consts.DeleteOn).
-			WherePrefix(udTable, udCls.UserId, userId).
-			WherePrefix(udTable, udCls.IsSelect, consts.CarSelectYes).One()
-		if err != nil {
-			//errChan <- err
-			panic(err)
-		}
-		if !result.IsEmpty() {
-			if err = result.Struct(&out); err != nil {
-				//errChan <- err
-				panic(err)
-			}
-			if consts.UserDeviceChild == out.UserDeviceType {
-				out.SpeedLimit = nil
-				out.MobileKey = nil
-			}
-			out.IsHavingCar = true
-			if err = s.findTDDeviceInfo(
-				//ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
-				ctx, "asd", out,
-			); err != nil {
-				panic(err)
-				//errChan <- err
-			}
-		}
-	}(ctx)
-	return
-}*/
-
 func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 	withContext, _ := errgroup.WithContext(ctx)
 	defer func() {
@@ -142,7 +71,6 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 			out.IsHavingCar = true
 			if err = s.findTDDeviceInfo(
 				ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
-				//ctx, "sdasda", out,
 			); err != nil {
 				return err
 			}
