@@ -137,8 +137,8 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 			}
 			out.IsHavingCar = true
 			if err = s.findTDDeviceInfo(
-				//ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
-				ctx, "sdasda", out,
+				ctx, result.GMap().GetVar(dao.Device.Columns().DeviceName).String(), out,
+				//ctx, "sdasda", out,
 			); err != nil {
 				return err
 			}
