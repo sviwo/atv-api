@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
+	"golang.org/x/sync/errgroup"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
@@ -37,66 +38,77 @@ func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
 		dTable  = dao.Device.Table()
 		dCls    = dao.Device.Columns()
 	)
-	orm := dao.UserDevice.Ctx(ctx).FieldsPrefix(udTable, udCls.IsSelect, udCls.UserDeviceType).
+	if err := dao.UserDevice.Ctx(ctx).FieldsPrefix(udTable, udCls.IsSelect, udCls.UserDeviceType).
 		FieldsPrefix(dTable, dCls.DeviceId, dCls.Nickname, dCls.DeviceName).
 		LeftJoinOnField(dTable, dCls.DeviceId).
 		WherePrefix(dTable, dCls.IsDelete, consts.DeleteOn).
 		WherePrefix(udTable, udCls.UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
-		OrderDesc(udCls.IsSelect)
-	if err := orm.Scan(&out); err != nil {
+		OrderDesc(udCls.IsSelect).Scan(&out); err != nil {
 		panic(err)
 	}
+	keys := make([]string, 0)
+	keys = append(keys, consts.MileageStr)
 	for _, ot := range out {
-		ot.Mileage = s.findMileage(ctx, ot.DeviceName)
+		res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
+			DeviceKey:    ot.DeviceName,
+			PropertyKeys: keys,
+		})
+		if err != nil {
+			panic(err)
+		}
+		if !gutil.IsEmpty(res) {
+			ot.Mileage = res[0].Value.Float32()
+		}
 	}
 	return
 }
 
-func (s sCar) findMileage(ctx context.Context, deviceName string) float32 {
-	keys := make([]string, 0)
-	keys = append(keys, consts.MileageStr)
-	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
-		DeviceKey:    deviceName,
-		PropertyKeys: keys,
-	})
-	if err != nil {
-		panic(err)
-	}
-	if !gutil.IsEmpty(res) {
-		return res[0].Value.Float32()
-	}
-	return 0
-}
-
 func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.UserDeviceOutput) {
-	device := s.findDeviceInfo(ctx, deviceId)
-	if device == nil {
-		return
-	}
-	if err := gconv.Scan(device, &out); err != nil {
-		panic(err)
-	}
-	if err := gconv.Scan(s.findUserDevice(ctx, nil), &out); err != nil {
-		panic(err)
-	}
+	withContext, _ := errgroup.WithContext(ctx)
+	defer func() {
+		if err := withContext.Wait(); err != nil {
+			panic(err)
+		}
+	}()
+	withContext.Go(func() error {
+		device := s.findDeviceInfo(ctx, deviceId)
+		if device != nil {
+			if err := gconv.Scan(device, &out); err != nil {
+				return err
+			}
+		}
+		out.ActivateTime = device.ActivateTime.Format("n/d/Y")
+		out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0).Format("n/d/Y")
+		out.UserCarKeyList = s.findCarKeyList(ctx, device.DeviceId)
+		keys := make([]string, 0)
+		keys = append(keys, consts.LimitStr)
+		keys = append(keys, consts.MileageStr)
+		res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
+			DeviceKey:    device.DeviceName,
+			PropertyKeys: keys,
+		})
 
-	out.ActivateTime = device.ActivateTime.Format("n/d/Y")
-	out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0).Format("n/d/Y")
-	out.UserCarKeyList = s.findCarKeyList(ctx, device.DeviceId)
-	out.Mileage = s.findMileage(ctx, device.DeviceName)
-
-	keys := make([]string, 0)
-	keys = append(keys, consts.LimitStr)
-	res, err := service.DevDevice().GetProperty(ctx, &model.DeviceGetPropertyInput{
-		DeviceKey:    device.DeviceName,
-		PropertyKeys: keys,
+		if err != nil {
+			return err
+		}
+		for _, re := range res {
+			switch re.Key {
+			case consts.LimitStr:
+				out.TopSpeedHour = re.Value.Int()
+			case consts.MileageStr:
+				out.Mileage = re.Value.Float32()
+			default:
+				break
+			}
+		}
+		return nil
 	})
-	if err != nil {
-		panic(err)
-	}
-	if res != nil && !res[0].Value.IsEmpty() {
-		out.TopSpeedHour = res[0].Value.Int()
-	}
+	withContext.Go(func() error {
+		if err := gconv.Scan(s.findUserDevice(ctx, nil), &out); err != nil {
+			return err
+		}
+		return nil
+	})
 	return
 }
 
