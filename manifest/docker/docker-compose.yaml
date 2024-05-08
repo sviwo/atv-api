@@ -75,6 +75,9 @@ services:
     ports: # 业务模块  商品服务映射端口
       - "8500:8500"
       - "8000:8000"
+    volumes:
+      - "./resource/log/:/home/sviwo/logs"
+      - "./resource/resource/:/home/sviwo/resource"
     depends_on: # 依赖服务
       - sviwo-redis
       - sviwo-mysql
