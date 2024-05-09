@@ -42,7 +42,7 @@ logger:
 database:
   logger:
     - path: "./logs/sql"
-      level: "all"
+      level: "DEV"
       stdout: true
   default:
     - link: "mysql:root:gyc1993@tcp(114.115.135.233:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置

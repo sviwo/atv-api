@@ -16,7 +16,7 @@ type AppMediaTreeRes struct {
 	Title       string             `json:"title"       description:"标题"`
 	MediaDesc   string             `json:"mediaDesc"   description:"简介"`
 	SmallImg    string             `json:"smallImg"    description:"缩略图"`
-	Content     string             `json:"content"     description:"内容"`
+	Content     string             `json:"content"     description:"内容（当显示类型为0的时候content为空，为1的时content为链接地址）"`
 	Children    []*AppMediaTreeRes `json:"children"    dc:""`
 }
 
