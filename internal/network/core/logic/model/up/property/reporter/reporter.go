@@ -21,7 +21,7 @@ func Init() (err error) {
 func ReportProperty(ctx context.Context, data topicModel.TopicHandlerData) error {
 	//对存在转义字符的进行全量替换
 	payLoad := strings.ReplaceAll(string(data.PayLoad), "\\", "")
-	glog.Printf(ctx, "-----------属性上报---tpoic:%s---内容：%s--", data.Topic, payLoad)
+	glog.Infof(ctx, "-----------属性上报---tpoic:%s---内容：%s--", data.Topic, payLoad)
 	return nil
 
 }

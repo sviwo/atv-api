@@ -82,7 +82,7 @@ func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 	if err == nil {
 		return
 	}
-	glog.Error(r.GetCtx(), err)
+	g.Log().Error(r.GetCtx(), err)
 	r.Response.ClearBuffer()
 	var gvalidErr gvalid.Error
 	errors.As(err, &gvalidErr)

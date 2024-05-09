@@ -28,7 +28,7 @@ func (q *qDeviceAlarmLog) GetTopic() string {
 
 // Handle 处理消息
 func (q *qDeviceAlarmLog) Handle(ctx context.Context, p worker.Payload) (err error) {
-	g.Log().Debugf(ctx, "alarm_Handle: Payload(%s)", p.Payload)
+	g.Log().Infof(ctx, "alarm_Handle: Payload(%s)", p.Payload)
 
 	if p.Payload == nil || q.GetTopic() != p.Group {
 		return nil

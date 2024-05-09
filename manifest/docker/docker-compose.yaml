@@ -76,8 +76,7 @@ services:
       - "8500:8500"
       - "8000:8000"
     volumes:
-      - "./resource/log/:/home/sviwo/logs"
-      - "./resource/resource/:/home/sviwo/resource"
+      - "/data/project/docker/sviwo/logs:/home/sviwo/logs"
     depends_on: # 依赖服务
       - sviwo-redis
       - sviwo-mysql
