@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-09 14:07:28
 // ==========================================================================
 
 package internal
@@ -11,70 +11,78 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// AppTextDao is the data access object for table sw_app_text.
-type AppTextDao struct {
-	table   string         // table is the underlying table name of the DAO.
-	group   string         // group is the database configuration group name of current DAO.
-	columns AppTextColumns // columns contains all the column names of Table for convenient usage.
+// AppMediaDao is the data access object for table sw_app_media.
+type AppMediaDao struct {
+	table   string          // table is the underlying table name of the DAO.
+	group   string          // group is the database configuration group name of current DAO.
+	columns AppMediaColumns // columns contains all the column names of Table for convenient usage.
 }
 
-// AppTextColumns defines and stores column names for table sw_app_text.
-type AppTextColumns struct {
+// AppMediaColumns defines and stores column names for table sw_app_media.
+type AppMediaColumns struct {
 	Id          string //
 	ParentId    string //
 	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
-	TextTitle   string // 文本标题
-	TextContent string // 文本内容
+	PageType    string // 页面类型：0=帮助页，1=注册用户页，2=视屏教程页
+	DisplayType string // 显示类型：0=直接显示，1=跳转外链
+	Title       string // 标题
+	MediaDesc   string // 简介
+	SmallImg    string // 缩略图
+	Content     string // 内容
 	Orders      string // 排序
 	CreateTime  string //
 	UpdateTime  string //
 	IsDelete    string // 是否删除：true=已删除，false=正常
 }
 
-// appTextColumns holds the columns for table sw_app_text.
-var appTextColumns = AppTextColumns{
+// appMediaColumns holds the columns for table sw_app_media.
+var appMediaColumns = AppMediaColumns{
 	Id:          "id",
 	ParentId:    "parent_id",
 	Enable:      "enable",
-	TextTitle:   "text_title",
-	TextContent: "text_content",
+	PageType:    "page_type",
+	DisplayType: "display_type",
+	Title:       "title",
+	MediaDesc:   "media_desc",
+	SmallImg:    "small_img",
+	Content:     "content",
 	Orders:      "orders",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 	IsDelete:    "is_delete",
 }
 
-// NewAppTextDao creates and returns a new DAO object for table data access.
-func NewAppTextDao() *AppTextDao {
-	return &AppTextDao{
+// NewAppMediaDao creates and returns a new DAO object for table data access.
+func NewAppMediaDao() *AppMediaDao {
+	return &AppMediaDao{
 		group:   "default",
-		table:   "sw_app_text",
-		columns: appTextColumns,
+		table:   "sw_app_media",
+		columns: appMediaColumns,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of current DAO.
-func (dao *AppTextDao) DB() gdb.DB {
+func (dao *AppMediaDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of current dao.
-func (dao *AppTextDao) Table() string {
+func (dao *AppMediaDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of current dao.
-func (dao *AppTextDao) Columns() AppTextColumns {
+func (dao *AppMediaDao) Columns() AppMediaColumns {
 	return dao.columns
 }
 
 // Group returns the configuration group name of database of current dao.
-func (dao *AppTextDao) Group() string {
+func (dao *AppMediaDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns the Model for current DAO, It automatically sets the context for current operation.
-func (dao *AppTextDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *AppMediaDao) Ctx(ctx context.Context) *gdb.Model {
 	return dao.DB().Model(dao.table).Safe().Ctx(ctx)
 }
 
@@ -84,6 +92,6 @@ func (dao *AppTextDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note that, you should not Commit or Rollback the transaction in function f
 // as it is automatically handled by this function.
-func (dao *AppTextDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *AppMediaDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

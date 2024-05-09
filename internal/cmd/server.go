@@ -65,8 +65,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 				controller.Version,
 				controller.TravelRecord,
 				controller.Car,
-				controller.AppText,
-				controller.AppVideos,
+				controller.AppMedia,
 			)
 		})
 	})
