@@ -20,13 +20,21 @@ system:
   pluginsPath: "./plugins/built"
 
 logger:
-  path: "./logs"                        # 日志文件路径。默认为空，表示关闭，仅输出到终端
-  level: "dev"                          # 日志输出级别
+  path: "./logs/info"                   # 日志文件路径。默认为空，表示关闭，仅输出到终端
+  level: "info"                         # 日志输出级别
   file: "{Y-m-d}.log"
   rotateSize: "100M"                    # 按照日志文件大小对文件进行滚动切分。默认为0，表示关闭滚动切分特性
   rotateBackupLimit: 10                 # 按照切分的文件数量清理切分文件，当滚动切分特性开启时有效。默认为0，表示不备份，切分则删除
   rotateBackupExpire: "15d"             # 按照切分的文件有效期清理切分文件，当滚动切分特性开启时有效。默认为0，表示不备份，切分则删除
   rotateBackupCompress: 5               # 滚动切分文件的压缩比（0-9）。默认为0，表示不压缩。压缩级别设置得越高，会更多使用CPU资源
+  loggerErr:
+    path: "./logs/error"
+    level: "error"
+    file: "err-{Y-m-d}.log"
+    rotateSize: "100M"
+    rotateBackupLimit: 10
+    rotateBackupExpire: "15d"
+    rotateBackupCompress: 5
 
 database:
   default:
