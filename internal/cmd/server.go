@@ -38,6 +38,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 			service.Middleware().I18NHandler,
 			service.Middleware().ResponseHandler,
 			service.Middleware().ErrorHandler,
+			service.Middleware().MiddlewareNeverDoneCtx,
 			//service.Middleware().DecodeData,
 		)
 		//不需要登录的路由组绑定

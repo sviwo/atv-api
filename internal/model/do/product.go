@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
 // =================================================================================
 
 package do
@@ -18,8 +18,8 @@ type Product struct {
 	ProductModel  interface{} // 产品型号
 	Status        interface{} // 发布状态：0=未发布，1=已发布
 	Metadata      interface{} // 物模型
+	MetadataTable interface{} // 是否生成物模型表：0=否，1=是
 	CreateTime    *gtime.Time //
 	UpdateTime    *gtime.Time //
 	IsDelete      interface{} // 是否删除：true=已删除，false=正常
-	MetadataTable interface{} // 是否生成物模型表：0=否，1=是
 }

@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
 // =================================================================================
 
 package entity
@@ -10,18 +10,18 @@ import (
 
 // User is the golang structure for table user.
 type User struct {
-	UserId      uint64      `json:"userId"      dc:""`
-	Username    string      `json:"username"    dc:""`
-	Password    string      `json:"password"    dc:""`
-	PwdSalt     string      `json:"pwdSalt"     dc:"密码盐值"`
-	PwdEncryNum int         `json:"pwdEncryNum" dc:"密码加密次数"`
-	FirstName   string      `json:"firstName"   dc:""`
-	LastName    string      `json:"lastName"    dc:""`
-	Enable      bool        `json:"enable"      dc:"账号是否可用：true=正常，false=停用"`
-	HeadImg     string      `json:"headImg"     dc:""`
-	MobilePhone string      `json:"mobilePhone" dc:"手机号"`
-	UserAddress string      `json:"userAddress" dc:"用户地址"`
-	CreateTime  *gtime.Time `json:"createTime"  dc:""`
-	UpdateTime  *gtime.Time `json:"updateTime"  dc:""`
-	IsDelete    bool        `json:"isDelete"    dc:"是否删除：true=已删除，false=正常"`
+	UserId      uint64      `json:"userId"      orm:"user_id"       description:""`
+	Username    string      `json:"username"    orm:"username"      description:""`
+	Password    string      `json:"password"    orm:"password"      description:""`
+	PwdSalt     string      `json:"pwdSalt"     orm:"pwd_salt"      description:"密码盐值"`
+	PwdEncryNum int         `json:"pwdEncryNum" orm:"pwd_encry_num" description:"密码加密次数"`
+	FirstName   string      `json:"firstName"   orm:"first_name"    description:""`
+	LastName    string      `json:"lastName"    orm:"last_name"     description:""`
+	Enable      bool        `json:"enable"      orm:"enable"        description:"账号是否可用：true=正常，false=停用"`
+	HeadImg     string      `json:"headImg"     orm:"head_img"      description:""`
+	MobilePhone string      `json:"mobilePhone" orm:"mobile_phone"  description:"手机号"`
+	UserAddress string      `json:"userAddress" orm:"user_address"  description:"用户地址"`
+	CreateTime  *gtime.Time `json:"createTime"  orm:"create_time"   description:""`
+	UpdateTime  *gtime.Time `json:"updateTime"  orm:"update_time"   description:""`
+	IsDelete    bool        `json:"isDelete"    orm:"is_delete"     description:"是否删除：true=已删除，false=正常"`
 }

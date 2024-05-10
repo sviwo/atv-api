@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
 // =================================================================================
 
 package do
@@ -20,7 +20,7 @@ type TravelRecord struct {
 	MileageDriven  interface{} // 行驶里程，单位（m）
 	StartTime      *gtime.Time // 行程开始时间
 	EndTime        *gtime.Time // 行程结束时间
-	AvgSpeed       interface{} // 平均时速，单位（m）
+	AvgSpeed       interface{} // 平均时速，单位（km/h）
 	Consumption    interface{} // 使用电量
 	CreateTime     *gtime.Time //
 	UpdateTime     *gtime.Time //

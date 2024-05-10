@@ -126,6 +126,11 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 	}
 }
 
+func (s *sMiddleware) MiddlewareNeverDoneCtx(r *ghttp.Request) {
+	r.SetCtx(r.GetNeverDoneCtx())
+	r.Middleware.Next()
+}
+
 // use middleware func for router
 func (s *sMiddleware) DecodeDataHandler(r *ghttp.Request) {
 	if r.Request.Method == "GET" {
