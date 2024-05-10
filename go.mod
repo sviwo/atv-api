@@ -1,6 +1,6 @@
 module sviwo
 
-go 1.19
+go 1.22.3
 
 require (
 	github.com/alibabacloud-go/darabonba-openapi/v2 v2.0.5
@@ -13,7 +13,7 @@ require (
 	github.com/goflyfox/gtoken v1.5.7
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.6.3
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.6.3
-	github.com/gogf/gf/v2 v2.6.4
+	github.com/gogf/gf/v2 v2.7.0
 	github.com/golang-module/carbon/v2 v2.3.10
 	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75
 	github.com/gorilla/websocket v1.5.1
@@ -23,7 +23,9 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/taosdata/driver-go/v3 v3.5.3
 	go.opentelemetry.io/otel v1.24.0
+	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/net v0.21.0
+	golang.org/x/sync v0.1.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	pack.ag/amqp v0.12.5
 )
@@ -71,8 +73,6 @@ require (
 	go.opentelemetry.io/otel/metric v1.24.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
-	go.uber.org/automaxprocs v1.5.3 // indirect
-	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
