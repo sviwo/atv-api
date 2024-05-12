@@ -17,3 +17,8 @@ func (c cDevice) GetDeviceSecret(ctx context.Context, req *v1.DeviceSecretReq) (
 	}
 	return
 }
+
+func (c cDevice) CheckDeviceBind(ctx context.Context, req *v1.CheckDeviceBindReq) (res *v1.EmptyFieldRes, err error) {
+	service.DevDevice().CheckDeviceBind(ctx, req.DeviceName)
+	return
+}

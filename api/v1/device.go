@@ -15,3 +15,8 @@ type DeviceSecretRes struct {
 	DeviceSecret string `json:"deviceSecret"    dc:"对应物联网平台颁发的设备证书的DeviceSecret"`
 	MqttHostUrl  string `json:"mqttHostUrl"     dc:"mqtt连接url"`
 }
+
+type CheckDeviceBindReq struct {
+	g.Meta     `path:"/device/check/device/bind" method:"get" tags:"设备相关" sm:"激活车辆前置检查"`
+	DeviceName string `json:"deviceName" dc:"设备的唯一标识(车架号)" v:"required"`
+}

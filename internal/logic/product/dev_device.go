@@ -25,8 +25,6 @@ import (
 	"sviwo/pkg/utility"
 )
 
-type sDevDevice struct{}
-
 func init() {
 	service.RegisterDevDevice(DeviceNew())
 }
@@ -34,6 +32,8 @@ func init() {
 func DeviceNew() *sDevDevice {
 	return &sDevDevice{}
 }
+
+type sDevDevice struct{}
 
 // CacheDeviceDetailList 缓存所有设备详情数据
 func (s *sDevDevice) CacheDeviceDetailList(ctx context.Context) (err error) {
@@ -213,10 +213,13 @@ func (s *sDevDevice) BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStat
 	return
 }
 
-func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
-	out *model.DeviceSecretOutput) {
+func (s *sDevDevice) CheckDeviceBind(ctx context.Context, deviceName string) {
+	s.checkDeviceInfo(ctx, deviceName)
+}
+
+func (s *sDevDevice) checkDeviceInfo(ctx context.Context, deviceName string) (device *entity.Device) {
 	result, err := dao.Device.Ctx(ctx).
-		Where(dao.Device.Columns().DeviceName, deviceCode).
+		Where(dao.Device.Columns().DeviceName, deviceName).
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).
 		One()
 	if err != nil {
@@ -225,20 +228,26 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 	if result.IsEmpty() {
 		panic(gerror.NewCode(enums.IllegalDevice))
 	}
-	device := new(entity.Device)
-	if err = result.Struct(&device); err != nil {
-		panic(err)
-	}
-	udCnt, err := dao.UserDevice.Ctx(ctx).Where(dao.UserDevice.Columns().DeviceId, device.DeviceId).Count()
+	udCnt, err := dao.UserDevice.Ctx(ctx).
+		Where(dao.UserDevice.Columns().DeviceId, result.GMap().GetVar(dao.Device.Columns().DeviceId).Int64()).
+		Count()
 	if err != nil {
 		panic(err)
 	}
 	if udCnt > 0 {
 		panic(gerror.NewCode(enums.CarHaveMaster))
 	}
+	if err = result.Struct(&device); err != nil {
+		panic(err)
+	}
+	return
+}
 
+func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
+	out *model.DeviceSecretOutput) {
+	device := s.checkDeviceInfo(ctx, deviceName)
 	if device.Status != consts.DeviceStatueDisable {
-		if err = gconv.Struct(device, &out); err != nil {
+		if err := gconv.Struct(device, &out); err != nil {
 			panic(err)
 		}
 		out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
