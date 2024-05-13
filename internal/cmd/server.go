@@ -62,6 +62,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 				controller.User.EditInfo,
 				controller.Device.GetDeviceSecret,
 				controller.Device.CheckDeviceBind,
+				controller.Device.ActivationSuccess,
 				controller.Home,
 				controller.UserAuth,
 				controller.Version,

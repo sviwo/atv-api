@@ -22,3 +22,8 @@ func (c cDevice) CheckDeviceBind(ctx context.Context, req *v1.CheckDeviceBindReq
 	service.DevDevice().CheckDeviceBind(ctx, req.DeviceName)
 	return
 }
+
+func (c cDevice) ActivationSuccess(ctx context.Context, req *v1.ActivationSuccessReq) (res *v1.EmptyFieldRes, err error) {
+	service.DevDevice().ActivationSuccess(ctx, req.DeviceName)
+	return
+}

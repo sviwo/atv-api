@@ -253,22 +253,32 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 		out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
 		return
 	}
-
 	data, err := aliyun.RegisterDevice(ctx, device.ProductKey, device.DeviceName)
 	if err != nil {
 		panic(err)
 	}
-	if err = g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
-		if _, err = dao.Device.Ctx(ctx).
-			Data(dao.Device.Columns().RegistryTime, gtime.Now(),
-				dao.Device.Columns().Status, consts.DeviceStatueOffline,
-				dao.Device.Columns().DeviceSecret, data.DeviceSecret,
-			).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
-			return err
+	if _, err = dao.Device.Ctx(ctx).
+		Data(dao.Device.Columns().RegistryTime, gtime.Now(),
+			dao.Device.Columns().Status, consts.DeviceStatueOffline,
+			dao.Device.Columns().DeviceSecret, data.DeviceSecret,
+		).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
+		if e := aliyun.DeleteDevice(ctx, device.ProductKey, device.DeviceName); e != nil {
+			err = e
 		}
+		panic(err)
+	}
+	if err = gconv.Struct(data, &out); err != nil {
+		panic(err)
+	}
+	out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
+	return
+}
 
-		userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
-		if _, err = dao.UserDevice.Ctx(ctx).
+func (s *sDevDevice) ActivationSuccess(ctx context.Context, deviceName string) {
+	device := s.checkDeviceInfo(ctx, deviceName)
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
+		if _, err := dao.UserDevice.Ctx(ctx).
 			Data(dao.UserDevice.Columns().IsSelect, consts.CarSelectNo).
 			Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
 			Where(dao.UserDevice.Columns().UserId, userId).
@@ -276,7 +286,7 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 			return err
 		}
 
-		if _, err = dao.UserDevice.Ctx(ctx).Data(
+		if _, err := dao.UserDevice.Ctx(ctx).Data(
 			dao.UserDevice.Columns().Id, utility.GID.Generate().Int64(),
 			dao.UserDevice.Columns().UserId, userId,
 			dao.UserDevice.Columns().DeviceId, device.DeviceId,
@@ -286,16 +296,8 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 		).Insert(); err != nil {
 			return err
 		}
-
-		if err = gconv.Struct(data, &out); err != nil {
-			return err
-		}
-		out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
 		return nil
 	}); err != nil {
-		if e := aliyun.DeleteDevice(ctx, device.ProductKey, device.DeviceName); e != nil {
-			err = e
-		}
 		panic(err)
 	}
 	return

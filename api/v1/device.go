@@ -17,6 +17,11 @@ type DeviceSecretRes struct {
 }
 
 type CheckDeviceBindReq struct {
-	g.Meta     `path:"/device/check/device/bind" method:"get" tags:"设备相关" sm:"激活车辆前置检查"`
+	g.Meta     `path:"/device/check/device/bind" method:"post" tags:"设备相关" sm:"激活设备前置检查"`
+	DeviceName string `json:"deviceName" dc:"设备的唯一标识(车架号)" v:"required"`
+}
+
+type ActivationSuccessReq struct {
+	g.Meta     `path:"/device/activation/success" method:"post" tags:"设备相关" sm:"设备激活成功回调接口"`
 	DeviceName string `json:"deviceName" dc:"设备的唯一标识(车架号)" v:"required"`
 }

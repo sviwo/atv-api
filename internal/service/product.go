@@ -45,6 +45,7 @@ type (
 		// 获取注册设备到指定产品下所需要的证书
 		GetDeviceSecret(ctx context.Context, deviceName string) (out *model.DeviceSecretOutput)
 		CheckDeviceBind(ctx context.Context, deviceName string)
+		ActivationSuccess(ctx context.Context, deviceName string)
 		// Get 获取设备详情
 		Get(ctx context.Context, key string) (out *model.DeviceOutput, err error)
 		Detail(ctx context.Context, key string) (out *model.DeviceOutput, err error)
