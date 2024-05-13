@@ -47,6 +47,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 			controller.Common.GetEccPublicKey,
 			controller.User.Register,
 			controller.User.UpdatePassword,
+			controller.AppMedia,
 			controller.DeviceProperty, // 设备属性设置
 		)
 		//需要登录鉴权的路由组
@@ -68,7 +69,6 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 				controller.Version,
 				controller.TravelRecord,
 				controller.Car,
-				controller.AppMedia,
 			)
 		})
 	})
