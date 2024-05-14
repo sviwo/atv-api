@@ -31,6 +31,7 @@ func (s sAppMedia) GetAppMediaTree(ctx context.Context, pageType int) (out []*mo
 				dao.AppMedia.Columns().Title,
 				dao.AppMedia.Columns().MediaDesc,
 				dao.AppMedia.Columns().SmallImg,
+				dao.AppMedia.Columns().Icon,
 				dao.AppMedia.Columns().Orders,
 				" '' AS content ",
 			).
@@ -46,6 +47,7 @@ func (s sAppMedia) GetAppMediaTree(ctx context.Context, pageType int) (out []*mo
 				dao.AppMedia.Columns().Title,
 				dao.AppMedia.Columns().MediaDesc,
 				dao.AppMedia.Columns().SmallImg,
+				dao.AppMedia.Columns().Icon,
 				dao.AppMedia.Columns().Orders,
 				dao.AppMedia.Columns().Content,
 			).

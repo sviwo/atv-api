@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
 // =================================================================================
 
 package entity
@@ -18,6 +18,7 @@ type AppMedia struct {
 	Title       string      `json:"title"       orm:"title"        description:"标题"`
 	MediaDesc   string      `json:"mediaDesc"   orm:"media_desc"   description:"简介"`
 	SmallImg    string      `json:"smallImg"    orm:"small_img"    description:"缩略图"`
+	Icon        string      `json:"icon"        orm:"icon"         description:""`
 	Content     string      `json:"content"     orm:"content"      description:"内容"`
 	Orders      int         `json:"orders"      orm:"orders"       description:"排序"`
 	CreateTime  *gtime.Time `json:"createTime"  orm:"create_time"  description:""`

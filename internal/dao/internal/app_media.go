@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
 // ==========================================================================
 
 package internal
@@ -28,6 +28,7 @@ type AppMediaColumns struct {
 	Title       string // 标题
 	MediaDesc   string // 简介
 	SmallImg    string // 缩略图
+	Icon        string //
 	Content     string // 内容
 	Orders      string // 排序
 	CreateTime  string //
@@ -45,6 +46,7 @@ var appMediaColumns = AppMediaColumns{
 	Title:       "title",
 	MediaDesc:   "media_desc",
 	SmallImg:    "small_img",
+	Icon:        "icon",
 	Content:     "content",
 	Orders:      "orders",
 	CreateTime:  "create_time",

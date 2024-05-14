@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
 // =================================================================================
 
 package do
@@ -20,6 +20,7 @@ type AppMedia struct {
 	Title       interface{} // 标题
 	MediaDesc   interface{} // 简介
 	SmallImg    interface{} // 缩略图
+	Icon        interface{} //
 	Content     interface{} // 内容
 	Orders      interface{} // 排序
 	CreateTime  *gtime.Time //

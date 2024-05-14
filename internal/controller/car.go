@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/api/v1"
+	"sviwo/internal/dao"
 	"sviwo/internal/model"
 	"sviwo/internal/service"
 )
@@ -11,6 +12,11 @@ import (
 var Car = cCar{}
 
 type cCar struct{}
+
+func (c cCar) CarCleanBind(ctx context.Context, req *v1.CarCleanBindReq) (res []*v1.EmptyFieldRes, err error) {
+	dao.UserDevice.Ctx(ctx).Delete(dao.UserDevice.Columns().DeviceId, 10000)
+	return
+}
 
 func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.GetCarListRes, err error) {
 	if err = gconv.Structs(service.Car().GetCarList(ctx), &res); err != nil {

@@ -71,7 +71,7 @@ const (
 	VersionTypeApp      = 0
 	VersionTypeFirmware = 1
 
-	//页面类型：0=帮助页，1=注册用户页，2=视屏教程页
+	//页面类型：0=帮助页，1=注册用户页，2=服务页
 	PageTypeHelp          = 0
 	PageTypeRegisterUser  = 1
 	PageTypeVideoTutorial = 2

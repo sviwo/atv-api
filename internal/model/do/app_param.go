@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:33:02
 // =================================================================================
 
 package do
@@ -16,6 +16,7 @@ type AppParam struct {
 	ParentId   interface{} //
 	ParamName  interface{} // 参数名称
 	ParamValue interface{} // 参数值
+	ParamConst interface{} // 参数常量
 	CreateTime *gtime.Time //
 	UpdateTime *gtime.Time //
 	IsDelete   interface{} // 是否删除：true=已删除，false=正常

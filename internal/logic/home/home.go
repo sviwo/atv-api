@@ -33,6 +33,18 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		return nil
 	})
 	withContext.Go(func() error {
+		one, err := dao.AppParam.Ctx(ctx).
+			Where(dao.AppParam.Columns().ParamConst, consts.ServicePhone).
+			Where(dao.AppParam.Columns().IsDelete, consts.DeleteOn).One()
+		if err != nil {
+			return err
+		}
+		if !one.IsEmpty() {
+			out.ServicePhone = one.GMap().GetVar(dao.AppParam.Columns().ParamValue).String()
+		}
+		return nil
+	})
+	withContext.Go(func() error {
 		userAuthStatus, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
 			One(dao.UserAuth.Columns().UserId, userId)
 		if err != nil {
@@ -52,7 +64,7 @@ func (s sHome) GetHomeData(ctx context.Context) (out *model.HomeDataOutput) {
 		)
 		result, err := dao.UserDevice.Ctx(ctx).
 			FieldsPrefix(udTable, udCls).
-			FieldsPrefix(dTable, dCls.Nickname, dCls.DeviceName).
+			FieldsPrefix(dTable, dCls.Nickname, dCls.DeviceName, dCls.BluetoothAddress, dCls.BluetoothSecretKey).
 			LeftJoinOnField(dTable, dCls.DeviceId).
 			WherePrefix(dTable, dCls.IsDelete, consts.DeleteOn).
 			WherePrefix(udTable, udCls.UserId, userId).

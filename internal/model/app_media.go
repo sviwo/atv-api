@@ -7,6 +7,7 @@ type AppMediaTreeOutput struct {
 	Title       string                `json:"title"       description:"标题"`
 	MediaDesc   string                `json:"mediaDesc"   description:"简介"`
 	SmallImg    string                `json:"smallImg"    description:"缩略图"`
+	Icon        string                `json:"icon"        description:"icon"`
 	Content     string                `json:"content"     description:"内容"`
-	Children    []*AppMediaTreeOutput `json:"children"    dc:""`
+	Children    []*AppMediaTreeOutput `json:"children"    description:""`
 }

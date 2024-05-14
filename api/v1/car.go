@@ -4,6 +4,10 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
+type CarCleanBindReq struct {
+	g.Meta `path:"/car/clean/bind" method:"get" tags:"车辆相关" sm:"清除车辆绑定（临时接口）"`
+}
+
 type GetCarInfoReq struct {
 	g.Meta `path:"/car/get/list" method:"get" tags:"车辆相关" sm:"获取车辆列表"`
 }

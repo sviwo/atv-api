@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:33:02
 // ==========================================================================
 
 package internal
@@ -24,6 +24,7 @@ type AppParamColumns struct {
 	ParentId   string //
 	ParamName  string // 参数名称
 	ParamValue string // 参数值
+	ParamConst string // 参数常量
 	CreateTime string //
 	UpdateTime string //
 	IsDelete   string // 是否删除：true=已删除，false=正常
@@ -35,6 +36,7 @@ var appParamColumns = AppParamColumns{
 	ParentId:   "parent_id",
 	ParamName:  "param_name",
 	ParamValue: "param_value",
+	ParamConst: "param_const",
 	CreateTime: "create_time",
 	UpdateTime: "update_time",
 	IsDelete:   "is_delete",
