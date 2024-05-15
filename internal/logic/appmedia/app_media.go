@@ -3,6 +3,7 @@ package appmedia
 import (
 	"context"
 	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
@@ -59,9 +60,11 @@ func (s sAppMedia) GetAppMediaTree(ctx context.Context, pageType int) (out []*mo
 		Scan(&array); err != nil {
 		panic(err)
 	}
-
 	if err := gconv.Scan(utility.BuildTree(gconv.Maps(array)), &out); err != nil {
 		panic(err)
+	}
+	if !gutil.IsEmpty(out[0].Children) {
+		out = out[0].Children
 	}
 	return
 }
