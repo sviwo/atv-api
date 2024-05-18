@@ -74,7 +74,6 @@ func (s sAppMedia) GetAppMediaDetail(ctx context.Context, Id int64) (content str
 		Fields(dao.AppMedia.Columns().Content).
 		Where(dao.AppMedia.Columns().Id, Id).
 		Where(dao.AppMedia.Columns().DisplayType, consts.DisplayTypeDirect).
-		WhereNot(dao.AppMedia.Columns().PageType, consts.PageTypeVideoTutorial).
 		Where(dao.AppMedia.Columns().Enable, consts.EnableDisplay).
 		Where(dao.AppMedia.Columns().IsDelete, consts.DeleteOn).
 		One()
