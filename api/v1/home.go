@@ -22,7 +22,7 @@ type HomeDataRes struct {
 	DrivingMode        int                    `json:"drivingMode"         dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
 	EnergyRecovery     int                    `json:"energyRecovery"      dc:"动能回收类型：0=无，1=中，2=强"`
 	ServicePhone       string                 `json:"servicePhone"        dc:"服务电话号码"`
-	BluetoothAddress   string                 `json:"bluetoothAddress"    dc:"蓝牙MAC地址"`
+	BluetoothAddress   string                 `json:"bluetoothAddress"    dc:"蓝牙地址"`
 	BluetoothSecretKey string                 `json:"bluetoothSecretKey"  dc:"蓝牙握手密钥"`
 	GeoLocation        map[string]interface{} `json:"geoLocation"         dc:"地理位置"`
 	Version            []*VersionRes          `json:"version"             dc:"新版本信息"`

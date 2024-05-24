@@ -26,7 +26,7 @@ type Device struct {
 	Version            interface{} // 固件版本号
 	LastOnlineTime     *gtime.Time // 最后上线时间
 	MetadataTable      interface{} // 是否生成物模型表：0=否，1=是
-	BluetoothAddress   interface{} // 蓝牙MAC地址
+	BluetoothAddress   interface{} // 蓝牙地址
 	BluetoothSecretKey interface{} // 蓝牙握手密钥
 	CreateTime         *gtime.Time //
 	UpdateTime         *gtime.Time //

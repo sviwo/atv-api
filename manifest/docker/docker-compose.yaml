@@ -58,7 +58,9 @@ services:
     privileged: true  #容器将以更高的权限运行
   sviwo-nginx:
     container_name: sviwo-nginx
-    image: nginx:1.25.1
+    build:
+      context: ./nginx/web
+      dockerfile: Dockerfile
     restart: always
     privileged: true
     ports:

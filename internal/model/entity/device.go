@@ -24,7 +24,7 @@ type Device struct {
 	Version            string      `json:"version"            orm:"version"              description:"固件版本号"`
 	LastOnlineTime     *gtime.Time `json:"lastOnlineTime"     orm:"last_online_time"     description:"最后上线时间"`
 	MetadataTable      bool        `json:"metadataTable"      orm:"metadata_table"       description:"是否生成物模型表：0=否，1=是"`
-	BluetoothAddress   string      `json:"bluetoothAddress"   orm:"bluetooth_address"    description:"蓝牙MAC地址"`
+	BluetoothAddress   string      `json:"bluetoothAddress"   orm:"bluetooth_address"    description:"蓝牙地址"`
 	BluetoothSecretKey string      `json:"bluetoothSecretKey" orm:"bluetooth_secret_key" description:"蓝牙握手密钥"`
 	CreateTime         *gtime.Time `json:"createTime"         orm:"create_time"          description:""`
 	UpdateTime         *gtime.Time `json:"updateTime"         orm:"update_time"          description:""`

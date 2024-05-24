@@ -34,7 +34,7 @@ type DeviceColumns struct {
 	Version            string // 固件版本号
 	LastOnlineTime     string // 最后上线时间
 	MetadataTable      string // 是否生成物模型表：0=否，1=是
-	BluetoothAddress   string // 蓝牙MAC地址
+	BluetoothAddress   string // 蓝牙地址
 	BluetoothSecretKey string // 蓝牙握手密钥
 	CreateTime         string //
 	UpdateTime         string //
