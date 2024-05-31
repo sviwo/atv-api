@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:39:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-31 13:03:28
 // ==========================================================================
 
 package internal
@@ -22,6 +22,7 @@ type DeviceDao struct {
 type DeviceColumns struct {
 	DeviceId           string //
 	ProductId          string // 所属产品
+	SimId              string //
 	ProductKey         string // 对应物联网平台产品的ProductKey
 	DeviceName         string // 对应物联网平台颁发的设备证书的DeviceName
 	DeviceSecret       string // 对应物联网平台颁发的设备证书的DeviceSecret
@@ -45,6 +46,7 @@ type DeviceColumns struct {
 var deviceColumns = DeviceColumns{
 	DeviceId:           "device_id",
 	ProductId:          "product_id",
+	SimId:              "sim_id",
 	ProductKey:         "product_key",
 	DeviceName:         "device_name",
 	DeviceSecret:       "device_secret",

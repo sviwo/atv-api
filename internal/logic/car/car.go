@@ -2,8 +2,16 @@ package car
 
 import (
 	"context"
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha1"
+	"crypto/x509"
 	"fmt"
+	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/database/gdb"
+	"github.com/gogf/gf/v2/encoding/gbase64"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
@@ -441,4 +449,100 @@ func (s sCar) EnabledSpeedLimit(ctx context.Context) {
 		Where(dao.UserDevice.Columns().DeviceId, userDevice.DeviceId).Update(); err != nil {
 		panic(err)
 	}
+}
+
+func (s *sCar) GetSimDataTraffic(ctx context.Context) string {
+	device := s.findDeviceInfo(ctx, nil)
+	if device == nil {
+		return ""
+	}
+	treeMap := gmap.NewTreeMap(gutil.ComparatorString)
+	// path
+	treeMap.Set("x-sign-uri", "/cube/v4/sims/"+device.SimId)
+	// 全局参数
+	num := gconv.String(grand.Intn(100))
+	treeMap.Set("nonce", num)
+	timestamp := gtime.Now().TimestampMilliStr()
+	treeMap.Set("timestamp", timestamp)
+	jsonString, err := gjson.EncodeString(treeMap)
+	if err != nil {
+		panic(err)
+	}
+	sign, err := generateSignature(g.Cfg().MustGet(ctx, "linkSim.privateKey").String(), []byte(jsonString))
+	if err != nil {
+		panic(err)
+	}
+	resp, err := httpClient(ctx, g.Cfg().MustGet(ctx, "linkSim.accessKey").String(), sign, device.SimId, timestamp, num)
+	if err != nil {
+		panic(err)
+	}
+	jsonMap := make(map[string]any, 1)
+	if err = gjson.DecodeTo(resp, &jsonMap); err != nil {
+		panic(err)
+	}
+	data := gconv.Map(jsonMap["data"])
+	if gutil.IsEmpty(data) {
+		return ""
+	}
+	simService := gconv.Map(data["sim_service"])
+	if gutil.IsEmpty(simService) {
+		return ""
+	}
+	bundles := gconv.Maps(simService["bundles"])
+	if gutil.IsEmpty(bundles) {
+		return ""
+	}
+	currentCycleUsage := bundles[0]["current_cycle_usage"]
+	if gutil.IsEmpty(currentCycleUsage) {
+		return ""
+	}
+	return fmt.Sprintf("%.1f", gconv.Float32(currentCycleUsage)/(1024*1024)) + "MB"
+}
+
+func httpClient(ctx context.Context, key, sign, simID, timestamp, num string) (string, error) {
+	client := g.Client()
+	client.SetHeader("Span-Id", "0.0.1")
+	client.SetHeader("Trace-Id", "NBC56410N97LJ016FQA")
+	client.SetHeader("Accept-Language", "zh-CN")
+	client.SetHeader("Authorization", "LF "+key+"/"+sign)
+	client.SetHeader("X-LF-Signature-Type", "2.0")
+	client.SetHeader("timestamp", timestamp)
+	client.SetHeader("nonce", num)
+	client.SetHeader("Content-Type", "application/json")
+	r, err := client.Get(ctx, "https://api.linksfield.net/cube/v4/sims/"+simID)
+	if err != nil {
+		return "", err
+	}
+	return r.ReadAllString(), nil
+}
+
+func generateSignature(privateKeyStr string, message []byte) (string, error) {
+	privateKey, err := parsePrivateKey(privateKeyStr)
+	if err != nil {
+		return "", err
+	}
+	hasher := sha1.New()
+	hasher.Write(message)
+	hash := hasher.Sum(nil)
+	sign, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA1, hash)
+	if err != nil {
+		return "", err
+	}
+	return gbase64.EncodeToString(sign), nil
+}
+
+func parsePrivateKey(privateKey string) (*rsa.PrivateKey, error) {
+	decodeString, err := gbase64.DecodeString(privateKey)
+	if err != nil {
+		return nil, err
+	}
+	privKey, err := x509.ParsePKCS8PrivateKey(decodeString)
+	if err != nil {
+		return nil, err
+	}
+	rsaPrivKey, ok := privKey.(*rsa.PrivateKey)
+	if !ok {
+		return nil, err
+	}
+	return rsaPrivKey, nil
 }

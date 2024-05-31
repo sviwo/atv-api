@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:39:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-31 13:03:28
 // =================================================================================
 
 package entity
@@ -12,6 +12,7 @@ import (
 type Device struct {
 	DeviceId           uint64      `json:"deviceId"           orm:"device_id"            description:""`
 	ProductId          int64       `json:"productId"          orm:"product_id"           description:"所属产品"`
+	SimId              string      `json:"simId"              orm:"sim_id"               description:""`
 	ProductKey         string      `json:"productKey"         orm:"product_key"          description:"对应物联网平台产品的ProductKey"`
 	DeviceName         string      `json:"deviceName"         orm:"device_name"          description:"对应物联网平台颁发的设备证书的DeviceName"`
 	DeviceSecret       string      `json:"deviceSecret"       orm:"device_secret"        description:"对应物联网平台颁发的设备证书的DeviceSecret"`

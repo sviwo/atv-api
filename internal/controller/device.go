@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/util/gconv"
 	"sviwo/api/v1"
+	"sviwo/internal/model"
 	"sviwo/internal/service"
 )
 
@@ -24,6 +25,10 @@ func (c cDevice) CheckDeviceBind(ctx context.Context, req *v1.CheckDeviceBindReq
 }
 
 func (c cDevice) ActivationSuccess(ctx context.Context, req *v1.ActivationSuccessReq) (res *v1.EmptyFieldRes, err error) {
-	service.DevDevice().ActivationSuccess(ctx, req.DeviceName)
+	successInput := model.ActivationSuccessInput{}
+	if err = gconv.Scan(req, &successInput); err != nil {
+		panic(err)
+	}
+	service.DevDevice().ActivationSuccess(ctx, &successInput)
 	return
 }

@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:39:40
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-31 13:03:28
 // =================================================================================
 
 package do
@@ -14,6 +14,7 @@ type Device struct {
 	g.Meta             `orm:"table:sw_device, do:true"`
 	DeviceId           interface{} //
 	ProductId          interface{} // 所属产品
+	SimId              interface{} //
 	ProductKey         interface{} // 对应物联网平台产品的ProductKey
 	DeviceName         interface{} // 对应物联网平台颁发的设备证书的DeviceName
 	DeviceSecret       interface{} // 对应物联网平台颁发的设备证书的DeviceSecret

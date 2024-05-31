@@ -16,3 +16,10 @@ type CtlSwitchDTInput struct {
 type CtlSwitchERTInput struct {
 	EnergyRecoveryType int `json:"energyRecoveryType"    dc:"动能回收类型：0=无，1=中，2=强"`
 }
+
+type ActivationSuccessInput struct {
+	DeviceName         string `json:"deviceName"          dc:"设备的唯一标识(车架号)" v:"required"`
+	BluetoothAddress   string `json:"bluetoothAddress"    dc:"蓝牙地址"             v:"required"`
+	BluetoothSecretKey string `json:"bluetoothSecretKey"  dc:"蓝牙握手密钥"          v:"required"`
+	SimID              string `json:"simID"               dc:"simID"               v:"required"`
+}

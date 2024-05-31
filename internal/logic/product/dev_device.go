@@ -274,8 +274,8 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 	return
 }
 
-func (s *sDevDevice) ActivationSuccess(ctx context.Context, deviceName string) {
-	device := s.checkDeviceInfo(ctx, deviceName)
+func (s *sDevDevice) ActivationSuccess(ctx context.Context, in *model.ActivationSuccessInput) {
+	device := s.checkDeviceInfo(ctx, in.DeviceName)
 	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
 	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
 		if _, err := dao.UserDevice.Ctx(ctx).
@@ -285,7 +285,6 @@ func (s *sDevDevice) ActivationSuccess(ctx context.Context, deviceName string) {
 			Update(); err != nil {
 			return err
 		}
-
 		if _, err := dao.UserDevice.Ctx(ctx).Data(
 			dao.UserDevice.Columns().Id, utility.GID.Generate().Int64(),
 			dao.UserDevice.Columns().UserId, userId,
@@ -294,6 +293,13 @@ func (s *sDevDevice) ActivationSuccess(ctx context.Context, deviceName string) {
 			dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceTypeMain,
 			dao.UserDevice.Columns().CreateTime, gtime.Now(),
 		).Insert(); err != nil {
+			return err
+		}
+		if _, err := dao.Device.Ctx(ctx).Data(
+			dao.Device.Columns().BluetoothSecretKey, in.BluetoothSecretKey,
+			dao.Device.Columns().BluetoothAddress, in.BluetoothAddress,
+			dao.Device.Columns().SimId, in.SimID,
+		).Where(dao.Device.Columns().DeviceName, in.DeviceName).Update(); err != nil {
 			return err
 		}
 		return nil
