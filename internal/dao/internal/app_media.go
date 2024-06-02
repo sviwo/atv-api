@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
 // ==========================================================================
 
 package internal
@@ -11,74 +11,80 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// AppVideosDao is the data access object for table sw_app_videos.
-type AppVideosDao struct {
-	table   string           // table is the underlying table name of the DAO.
-	group   string           // group is the database configuration group name of current DAO.
-	columns AppVideosColumns // columns contains all the column names of Table for convenient usage.
+// AppMediaDao is the data access object for table sw_app_media.
+type AppMediaDao struct {
+	table   string          // table is the underlying table name of the DAO.
+	group   string          // group is the database configuration group name of current DAO.
+	columns AppMediaColumns // columns contains all the column names of Table for convenient usage.
 }
 
-// AppVideosColumns defines and stores column names for table sw_app_videos.
-type AppVideosColumns struct {
+// AppMediaColumns defines and stores column names for table sw_app_media.
+type AppMediaColumns struct {
 	Id          string //
 	ParentId    string //
 	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
-	VideosTitle string // 视频标题
+	PageType    string // 页面类型：0=帮助页，1=注册用户页，2=视屏教程页
+	DisplayType string // 显示类型：0=直接显示，1=跳转外链
+	Title       string // 标题
+	MediaDesc   string // 简介
 	SmallImg    string // 缩略图
-	VideosDesc  string // 视频简介
-	VideosUrl   string // 视频链接
+	Icon        string //
+	Content     string // 内容
 	Orders      string // 排序
 	CreateTime  string //
 	UpdateTime  string //
 	IsDelete    string // 是否删除：true=已删除，false=正常
 }
 
-// appVideosColumns holds the columns for table sw_app_videos.
-var appVideosColumns = AppVideosColumns{
+// appMediaColumns holds the columns for table sw_app_media.
+var appMediaColumns = AppMediaColumns{
 	Id:          "id",
 	ParentId:    "parent_id",
 	Enable:      "enable",
-	VideosTitle: "videos_title",
+	PageType:    "page_type",
+	DisplayType: "display_type",
+	Title:       "title",
+	MediaDesc:   "media_desc",
 	SmallImg:    "small_img",
-	VideosDesc:  "videos_desc",
-	VideosUrl:   "videos_url",
+	Icon:        "icon",
+	Content:     "content",
 	Orders:      "orders",
 	CreateTime:  "create_time",
 	UpdateTime:  "update_time",
 	IsDelete:    "is_delete",
 }
 
-// NewAppVideosDao creates and returns a new DAO object for table data access.
-func NewAppVideosDao() *AppVideosDao {
-	return &AppVideosDao{
+// NewAppMediaDao creates and returns a new DAO object for table data access.
+func NewAppMediaDao() *AppMediaDao {
+	return &AppMediaDao{
 		group:   "default",
-		table:   "sw_app_videos",
-		columns: appVideosColumns,
+		table:   "sw_app_media",
+		columns: appMediaColumns,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of current DAO.
-func (dao *AppVideosDao) DB() gdb.DB {
+func (dao *AppMediaDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of current dao.
-func (dao *AppVideosDao) Table() string {
+func (dao *AppMediaDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of current dao.
-func (dao *AppVideosDao) Columns() AppVideosColumns {
+func (dao *AppMediaDao) Columns() AppMediaColumns {
 	return dao.columns
 }
 
 // Group returns the configuration group name of database of current dao.
-func (dao *AppVideosDao) Group() string {
+func (dao *AppMediaDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns the Model for current DAO, It automatically sets the context for current operation.
-func (dao *AppVideosDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *AppMediaDao) Ctx(ctx context.Context) *gdb.Model {
 	return dao.DB().Model(dao.table).Safe().Ctx(ctx)
 }
 
@@ -88,6 +94,6 @@ func (dao *AppVideosDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note that, you should not Commit or Rollback the transaction in function f
 // as it is automatically handled by this function.
-func (dao *AppVideosDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *AppMediaDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

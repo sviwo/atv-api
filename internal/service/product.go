@@ -43,7 +43,9 @@ type (
 	}
 	IDevDevice interface {
 		// 获取注册设备到指定产品下所需要的证书
-		GetDeviceSecret(ctx context.Context, deviceCode string) (out *model.DeviceSecretOutput)
+		GetDeviceSecret(ctx context.Context, deviceName string) (out *model.DeviceSecretOutput)
+		CheckDeviceBind(ctx context.Context, deviceName string)
+		ActivationSuccess(ctx context.Context, in *model.ActivationSuccessInput)
 		// Get 获取设备详情
 		Get(ctx context.Context, key string) (out *model.DeviceOutput, err error)
 		Detail(ctx context.Context, key string) (out *model.DeviceOutput, err error)
@@ -55,7 +57,6 @@ type (
 		GetLatestProperty(ctx context.Context, key string) (list []model.DeviceLatestProperty, err error)
 		// GetProperty 获取指定属性值
 		GetProperty(ctx context.Context, in *model.DeviceGetPropertyInput) (list []model.DeviceLatestProperty, err error)
-
 	}
 )
 

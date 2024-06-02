@@ -1,17 +1,17 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
 // =================================================================================
 
 package entity
 
 import (
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/gogf/gf/v2/util/gmeta"
 )
 
 // Product is the golang structure for table product.
 type Product struct {
-	gmeta.Meta    `orm:"table:sw_product"`
+	g.Meta        `orm:"table:sw_product"`
 	ProductId     int64       `json:"productId"     dc:""`
 	ProductName   string      `json:"productName"   dc:"产品名称"`
 	ProductKey    string      `json:"productKey"    dc:"产品key"`

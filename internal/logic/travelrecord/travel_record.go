@@ -13,6 +13,7 @@ import (
 	"sviwo/internal/model/do"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
+	"sviwo/pkg/dcache"
 	"sviwo/pkg/tsd"
 	"sviwo/pkg/tsd/comm"
 	"sviwo/pkg/utility"
@@ -61,6 +62,10 @@ func (s sTravelRecord) Delete(ctx context.Context, travelRecordId int64) (err er
 }
 
 func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOnline) (err error) {
+	status := CheckDeviceStatus(ctx, in.DeviceName)
+	if status {
+		return nil
+	}
 	//根据物模型获取所有属性数据 根据情况选择
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
@@ -117,6 +122,10 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 }
 
 func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.TravelRecordOnline) (err error) {
+	status := CheckDeviceStatus(ctx, in.DeviceName)
+	if status {
+		return nil
+	}
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
 		panic(err)
@@ -189,4 +198,12 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 		panic(err)
 	}
 	return
+}
+
+func CheckDeviceStatus(ctx context.Context, deviceName string) bool {
+	deviceStatus := dcache.GetDeviceStatus(ctx, deviceName)
+	if deviceStatus == consts.DeviceStatueOnline {
+		return true
+	}
+	return false
 }

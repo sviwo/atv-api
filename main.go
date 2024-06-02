@@ -5,7 +5,6 @@ import (
 	"github.com/gogf/gf/v2/os/gctx"
 	_ "github.com/taosdata/driver-go/v3/taosRestful"
 	_ "github.com/taosdata/driver-go/v3/taosWS"
-	_ "go.uber.org/automaxprocs"
 	"sviwo/internal/cmd"
 	_ "sviwo/internal/logic"
 	_ "sviwo/internal/packed"

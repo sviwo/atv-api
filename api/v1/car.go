@@ -4,6 +4,10 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
+type CarCleanBindReq struct {
+	g.Meta `path:"/car/clean/bind" method:"get" tags:"车辆相关" sm:"清除车辆绑定（临时接口）"`
+}
+
 type GetCarInfoReq struct {
 	g.Meta `path:"/car/get/list" method:"get" tags:"车辆相关" sm:"获取车辆列表"`
 }
@@ -94,4 +98,12 @@ type CtlSwitchDTReq struct {
 type CtlSwitchERTReq struct {
 	g.Meta             `path:"/car/control/switch/ert" method:"post" tags:"车辆相关" sm:"切换动能回收模式"`
 	EnergyRecoveryType int `json:"energyRecoveryType"    dc:"动能回收类型：0=无，1=中，2=强"`
+}
+
+type SimDataTrafficReq struct {
+	g.Meta `path:"/car/sim/data/traffic" method:"get" tags:"车辆相关" sm:"查询车辆sim卡流量"`
+}
+
+type SimDataTrafficRes struct {
+	DataTraffic string `json:"dataTraffic"        dc:""`
 }

@@ -43,6 +43,10 @@ type (
 			EnabledSpeedLimit 开启/关闭速度限制
 		*/
 		EnabledSpeedLimit(ctx context.Context)
+		/*
+			GetSimDataTraffic 获取sim卡数据流量
+		*/
+		GetSimDataTraffic(ctx context.Context) string
 	}
 )
 

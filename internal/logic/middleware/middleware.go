@@ -78,33 +78,29 @@ func (s *sMiddleware) I18NHandler(r *ghttp.Request) {
 
 func (s *sMiddleware) ErrorHandler(r *ghttp.Request) {
 	r.Middleware.Next()
-	err := r.GetError()
-	if err == nil {
-		return
-	}
-	glog.Error(r.GetCtx(), err)
-	r.Response.ClearBuffer()
-	var gvalidErr gvalid.Error
-	errors.As(err, &gvalidErr)
-	r.Response.Status = http.StatusOK
-	if !gutil.IsEmpty(gvalidErr) {
-		rule, err := gvalidErr.FirstRule()
-		if "required" == rule {
-			response.Json(
-				r, enums.New(enums.RequestMissingParam.Code(), err.Error()),
-				nil,
-			)
+	if err := r.GetError(); err != nil {
+		r.Response.ClearBuffer()
+		if gerror.HasStack(err) {
+			g.Log("loggerErr").Errorf(r.GetCtx(), "%+v", err)
 		} else {
-			response.Json(
-				r, enums.New(enums.RequestParamTypeError.Code(), err.Error()),
-				nil,
-			)
+			g.Log("loggerErr").Error(r.GetCtx(), err)
 		}
-	} else if reflect.TypeOf(err.(gerror.ICode).Code()).Name() == reflect.TypeOf(enums.OpenResponseEnum{}).Name() {
-		response.Json(r, err.(gerror.ICode).Code(), nil)
-	} else {
-		r.Response.Status = http.StatusInternalServerError
-		response.FailMsg(r)
+		var gvalidErr gvalid.Error
+		errors.As(err, &gvalidErr)
+		r.Response.Status = http.StatusOK
+		if !gutil.IsEmpty(gvalidErr) {
+			rule, err := gvalidErr.FirstRule()
+			if "required" == rule {
+				response.Json(r, enums.New(enums.RequestMissingParam.Code(), err.Error()))
+			} else {
+				response.Json(r, enums.New(enums.RequestParamTypeError.Code(), err.Error()))
+			}
+		} else if reflect.TypeOf(err.(gerror.ICode).Code()).Name() == reflect.TypeOf(enums.OpenResponseEnum{}).Name() {
+			response.Json(r, err.(gerror.ICode).Code())
+		} else {
+			r.Response.Status = http.StatusInternalServerError
+			response.FailMsg(r)
+		}
 	}
 }
 
@@ -128,6 +124,11 @@ func (s *sMiddleware) ResponseHandler(r *ghttp.Request) {
 	} else {
 		response.SuccessMsg(r, res)
 	}
+}
+
+func (s *sMiddleware) MiddlewareNeverDoneCtx(r *ghttp.Request) {
+	r.SetCtx(r.GetNeverDoneCtx())
+	r.Middleware.Next()
 }
 
 // use middleware func for router

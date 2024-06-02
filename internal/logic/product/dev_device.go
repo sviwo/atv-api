@@ -25,8 +25,6 @@ import (
 	"sviwo/pkg/utility"
 )
 
-type sDevDevice struct{}
-
 func init() {
 	service.RegisterDevDevice(DeviceNew())
 }
@@ -34,6 +32,8 @@ func init() {
 func DeviceNew() *sDevDevice {
 	return &sDevDevice{}
 }
+
+type sDevDevice struct{}
 
 // CacheDeviceDetailList 缓存所有设备详情数据
 func (s *sDevDevice) CacheDeviceDetailList(ctx context.Context) (err error) {
@@ -213,10 +213,13 @@ func (s *sDevDevice) BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStat
 	return
 }
 
-func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
-	out *model.DeviceSecretOutput) {
+func (s *sDevDevice) CheckDeviceBind(ctx context.Context, deviceName string) {
+	s.checkDeviceInfo(ctx, deviceName)
+}
+
+func (s *sDevDevice) checkDeviceInfo(ctx context.Context, deviceName string) (device *entity.Device) {
 	result, err := dao.Device.Ctx(ctx).
-		Where(dao.Device.Columns().DeviceName, deviceCode).
+		Where(dao.Device.Columns().DeviceName, deviceName).
 		Where(dao.Device.Columns().IsDelete, consts.DeleteOn).
 		One()
 	if err != nil {
@@ -225,51 +228,82 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceCode string) (
 	if result.IsEmpty() {
 		panic(gerror.NewCode(enums.IllegalDevice))
 	}
-	device := new(entity.Device)
+	udCnt, err := dao.UserDevice.Ctx(ctx).
+		Where(dao.UserDevice.Columns().DeviceId, result.GMap().GetVar(dao.Device.Columns().DeviceId).Int64()).
+		Count()
+	if err != nil {
+		panic(err)
+	}
+	if udCnt > 0 {
+		panic(gerror.NewCode(enums.CarHaveMaster))
+	}
 	if err = result.Struct(&device); err != nil {
 		panic(err)
 	}
+	return
+}
+
+func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
+	out *model.DeviceSecretOutput) {
+	device := s.checkDeviceInfo(ctx, deviceName)
 	if device.Status != consts.DeviceStatueDisable {
-		if err = gconv.Struct(device, &out); err != nil {
+		if err := gconv.Struct(device, &out); err != nil {
 			panic(err)
 		}
 		out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
 		return
 	}
-
 	data, err := aliyun.RegisterDevice(ctx, device.ProductKey, device.DeviceName)
 	if err != nil {
 		panic(err)
 	}
-	if err = g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
-		if _, err = dao.Device.Ctx(ctx).
-			Data(dao.Device.Columns().RegistryTime, gtime.Now(),
-				dao.Device.Columns().Status, consts.DeviceStatueOffline,
-				dao.Device.Columns().DeviceSecret, data.DeviceSecret,
-			).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
+	if _, err = dao.Device.Ctx(ctx).
+		Data(dao.Device.Columns().RegistryTime, gtime.Now(),
+			dao.Device.Columns().Status, consts.DeviceStatueOffline,
+			dao.Device.Columns().DeviceSecret, data.DeviceSecret,
+		).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
+		if e := aliyun.DeleteDevice(ctx, device.ProductKey, device.DeviceName); e != nil {
+			err = e
+		}
+		panic(err)
+	}
+	if err = gconv.Struct(data, &out); err != nil {
+		panic(err)
+	}
+	out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
+	return
+}
+
+func (s *sDevDevice) ActivationSuccess(ctx context.Context, in *model.ActivationSuccessInput) {
+	device := s.checkDeviceInfo(ctx, in.DeviceName)
+	userId := service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)
+	if err := g.DB().Transaction(context.TODO(), func(ctx context.Context, tx gdb.TX) error {
+		if _, err := dao.UserDevice.Ctx(ctx).
+			Data(dao.UserDevice.Columns().IsSelect, consts.CarSelectNo).
+			Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).
+			Where(dao.UserDevice.Columns().UserId, userId).
+			Update(); err != nil {
 			return err
 		}
-
-		if _, err = dao.UserDevice.Ctx(ctx).Insert(
+		if _, err := dao.UserDevice.Ctx(ctx).Data(
 			dao.UserDevice.Columns().Id, utility.GID.Generate().Int64(),
-			dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId),
+			dao.UserDevice.Columns().UserId, userId,
 			dao.UserDevice.Columns().DeviceId, device.DeviceId,
 			dao.UserDevice.Columns().IsSelect, consts.CarSelectYes,
 			dao.UserDevice.Columns().UserDeviceType, consts.UserDeviceTypeMain,
 			dao.UserDevice.Columns().CreateTime, gtime.Now(),
-		); err != nil {
+		).Insert(); err != nil {
 			return err
 		}
-
-		if err = gconv.Struct(data, &out); err != nil {
+		if _, err := dao.Device.Ctx(ctx).Data(
+			dao.Device.Columns().BluetoothSecretKey, in.BluetoothSecretKey,
+			dao.Device.Columns().BluetoothAddress, in.BluetoothAddress,
+			dao.Device.Columns().SimId, in.SimID,
+		).Where(dao.Device.Columns().DeviceName, in.DeviceName).Update(); err != nil {
 			return err
 		}
-		out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
 		return nil
 	}); err != nil {
-		if e := aliyun.DeleteDevice(ctx, device.ProductKey, device.DeviceName); err != nil {
-			panic(e)
-		}
 		panic(err)
 	}
 	return

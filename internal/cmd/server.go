@@ -38,6 +38,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 			service.Middleware().I18NHandler,
 			service.Middleware().ResponseHandler,
 			service.Middleware().ErrorHandler,
+			service.Middleware().MiddlewareNeverDoneCtx,
 			//service.Middleware().DecodeData,
 		)
 		//不需要登录的路由组绑定
@@ -46,6 +47,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 			controller.Common.GetEccPublicKey,
 			controller.User.Register,
 			controller.User.UpdatePassword,
+			controller.AppMedia,
 			controller.DeviceProperty, // 设备属性设置
 		)
 		//需要登录鉴权的路由组
@@ -60,13 +62,13 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 				controller.User.Info,
 				controller.User.EditInfo,
 				controller.Device.GetDeviceSecret,
+				controller.Device.CheckDeviceBind,
+				controller.Device.ActivationSuccess,
 				controller.Home,
 				controller.UserAuth,
 				controller.Version,
 				controller.TravelRecord,
 				controller.Car,
-				controller.AppText,
-				controller.AppVideos,
 			)
 		})
 	})

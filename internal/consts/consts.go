@@ -70,4 +70,13 @@ const (
 	//版本类型：0=APP更新，1=固件升级
 	VersionTypeApp      = 0
 	VersionTypeFirmware = 1
+
+	//页面类型：0=帮助页，1=注册用户页，2=服务页
+	PageTypeHelp         = 0
+	PageTypeRegisterUser = 1
+	PageTypeServer       = 2
+
+	//显示类型：0=直接显示，1=跳转外链
+	DisplayTypeDirect   = 0
+	DisplayTypeRedirect = 1
 )

@@ -107,7 +107,7 @@ func NewTasks() (tk *Tasks, err error) {
 	tk = &Tasks{
 		worker: w,
 	}
-	g.Log().Debug(context.Background(), "initialize worker success")
+	//g.Log().Debug(context.Background(), "initialize worker success")
 	return
 }
 

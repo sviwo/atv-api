@@ -11,6 +11,7 @@ type (
 		I18NHandler(r *ghttp.Request)
 		ResponseHandler(r *ghttp.Request)
 		ErrorHandler(r *ghttp.Request)
+		MiddlewareNeverDoneCtx(r *ghttp.Request)
 		DecodeDataHandler(r *ghttp.Request)
 	}
 )

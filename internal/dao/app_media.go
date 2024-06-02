@@ -8,19 +8,19 @@ import (
 	"sviwo/internal/dao/internal"
 )
 
-// internalAppVideosDao is internal type for wrapping internal DAO implements.
-type internalAppVideosDao = *internal.AppVideosDao
+// internalAppMediaDao is internal type for wrapping internal DAO implements.
+type internalAppMediaDao = *internal.AppMediaDao
 
-// appVideosDao is the data access object for table sw_app_videos.
+// appMediaDao is the data access object for table sw_app_media.
 // You can define custom methods on it to extend its functionality as you wish.
-type appVideosDao struct {
-	internalAppVideosDao
+type appMediaDao struct {
+	internalAppMediaDao
 }
 
 var (
-	// AppVideos is globally public accessible object for table sw_app_videos operations.
-	AppVideos = appVideosDao{
-		internal.NewAppVideosDao(),
+	// AppMedia is globally public accessible object for table sw_app_media operations.
+	AppMedia = appMediaDao{
+		internal.NewAppMediaDao(),
 	}
 )
 

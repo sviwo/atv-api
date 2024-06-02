@@ -64,6 +64,7 @@ var (
 	CarKeyInvalidError = New(2012, "这把车钥匙已失效")
 	ShareCarKeyError   = New(2013, "只能分享自己车的钥匙")
 	CarKeyLimitError   = New(2014, "此车的钥匙已达上限")
+	CarHaveMaster      = New(2015, "此车辆已经有主人了")
 
 	/*
 		   第三方错误码 3000～3999

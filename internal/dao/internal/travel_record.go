@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-01 16:15:05
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
 // ==========================================================================
 
 package internal
@@ -28,7 +28,7 @@ type TravelRecordColumns struct {
 	MileageDriven  string // 行驶里程，单位（m）
 	StartTime      string // 行程开始时间
 	EndTime        string // 行程结束时间
-	AvgSpeed       string // 平均时速，单位（m）
+	AvgSpeed       string // 平均时速，单位（km/h）
 	Consumption    string // 使用电量
 	CreateTime     string //
 	UpdateTime     string //

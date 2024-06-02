@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-04-07 19:40:01
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-10 15:47:49
 // =================================================================================
 
 package entity
@@ -10,14 +10,14 @@ import (
 
 // Version is the golang structure for table version.
 type Version struct {
-	VersionId         int64       `json:"versionId"         dc:""`
-	VersionCode       string      `json:"versionCode"       dc:"版本编码"`
-	VersionType       int         `json:"versionType"       dc:"版本类型：0=APP更新，1=固件升级"`
-	VersionUpdateType int         `json:"versionUpdateType" dc:"版本更新类型：0=弱更新，1=强更新"`
-	VersionStatus     int         `json:"versionStatus"     dc:"版本发布状态：0=待发布，1=已发布，2=已过期"`
-	VersionUrl        string      `json:"versionUrl"        dc:"版本链接"`
-	VersionDesc       string      `json:"versionDesc"       dc:"版本描述，用于app显示的新版本信息"`
-	CreateTime        *gtime.Time `json:"createTime"        dc:""`
-	UpdateTime        *gtime.Time `json:"updateTime"        dc:""`
-	IsDelete          bool        `json:"isDelete"          dc:"是否删除：true=已删除，false=正常"`
+	VersionId         int64       `json:"versionId"         orm:"version_id"          description:""`
+	VersionCode       string      `json:"versionCode"       orm:"version_code"        description:"版本编码"`
+	VersionType       int         `json:"versionType"       orm:"version_type"        description:"版本类型：0=APP更新，1=固件升级"`
+	VersionUpdateType int         `json:"versionUpdateType" orm:"version_update_type" description:"版本更新类型：0=弱更新，1=强更新"`
+	VersionStatus     int         `json:"versionStatus"     orm:"version_status"      description:"版本发布状态：0=待发布，1=已发布，2=已过期"`
+	VersionUrl        string      `json:"versionUrl"        orm:"version_url"         description:"版本链接"`
+	VersionDesc       string      `json:"versionDesc"       orm:"version_desc"        description:"版本描述，用于app显示的新版本信息"`
+	CreateTime        *gtime.Time `json:"createTime"        orm:"create_time"         description:""`
+	UpdateTime        *gtime.Time `json:"updateTime"        orm:"update_time"         description:""`
+	IsDelete          bool        `json:"isDelete"          orm:"is_delete"           description:"是否删除：true=已删除，false=正常"`
 }

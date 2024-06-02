@@ -41,5 +41,5 @@ func SuccessMsg(r *ghttp.Request, data interface{}) {
 }
 
 func FailMsg(r *ghttp.Request) {
-	Json(r, enums.Fail)
+	JsonExit(r, enums.Fail, nil)
 }
