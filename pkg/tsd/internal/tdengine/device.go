@@ -37,7 +37,7 @@ func (m *TdEngine) Initialization(ctx context.Context) (err error) {
 		return
 	}
 
-	dbName := g.Cfg().MustGet(context.Background(), "tsd.tdengine.dbName", "sagoo_iot").String()
+	dbName := g.Cfg().MustGet(context.Background(), "tsd.tdengine.dbName", "sviwo_iot").String()
 	_, err = taos.Exec("CREATE DATABASE IF NOT EXISTS " + dbName)
 
 	return
