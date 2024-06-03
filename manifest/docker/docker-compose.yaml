@@ -18,7 +18,7 @@ services:
       - 7001:6379
 
   sviwo-tdengine:
-    image: tdengine/tdengine:3.3.0.7
+    image: tdengine/tdengine:3.3.0.3
     container_name: sviwo-tdengine-server
     restart: always
     environment:
