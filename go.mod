@@ -21,9 +21,8 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/taosdata/driver-go/v3 v3.5.3
+	github.com/taosdata/driver-go/v3 v3.5.5
 	go.opentelemetry.io/otel v1.26.0
-	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/net v0.25.0
 	golang.org/x/sync v0.1.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
