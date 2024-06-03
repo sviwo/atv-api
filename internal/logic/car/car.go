@@ -451,15 +451,13 @@ func (s sCar) EnabledSpeedLimit(ctx context.Context) {
 	}
 }
 
-func (s *sCar) GetSimDataTraffic(ctx context.Context) string {
+func (s *sCar) GetSimDataTraffic(ctx context.Context) (out *model.SimDataTrafficOutput) {
 	device := s.findDeviceInfo(ctx, nil)
 	if device == nil {
-		return ""
+		return
 	}
 	treeMap := gmap.NewTreeMap(gutil.ComparatorString)
-	// path
 	treeMap.Set("x-sign-uri", "/cube/v4/sims/"+device.SimId)
-	// 全局参数
 	num := gconv.String(grand.Intn(100))
 	treeMap.Set("nonce", num)
 	timestamp := gtime.Now().TimestampMilliStr()
@@ -482,21 +480,23 @@ func (s *sCar) GetSimDataTraffic(ctx context.Context) string {
 	}
 	data := gconv.Map(jsonMap["data"])
 	if gutil.IsEmpty(data) {
-		return ""
+		return
 	}
 	simService := gconv.Map(data["sim_service"])
 	if gutil.IsEmpty(simService) {
-		return ""
+		return
 	}
 	bundles := gconv.Maps(simService["bundles"])
 	if gutil.IsEmpty(bundles) {
-		return ""
+		return
 	}
-	currentCycleUsage := bundles[0]["current_cycle_usage"]
-	if gutil.IsEmpty(currentCycleUsage) {
-		return ""
-	}
-	return fmt.Sprintf("%.1f", gconv.Float32(currentCycleUsage)/(1024*1024)) + "MB"
+	out = &model.SimDataTrafficOutput{}
+	dataLimit := gconv.Float32(bundles[0]["data_limit"])
+	out.TotalDataTraffic = fmt.Sprintf("%.1f", dataLimit/(1024*1024)) + "MB"
+	currentCycleUsage := gconv.Float32(bundles[0]["current_cycle_usage"])
+	out.ConsumeDataTraffic = fmt.Sprintf("%.1f", currentCycleUsage/(1024*1024)) + "MB"
+	out.SurplusDataTraffic = fmt.Sprintf("%.1f", (dataLimit-currentCycleUsage)/(1024*1024)) + "MB"
+	return
 }
 
 func httpClient(ctx context.Context, key, sign, simID, timestamp, num string) (string, error) {

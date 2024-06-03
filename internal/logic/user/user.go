@@ -184,7 +184,7 @@ func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 	if err != nil {
 		panic(err)
 	}
-	if !res[0].Value.IsEmpty() {
+	if !gutil.IsEmpty(res) && !res[0].Value.IsEmpty() {
 		out.Mileage = res[0].Value.Float32()
 	}
 	return
