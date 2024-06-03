@@ -105,5 +105,7 @@ type SimDataTrafficReq struct {
 }
 
 type SimDataTrafficRes struct {
-	DataTraffic string `json:"dataTraffic"        dc:""`
+	TotalDataTraffic   string `json:"totalDataTraffic"          dc:"总流量"`
+	ConsumeDataTraffic string `json:"consumeDataTraffic"        dc:"已消耗流量"`
+	SurplusDataTraffic string `json:"surplusDataTraffic"        dc:"剩余流量"`
 }

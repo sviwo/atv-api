@@ -90,6 +90,8 @@ func (c cCar) CtlSwitchERT(ctx context.Context, req *v1.CtlSwitchERTReq) (res *v
 	return
 }
 func (c cCar) GetSimDataTraffic(ctx context.Context, req *v1.SimDataTrafficReq) (res *v1.SimDataTrafficRes, err error) {
-	res = &v1.SimDataTrafficRes{DataTraffic: service.Car().GetSimDataTraffic(ctx)}
+	if err = gconv.Scan(service.Car().GetSimDataTraffic(ctx), &res); err != nil {
+		panic(err)
+	}
 	return
 }
