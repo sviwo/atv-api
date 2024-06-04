@@ -61,6 +61,7 @@ gfToken:
   ServerName: "Sviwo"
   cacheKey: "gfToken:"   #缓存前缀
   timeOut: 24 * 60 * 60 * 1000 * 10         #token超时时间（毫秒）
+  maxRefresh: 5400       #token自动刷新时间（秒）
   multiLogin: true      #是否允许一个账号多人同时登录
   encryptKey: "49c54195e750b04e74a8429b17896586"    #加密key (32位)
   cacheMode: 2          #存储引擎 1 gcache 2 gredis 默认1
@@ -87,10 +88,10 @@ mqtt:
 tsd:
   database: "TdEngine" #可选择 TdEngine、Influxdb
   tdengine:
-    type: "taosRestful" #http连接方式，端口是6041
-    dsn: "root:taosdata@http(114.115.135.233:6041)/"
-#    type: "taosWS" #http连接方式，端口是6041
-#    dsn: "root:taosdata@ws(114.115.135.233:6041)/"
+#    type: "taosRestful" #http连接方式，端口是6041
+#    dsn: "root:taosdata@http(114.115.135.233:6041)/"
+    type: "taosWS" #http连接方式，端口是6041
+    dsn: "root:taosdata@ws(114.115.135.233:6041)/"
     dbName: "sviwo_iot"
     maxOpenConns: 2000
     maxIdleConns: 80
@@ -142,3 +143,7 @@ queue:
     db: 0                                            # 指定redis库
     pass: "sviwo-987dfsdrf6g46sd7q9we4sd6a5"                                          # redis密码
     timeout: 60
+
+linkSim:
+    accessKey: "021BC8E0ECA74506A225725D3A60236E"
+    privateKey: "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAIV008raK+tKLQdzYgdaRsR+5eudydXSOziex5c7fcQW+UH/3AryEGUSAQoU8VykIJ5L7gDNKAq5wOqU3uqElCMHeJXmrDG5yvu281JVG5d0C20rTrfc+T77KiU3NFyVd+BtMKbvuyKa+EaFaT9bCFoN3fvo21xUfDG6Q4QXbVIvAgMBAAECgYBvnMdMTa6Rd1W1d4AymgO5bk+oACy/ELXKorBWAMEr7/LCidNjrBKeFLKd1eoOCo3lFaeVL/8fCT8YcS0FgZ/JdpMAlfPzXFoUHncr6tCoIHzla/eUfRC57tYqbFyrgGVkczR3YyVK17y2G3GEnZc898koGMbT22u8zZNBqUmxwQJBAOjRw4SGCjROmlB2r3xO5bkkcJA4Vj/MMLuJU4ej/HuelVAVYQVxsQ0eBsuz1LuuvZWK36Djvv22B3pF1acaT/8CQQCSvnDRWJnW75EMTwU9T1j0K12tXSFx9QpKM8C4K+2qEN7c+6/sOgorIDKgzAgacRyJCSfMoQIE3JCIH+lmHf3RAkEAxMaeCME9mK4isQVPFrKcaNoKpWpoQ22ydp7/0XHhcR48tr4LDY3lBeAuADdTAvoS1HTWw+YZw9f5A/hINv7/QwJAHKY3qneM2Wy+OdP3puel603IJT+odvIrRx9hgdN5vBk9GZG93/XY5GCN4dzTvC3XL13tOkM4/K//O8RXMguq8QJBANQdPr67dLh06dUmA8H49Wpwm7Q3CGERdEUs6nIaukGk/TQsGduaGE96O3ZG3Rcu+L5BjoxqA+Se2+GV4/p0fDQ="
