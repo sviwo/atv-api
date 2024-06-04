@@ -46,7 +46,7 @@ type (
 		/*
 			GetSimDataTraffic 获取sim卡数据流量
 		*/
-		GetSimDataTraffic(ctx context.Context) string
+		GetSimDataTraffic(ctx context.Context) (out *model.SimDataTrafficOutput)
 	}
 )
 
