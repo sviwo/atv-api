@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-06-08 20:37:43
 // =================================================================================
 
 package entity
@@ -13,7 +13,7 @@ type AppMedia struct {
 	Id          int64       `json:"id"          orm:"id"           description:""`
 	ParentId    int64       `json:"parentId"    orm:"parent_id"    description:""`
 	Enable      bool        `json:"enable"      orm:"enable"       description:"显示或屏蔽：true=显示，false=屏蔽"`
-	PageType    int         `json:"pageType"    orm:"page_type"    description:"页面类型：0=帮助页，1=注册用户页，2=视屏教程页"`
+	PageType    int         `json:"pageType"    orm:"page_type"    description:"页面类型：0=帮助页，1=注册用户页，2=服务页"`
 	DisplayType int         `json:"displayType" orm:"display_type" description:"显示类型：0=直接显示，1=跳转外链"`
 	Title       string      `json:"title"       orm:"title"        description:"标题"`
 	MediaDesc   string      `json:"mediaDesc"   orm:"media_desc"   description:"简介"`

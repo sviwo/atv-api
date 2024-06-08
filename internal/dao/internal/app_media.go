@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-06-08 20:37:43
 // ==========================================================================
 
 package internal
@@ -23,7 +23,7 @@ type AppMediaColumns struct {
 	Id          string //
 	ParentId    string //
 	Enable      string // 显示或屏蔽：true=显示，false=屏蔽
-	PageType    string // 页面类型：0=帮助页，1=注册用户页，2=视屏教程页
+	PageType    string // 页面类型：0=帮助页，1=注册用户页，2=服务页
 	DisplayType string // 显示类型：0=直接显示，1=跳转外链
 	Title       string // 标题
 	MediaDesc   string // 简介

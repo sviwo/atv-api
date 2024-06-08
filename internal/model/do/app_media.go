@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-05-14 13:53:15
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-06-08 20:37:43
 // =================================================================================
 
 package do
@@ -15,7 +15,7 @@ type AppMedia struct {
 	Id          interface{} //
 	ParentId    interface{} //
 	Enable      interface{} // 显示或屏蔽：true=显示，false=屏蔽
-	PageType    interface{} // 页面类型：0=帮助页，1=注册用户页，2=视屏教程页
+	PageType    interface{} // 页面类型：0=帮助页，1=注册用户页，2=服务页
 	DisplayType interface{} // 显示类型：0=直接显示，1=跳转外链
 	Title       interface{} // 标题
 	MediaDesc   interface{} // 简介
