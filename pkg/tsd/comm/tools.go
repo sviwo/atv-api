@@ -79,11 +79,14 @@ func GetDeviceValue(field []string, data iotModel.ReportPropertyData) []string {
 	//跟据统一的key列表顺序，对数据值排序输出
 	for _, key := range field {
 		for k, v := range data {
-			_, ok := data[key]
+			sv, ok := data[key]
 			if ok {
 				if k == key {
-
-					value = append(value, "'"+gvar.New(v.Value).String()+"'")
+					str := gvar.New(sv.Value).String()
+					if strings.ContainsRune(str, ',') {
+						str = strings.ReplaceAll(str, "'", "\"")
+					}
+					value = append(value, "'"+gvar.New(str).String()+"'")
 					value = append(value, "'"+gtime.New(v.CreateTime).Format("Y-m-d H:i:s")+"'")
 				}
 			}
