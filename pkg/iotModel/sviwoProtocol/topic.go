@@ -12,5 +12,5 @@ const (
 	PropertyOnOfflineTopic = "/as/mqtt/status/+/+"
 
 	//设备事件通知topic /k0ugjmf1ois/sviwo_atv/thing/event/lowbattey/post
-	EvnetTopic = "/+/+/thing/event/+/post"
+	EventTopic = "/+/+/thing/event/+/post"
 )
