@@ -18,7 +18,7 @@ import (
 
 func Init() (err error) {
 	//  /sys/${productKey}/${devicekey}/thing/event/${tsl.event.identifier}/post
-	if err = core.RegisterSubTopicHandler(sviwoProtocol.EvnetTopic, consts.MsgTypeEvent, ReportEvent); err != nil {
+	if err = core.RegisterSubTopicHandler(sviwoProtocol.EventTopic, consts.MsgTypeEvent, ReportEvent); err != nil {
 		return err
 	}
 	return nil

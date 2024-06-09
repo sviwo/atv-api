@@ -137,6 +137,9 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	if err != nil {
 		panic(err)
 	}
+	if result.IsEmpty() {
+		return nil
+	}
 	userDevice := new(entity.UserDevice)
 	result.Struct(&userDevice)
 
