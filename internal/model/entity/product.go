@@ -5,11 +5,13 @@
 package entity
 
 import (
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 )
 
 // Product is the golang structure for table product.
 type Product struct {
+	g.Meta        `orm:"table:sw_product"`
 	ProductId     int64       `json:"productId"     orm:"product_id"     description:""`
 	ProductName   string      `json:"productName"   orm:"product_name"   description:"产品名称"`
 	ProductKey    string      `json:"productKey"    orm:"product_key"    description:"产品key"`
