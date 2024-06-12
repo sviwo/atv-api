@@ -18,7 +18,7 @@ services:
       - 7001:6379
 
   sviwo-tdengine:
-    image: tdengine/tdengine:3.3.0.3
+    image: m.daocloud.io/docker.io/tdengine/tdengine:3.3.0.3
     container_name: sviwo-tdengine-server
     restart: always
     environment:

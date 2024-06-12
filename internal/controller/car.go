@@ -26,8 +26,11 @@ func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.
 }
 
 func (c cCar) GetCarDetail(ctx context.Context, req *v1.GetCarDetailReq) (res *v1.GetCarDetailRes, err error) {
-	if err = gconv.Scan(service.Car().GetCarDetail(ctx, req.DeviceId), &res); err != nil {
-		panic(err)
+	out := service.Car().GetCarDetail(ctx, req.DeviceId)
+	if out != nil {
+		if err = gconv.Struct(out, &res); err != nil {
+			panic(err)
+		}
 	}
 	return
 }

@@ -80,10 +80,11 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 	}()
 	withContext.Go(func() error {
 		device := s.findDeviceInfo(ctx, deviceId)
-		if device != nil {
-			if err := gconv.Scan(device, &out); err != nil {
-				return err
-			}
+		if device == nil {
+			return nil
+		}
+		if err := gconv.Scan(device, &out); err != nil {
+			return err
 		}
 		out.ActivateTime = device.ActivateTime.Format("n/d/Y")
 		out.WarrantyTime = device.ActivateTime.AddDate(1, 0, 0).Format("n/d/Y")
@@ -112,8 +113,11 @@ func (s sCar) GetCarDetail(ctx context.Context, deviceId *int64) (out *model.Use
 		return nil
 	})
 	withContext.Go(func() error {
-		if err := gconv.Scan(s.findUserDevice(ctx, nil), &out); err != nil {
-			return err
+		userDevice := s.findUserDevice(ctx, nil)
+		if userDevice != nil {
+			if err := gconv.Scan(userDevice, &out); err != nil {
+				return err
+			}
 		}
 		return nil
 	})
