@@ -1,11 +1,16 @@
 package response
 
 import (
+	"fmt"
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/i18n/gi18n"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/os/gtime"
+	"io"
+	"net/http"
 	"sviwo/internal/consts/enums"
+	"time"
 )
 
 // JsonRes 数据返回通用JSON数据结构
@@ -33,7 +38,7 @@ func Json(r *ghttp.Request, gc gcode.Code, data ...interface{}) {
 // JsonExit 返回标准JSON数据并退出当前HTTP执行函数。
 func JsonExit(r *ghttp.Request, gc gcode.Code, data interface{}) {
 	Json(r, gc, data)
-	r.Exit()
+	r.ExitAll()
 }
 
 func SuccessMsg(r *ghttp.Request, data interface{}) {
@@ -42,4 +47,52 @@ func SuccessMsg(r *ghttp.Request, data interface{}) {
 
 func FailMsg(r *ghttp.Request) {
 	JsonExit(r, enums.Fail, nil)
+}
+
+// JsonRedirect 返回标准JSON数据引导客户端跳转。
+func JsonRedirect(r *ghttp.Request, code int, message, redirect string, data ...interface{}) {
+	responseData := interface{}(nil)
+	if len(data) > 0 {
+		responseData = data[0]
+	}
+	r.Response.WriteJson(JsonRes{
+		Code:    code,
+		Message: message,
+		Data:    responseData,
+		//Redirect: redirect,
+	})
+}
+
+// JsonRedirectExit 返回标准JSON数据引导客户端跳转，并退出当前HTTP执行函数。
+func JsonRedirectExit(r *ghttp.Request, code int, message, redirect string, data ...interface{}) {
+	JsonRedirect(r, code, message, redirect, data...)
+	r.ExitAll()
+}
+
+// ToXls 向前端返回Excel文件 参数 content 为上面生成的io.ReadSeeker， fileTag 为返回前端的文件名
+func ToXls(r *ghttp.Request, content io.ReadSeeker, fileTag string) {
+	fileName := fmt.Sprintf("%s%s%s.xlsx", gtime.Now().String(), `-`, fileTag)
+	r.Response.Writer.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
+	r.Response.Writer.Header().Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	http.ServeContent(r.Response.Writer, r.Request, fileName, time.Now(), content)
+	r.ExitAll()
+	return
+}
+
+// ToPlainText 输出流
+func ToPlainText(r *ghttp.Request, content []byte, fileName string) {
+	r.Response.Writer.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
+	r.Response.Writer.Header().Add("Content-Type", "text/plain;charset=UTF-8")
+	r.Response.Write(content)
+	r.Response.Flush()
+}
+
+// ToJsonFIle 向前端返回文件 参数 content 为上面生成的io.ReadSeeker， fileTag 为返回前端的文件名
+func ToJsonFIle(r *ghttp.Request, content io.ReadSeeker, fileTag string) {
+	fileName := fmt.Sprintf("%s%s%s.json", gtime.Now().Format("20060102150405"), `-`, fileTag)
+	r.Response.Writer.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
+	r.Response.Writer.Header().Add("Content-Type", "application/json")
+	http.ServeContent(r.Response.Writer, r.Request, fileName, time.Now(), content)
+	r.ExitAll()
+	return
 }

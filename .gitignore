@@ -15,7 +15,11 @@ output/
 manifest/output/
 *.log
 
-./manifest/docker/mysql/data/
-./manifest/docker/mysql/logs/
+/manifest/docker/taos
+
+manifest/docker/mysql/data/
+manifest/docker/mysql/logs/
+
+
 
 *.binlog
