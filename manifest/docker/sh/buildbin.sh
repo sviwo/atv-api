@@ -16,7 +16,7 @@ build() {
 
 dev(){
   build
-  cp ./manifest/config/config.yaml ./manifest/docker/sviwo/config/config.yaml
+  cp ./manifest/config/config-dev.yaml ./manifest/docker/sviwo/config/config.yaml
   echo "Copy config-dev.yaml success!!!"
 }
 
