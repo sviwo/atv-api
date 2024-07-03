@@ -151,7 +151,7 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 		dao.TravelRecord.Columns().EndTime:  nil,
 	}).Scan(&travelRecord)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
