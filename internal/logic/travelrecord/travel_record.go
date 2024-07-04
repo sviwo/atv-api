@@ -121,10 +121,10 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 	return
 }
 
-func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.TravelRecordOnline) (err error) {
+func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.TravelRecordOnline) {
 	status := CheckDeviceStatus(ctx, in.DeviceName)
 	if status {
-		return nil
+		return
 	}
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
@@ -138,21 +138,30 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 		panic(err)
 	}
 	if result.IsEmpty() {
-		return nil
+		return
+	}
+	if result.IsEmpty() {
+		return
 	}
 	userDevice := new(entity.UserDevice)
-	result.Struct(&userDevice)
+	if err = result.Struct(&userDevice); err != nil {
+		panic(err)
+	}
 
-	travelRecord := entity.TravelRecord{}
-	err = dao.TravelRecord.Ctx(ctx).Where(g.Map{
+	tr, err := dao.TravelRecord.Ctx(ctx).Where(g.Map{
 		dao.TravelRecord.Columns().DeviceId: p.DeviceId,
 		dao.TravelRecord.Columns().UserId:   userDevice.UserId,
 		dao.TravelRecord.Columns().IsDelete: consts.DeleteOn,
 		dao.TravelRecord.Columns().EndTime:  nil,
-	}).Scan(&travelRecord)
+	}).One()
 	if err != nil {
-		return err
+		return
 	}
+	travelRecord := new(entity.TravelRecord)
+	if err = tr.Struct(&travelRecord); err != nil {
+		panic(err)
+	}
+
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
 	// 获取最近的用车数据

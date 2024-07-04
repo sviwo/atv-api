@@ -130,9 +130,9 @@ func offline(ctx context.Context, device *model.DeviceOutput) (err error) {
 	trData := model.TravelRecordOnline{
 		DeviceName: device.DeviceName,
 	}
-	err = service.TravelRecord().UpdateOnlineToOffline(ctx, trData)
-	if err != nil {
-		g.Log().Errorf(ctx, "结束行程失败: %s", err.Error())
-	}
+	service.TravelRecord().UpdateOnlineToOffline(ctx, trData)
+	//if err != nil {
+	//	g.Log().Errorf(ctx, "结束行程失败: %s", err.Error())
+	//}
 	return
 }
