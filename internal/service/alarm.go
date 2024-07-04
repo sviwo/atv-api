@@ -25,8 +25,8 @@ type (
 )
 
 var (
-	localAlarmLog   IAlarmLog
-	localAlarmRule  IAlarmRule
+	localAlarmLog  IAlarmLog
+	localAlarmRule IAlarmRule
 )
 
 func AlarmLog() IAlarmLog {
