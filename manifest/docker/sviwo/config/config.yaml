@@ -38,13 +38,13 @@ logger:
 
 database:
   default:
-    - link: "mysql:root:1qaz2wsx@tcp(sviwo-mysql-a7sr.sviwo-atv:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置
+    - link: "mysql:root:1qaz2wsx@tcp(sviwo-dns-mysql.sviwo-atv:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置
       role: "master"
       debug: true
 
 redis:
   default:
-    address: sviwo-redis-6839.sviwo-atv:6379 #redis地址
+    address: sviwo-dns-redis.sviwo-atv:6379 #redis地址
     db: 1 #db
     pass: sviwo-987dfsdrf6g46sd7q9we4sd6a5 #密码
     minIdle: 50 #最小空闲连接数
@@ -53,7 +53,7 @@ redis:
     idleTimeout: "30s" #连接最大空闲时间，使用时间字符串例如30s/2m/2d
     ClientName: "SystemCache"
   cache:
-    address: sviwo-redis-6839.sviwo-atv:6379  #地址
+    address: sviwo-dns-redis.sviwo-atv:6379  #地址
     db: 1   #db
     pass: sviwo-987dfsdrf6g46sd7q9we4sd6a5 #密码
 
@@ -87,10 +87,10 @@ mqtt:
 tsd:
   database: "TdEngine" #可选择 TdEngine、Influxdb
   tdengine:
-#    type: "taosRestful" #http连接方式，端口是6041
-#    dsn: "root:taosdata@http(114.115.135.233:6041)/"
+    #    type: "taosRestful" #http连接方式，端口是6041
+    #    dsn: "root:taosdata@http(114.115.135.233:6041)/"
     type: "taosWS" #http连接方式，端口是6041
-    dsn: "root:taosdata@ws(sviwo-tdengine-w3ch.sviwo-atv:6041)/"
+    dsn: "root:taosdata@ws(sviwo-dns-tdengine.sviwo-atv:6041)/"
     dbName: "sviwo_iot"
     maxOpenConns: 2000
     maxIdleConns: 80
@@ -138,11 +138,11 @@ queue:
   retry: 2                                            # 重试次数，仅rocketmq|redis支持
   groupName: "sviwoiot"                                  # mq群组名称
   redis:
-    address: "sviwo-redis-6839.sviwo-atv:6379"                         # redis服务地址，默认为127.0.0.1:6379
+    address: "sviwo-dns-redis.sviwo-atv:6379"                         # redis服务地址，默认为127.0.0.1:6379
     db: 0                                            # 指定redis库
     pass: "sviwo-987dfsdrf6g46sd7q9we4sd6a5"                                          # redis密码
     timeout: 60
 
 linkSim:
-    accessKey: "021BC8E0ECA74506A225725D3A60236E"
-    privateKey: "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAIV008raK+tKLQdzYgdaRsR+5eudydXSOziex5c7fcQW+UH/3AryEGUSAQoU8VykIJ5L7gDNKAq5wOqU3uqElCMHeJXmrDG5yvu281JVG5d0C20rTrfc+T77KiU3NFyVd+BtMKbvuyKa+EaFaT9bCFoN3fvo21xUfDG6Q4QXbVIvAgMBAAECgYBvnMdMTa6Rd1W1d4AymgO5bk+oACy/ELXKorBWAMEr7/LCidNjrBKeFLKd1eoOCo3lFaeVL/8fCT8YcS0FgZ/JdpMAlfPzXFoUHncr6tCoIHzla/eUfRC57tYqbFyrgGVkczR3YyVK17y2G3GEnZc898koGMbT22u8zZNBqUmxwQJBAOjRw4SGCjROmlB2r3xO5bkkcJA4Vj/MMLuJU4ej/HuelVAVYQVxsQ0eBsuz1LuuvZWK36Djvv22B3pF1acaT/8CQQCSvnDRWJnW75EMTwU9T1j0K12tXSFx9QpKM8C4K+2qEN7c+6/sOgorIDKgzAgacRyJCSfMoQIE3JCIH+lmHf3RAkEAxMaeCME9mK4isQVPFrKcaNoKpWpoQ22ydp7/0XHhcR48tr4LDY3lBeAuADdTAvoS1HTWw+YZw9f5A/hINv7/QwJAHKY3qneM2Wy+OdP3puel603IJT+odvIrRx9hgdN5vBk9GZG93/XY5GCN4dzTvC3XL13tOkM4/K//O8RXMguq8QJBANQdPr67dLh06dUmA8H49Wpwm7Q3CGERdEUs6nIaukGk/TQsGduaGE96O3ZG3Rcu+L5BjoxqA+Se2+GV4/p0fDQ="
+  accessKey: "021BC8E0ECA74506A225725D3A60236E"
+  privateKey: "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAIV008raK+tKLQdzYgdaRsR+5eudydXSOziex5c7fcQW+UH/3AryEGUSAQoU8VykIJ5L7gDNKAq5wOqU3uqElCMHeJXmrDG5yvu281JVG5d0C20rTrfc+T77KiU3NFyVd+BtMKbvuyKa+EaFaT9bCFoN3fvo21xUfDG6Q4QXbVIvAgMBAAECgYBvnMdMTa6Rd1W1d4AymgO5bk+oACy/ELXKorBWAMEr7/LCidNjrBKeFLKd1eoOCo3lFaeVL/8fCT8YcS0FgZ/JdpMAlfPzXFoUHncr6tCoIHzla/eUfRC57tYqbFyrgGVkczR3YyVK17y2G3GEnZc898koGMbT22u8zZNBqUmxwQJBAOjRw4SGCjROmlB2r3xO5bkkcJA4Vj/MMLuJU4ej/HuelVAVYQVxsQ0eBsuz1LuuvZWK36Djvv22B3pF1acaT/8CQQCSvnDRWJnW75EMTwU9T1j0K12tXSFx9QpKM8C4K+2qEN7c+6/sOgorIDKgzAgacRyJCSfMoQIE3JCIH+lmHf3RAkEAxMaeCME9mK4isQVPFrKcaNoKpWpoQ22ydp7/0XHhcR48tr4LDY3lBeAuADdTAvoS1HTWw+YZw9f5A/hINv7/QwJAHKY3qneM2Wy+OdP3puel603IJT+odvIrRx9hgdN5vBk9GZG93/XY5GCN4dzTvC3XL13tOkM4/K//O8RXMguq8QJBANQdPr67dLh06dUmA8H49Wpwm7Q3CGERdEUs6nIaukGk/TQsGduaGE96O3ZG3Rcu+L5BjoxqA+Se2+GV4/p0fDQ="
