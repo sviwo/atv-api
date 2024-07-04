@@ -44,7 +44,7 @@ database:
 
 redis:
   default:
-    address: sviwo-redis-6839.sviwo-atv:6379 #redis地址
+    address: sviwo-redis-ti3l.sviwo-atv:6379 #redis地址
     db: 1 #db
     pass: sviwo-987dfsdrf6g46sd7q9we4sd6a5 #密码
     minIdle: 50 #最小空闲连接数
@@ -138,7 +138,7 @@ queue:
   retry: 2                                            # 重试次数，仅rocketmq|redis支持
   groupName: "sviwoiot"                                  # mq群组名称
   redis:
-    address: "sviwo-redis-6839.sviwo-atv:6379"                         # redis服务地址，默认为127.0.0.1:6379
+    address: "sviwo-redis-ti3l.sviwo-atv:6379"                         # redis服务地址，默认为127.0.0.1:6379
     db: 0                                            # 指定redis库
     pass: "sviwo-987dfsdrf6g46sd7q9we4sd6a5"                                          # redis密码
     timeout: 60
