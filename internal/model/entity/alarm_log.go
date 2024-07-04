@@ -16,8 +16,8 @@ type AlarmLog struct {
 	ProductKey  string      `json:"productKey"  orm:"product_key"  description:"产品标识"`
 	DeviceKey   string      `json:"deviceKey"   orm:"device_key"   description:"设备标识"`
 	Status      int         `json:"status"      orm:"status"       description:"告警状态：0=未处理，1=已处理"`
-	CreatedTime *gtime.Time `json:"createdTime" orm:"created_time" description:"告警时间"`
-	UpdatedBy   uint        `json:"updatedBy"   orm:"updated_by"   description:"告警处理人员"`
-	UpdatedTime *gtime.Time `json:"updatedTime" orm:"updated_time" description:"处理时间"`
 	Content     string      `json:"content"     orm:"content"      description:"处理意见"`
+	UpdatedBy   uint        `json:"updatedBy"   orm:"updated_by"   description:"告警处理人员"`
+	CreatedTime *gtime.Time `json:"createdTime" orm:"created_time" description:"告警时间"`
+	UpdatedTime *gtime.Time `json:"updatedTime" orm:"updated_time" description:"处理时间"`
 }

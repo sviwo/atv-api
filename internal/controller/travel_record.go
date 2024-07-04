@@ -61,8 +61,9 @@ func (c cTravelRecord) Offline(ctx context.Context, req *v1.TravelRecordOfflineR
 	if err = gconv.Struct(req, &tData); err != nil {
 		panic(err)
 	}
-	if err = service.TravelRecord().UpdateOnlineToOffline(ctx, tData); err != nil {
-		panic(err)
-	}
+	service.TravelRecord().UpdateOnlineToOffline(ctx, tData)
+	//if err = service.TravelRecord().UpdateOnlineToOffline(ctx, tData); err != nil {
+	//	panic(err)
+	//}
 	return
 }
