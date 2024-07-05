@@ -80,6 +80,7 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 		dao.TravelRecord.Columns().DeviceId: p.DeviceId,
 		dao.TravelRecord.Columns().UserId:   userDevice.UserId,
 		dao.TravelRecord.Columns().IsDelete: consts.DeleteOn,
+		dao.TravelRecord.Columns().EndTime:  nil,
 	}).One()
 	if !trRes.IsEmpty() {
 		dao.TravelRecord.Ctx(ctx).
