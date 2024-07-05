@@ -33,8 +33,16 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 		if err != nil {
 			g.Log().Debug(ctx, device.DeviceName, "更新设备在线的缓存时间失败")
 		}
-
 	} else {
+		//todo 暂时这么处理 后面加队列
+		trData := model.TravelRecordOnline{
+			DeviceName: device.DeviceName,
+		}
+		err := service.TravelRecord().CreateOnline(ctx, trData)
+		if err != nil {
+			g.Log().Errorf(ctx, "加入行程失败: %s", err.Error())
+		}
+
 		var deviceStatusLog = new(iotModel.DeviceStatusLog)
 		deviceStatusLog.Status = 2
 		deviceStatusLog.Timestamp = time.Now()
@@ -43,7 +51,6 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 		if err := cache.Instance().Set(ctx, consts.DeviceStatusPrefix+device.DeviceName, deviceStatusLog, time.Duration(timeout)*time.Second); err != nil {
 			g.Log().Debug(ctx, device.DeviceName, "设置设备在线的缓存时间失败")
 		}
-
 		//添加延时下线消息判断
 		go func(deviceKey string, timeOutSecond time.Duration) {
 			if err := online(ctx, device); err != nil {
@@ -56,7 +63,6 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 				}
 				time.Sleep(timeOutSecond * time.Second)
 			}
-
 			//设备下线
 			err := offline(ctx, device)
 			if err != nil {
@@ -87,7 +93,6 @@ func online(ctx context.Context, device *model.DeviceOutput) (err error) {
 		Desc:      "",
 	})
 	pushDeviceStatus(device.DeviceName, 2)
-
 	//告警处理
 	go func() {
 		// 上线告警提醒
@@ -99,15 +104,7 @@ func online(ctx context.Context, device *model.DeviceOutput) (err error) {
 		if err != nil {
 			g.Log().Errorf(ctx, "告警检测失败: %s", err.Error())
 		}
-		trData := model.TravelRecordOnline{
-			DeviceName: device.DeviceName,
-		}
-		err = service.TravelRecord().CreateOnline(ctx, trData)
-		if err != nil {
-			g.Log().Errorf(ctx, "加入行程失败: %s", err.Error())
-		}
 	}()
-
 	return
 }
 
