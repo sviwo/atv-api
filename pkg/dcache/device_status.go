@@ -34,15 +34,6 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 			g.Log().Debug(ctx, device.DeviceName, "更新设备在线的缓存时间失败")
 		}
 	} else {
-		//todo 暂时这么处理 后面加队列
-		trData := model.TravelRecordOnline{
-			DeviceName: device.DeviceName,
-		}
-		err := service.TravelRecord().CreateOnline(ctx, trData)
-		if err != nil {
-			g.Log().Errorf(ctx, "加入行程失败: %s", err.Error())
-		}
-
 		var deviceStatusLog = new(iotModel.DeviceStatusLog)
 		deviceStatusLog.Status = 2
 		deviceStatusLog.Timestamp = time.Now()
@@ -103,6 +94,14 @@ func online(ctx context.Context, device *model.DeviceOutput) (err error) {
 		err = service.AlarmRule().Check(ctx, device.Product.ProductKey, device.DeviceName, consts.AlarmTriggerTypeOnline, data)
 		if err != nil {
 			g.Log().Errorf(ctx, "告警检测失败: %s", err.Error())
+		}
+		//todo 暂时这么处理 后面加队列
+		trData := model.TravelRecordOnline{
+			DeviceName: device.DeviceName,
+		}
+		err = service.TravelRecord().CreateOnline(ctx, trData)
+		if err != nil {
+			g.Log().Errorf(ctx, "加入行程失败: %s", err.Error())
 		}
 	}()
 	return

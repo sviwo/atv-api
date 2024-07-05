@@ -62,10 +62,6 @@ func (s sTravelRecord) Delete(ctx context.Context, travelRecordId int64) (err er
 }
 
 func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOnline) (err error) {
-	status := CheckDeviceStatus(ctx, in.DeviceName)
-	if status {
-		return nil
-	}
 	//根据物模型获取所有属性数据 根据情况选择
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
@@ -84,7 +80,6 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 		dao.TravelRecord.Columns().DeviceId: p.DeviceId,
 		dao.TravelRecord.Columns().UserId:   userDevice.UserId,
 		dao.TravelRecord.Columns().IsDelete: consts.DeleteOn,
-		dao.TravelRecord.Columns().EndTime:  nil,
 	}).One()
 	if !trRes.IsEmpty() {
 		dao.TravelRecord.Ctx(ctx).
@@ -92,7 +87,6 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 			Where(g.Map{dao.TravelRecord.Columns().TravelRecordId: trRes.GMap().Get(dao.TravelRecord.Columns().TravelRecordId)}).
 			Update()
 	}
-
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
 	if err != nil {
@@ -122,10 +116,6 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 }
 
 func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.TravelRecordOnline) {
-	status := CheckDeviceStatus(ctx, in.DeviceName)
-	if status {
-		return
-	}
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
 		panic(err)
