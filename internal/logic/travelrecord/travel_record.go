@@ -140,9 +140,6 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 	if result.IsEmpty() {
 		return
 	}
-	if result.IsEmpty() {
-		return
-	}
 	userDevice := new(entity.UserDevice)
 	if err = result.Struct(&userDevice); err != nil {
 		panic(err)
@@ -155,6 +152,9 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 		dao.TravelRecord.Columns().EndTime:  nil,
 	}).One()
 	if err != nil {
+		panic(err)
+	}
+	if tr.IsEmpty() {
 		return
 	}
 	travelRecord := new(entity.TravelRecord)
