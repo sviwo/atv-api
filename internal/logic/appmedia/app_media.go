@@ -60,12 +60,13 @@ func (s sAppMedia) GetAppMediaTree(ctx context.Context, pageType int) (out []*mo
 		Scan(&array); err != nil {
 		panic(err)
 	}
+	if gutil.IsEmpty(array) {
+		return
+	}
 	if err := gconv.Scan(utility.BuildTree(gconv.Maps(array)), &out); err != nil {
 		panic(err)
 	}
-	if !gutil.IsEmpty(out[0].Children) {
-		out = out[0].Children
-	}
+	out = out[0].Children
 	return
 }
 
