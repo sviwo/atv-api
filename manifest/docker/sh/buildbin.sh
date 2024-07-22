@@ -7,7 +7,7 @@ usage(){
 }
 build() {
   echo "Begin build bin file......"
-  cd ../../../../atv-api
+  cd ../../../
   gf build -s linux
   echo "Build success"
 
@@ -17,7 +17,10 @@ build() {
 dev(){
   build
   cp ./manifest/config/config-dev.yaml ./manifest/docker/sviwo/config/config.yaml
-  echo "Copy config-dev.yaml success!!!"
+  cd ./manifest/docker/sviwo
+  docker build -t server.sviwo.cn:9888/sviwo/sviwo-api:latest .
+  docker push server.sviwo.cn:9888/sviwo/sviwo-api:latest
+  echo "build upload success!!!"
 }
 
 pro(){

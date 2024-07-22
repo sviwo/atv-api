@@ -24,7 +24,7 @@ RUN chmod +x /entrypoint.sh
 
 RUN chmod +x /opt/sviwo/sviwo-api
 
-EXPOSE 8200
+EXPOSE 8000
 
 #CMD /opt/sviwo/sviwo-api
 CMD ["/bin/sh", "-c", "sleep 10 && /entrypoint.sh"]

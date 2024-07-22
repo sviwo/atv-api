@@ -16,12 +16,13 @@ type (
 		EditCarNickname(ctx context.Context, nickname string)
 
 		RemoveCar(ctx context.Context, userDeviceId, deviceId *int64)
-
 		/*
 			GetCarKey 获取车辆钥匙
 		*/
 		GetCarKey(ctx context.Context) (carKey string)
-
+		/*
+			InviteBindCar 使用车辆钥匙绑定车辆
+		*/
 		InviteBindCar(ctx context.Context, carKey string)
 		/*
 			CtlLamp 控车

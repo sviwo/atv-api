@@ -62,10 +62,6 @@ func (s sTravelRecord) Delete(ctx context.Context, travelRecordId int64) (err er
 }
 
 func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOnline) (err error) {
-	status := CheckDeviceStatus(ctx, in.DeviceName)
-	if status {
-		return nil
-	}
 	//根据物模型获取所有属性数据 根据情况选择
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
@@ -92,7 +88,6 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 			Where(g.Map{dao.TravelRecord.Columns().TravelRecordId: trRes.GMap().Get(dao.TravelRecord.Columns().TravelRecordId)}).
 			Update()
 	}
-
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
 	if err != nil {
@@ -121,11 +116,7 @@ func (s sTravelRecord) CreateOnline(ctx context.Context, in model.TravelRecordOn
 	return
 }
 
-func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.TravelRecordOnline) (err error) {
-	status := CheckDeviceStatus(ctx, in.DeviceName)
-	if status {
-		return nil
-	}
+func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.TravelRecordOnline) {
 	p, err := service.DevDevice().Detail(ctx, in.DeviceName)
 	if err != nil {
 		panic(err)
@@ -138,21 +129,30 @@ func (s sTravelRecord) UpdateOnlineToOffline(ctx context.Context, in model.Trave
 		panic(err)
 	}
 	if result.IsEmpty() {
-		return nil
+		return
 	}
 	userDevice := new(entity.UserDevice)
-	result.Struct(&userDevice)
+	if err = result.Struct(&userDevice); err != nil {
+		panic(err)
+	}
 
-	travelRecord := entity.TravelRecord{}
-	err = dao.TravelRecord.Ctx(ctx).Where(g.Map{
+	tr, err := dao.TravelRecord.Ctx(ctx).Where(g.Map{
 		dao.TravelRecord.Columns().DeviceId: p.DeviceId,
 		dao.TravelRecord.Columns().UserId:   userDevice.UserId,
 		dao.TravelRecord.Columns().IsDelete: consts.DeleteOn,
 		dao.TravelRecord.Columns().EndTime:  nil,
-	}).Scan(&travelRecord)
+	}).One()
 	if err != nil {
-		return err
+		panic(err)
 	}
+	if tr.IsEmpty() {
+		return
+	}
+	travelRecord := new(entity.TravelRecord)
+	if err = tr.Struct(&travelRecord); err != nil {
+		panic(err)
+	}
+
 	tsdDb := tsd.DB()
 	defer tsdDb.Close()
 	// 获取最近的用车数据
