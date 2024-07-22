@@ -299,6 +299,7 @@ func (s *sDevDevice) ActivationSuccess(ctx context.Context, in *model.Activation
 			dao.Device.Columns().BluetoothSecretKey, in.BluetoothSecretKey,
 			dao.Device.Columns().BluetoothAddress, in.BluetoothAddress,
 			dao.Device.Columns().SimId, in.SimID,
+			dao.Device.Columns().UpdateTime, gtime.Now(),
 		).Where(dao.Device.Columns().DeviceName, in.DeviceName).Update(); err != nil {
 			return err
 		}
