@@ -10,7 +10,6 @@ build() {
   cd ../../../
   gf build -s linux
   echo "Build success"
-
   echo "Begin copy config.yaml......"
 }
 
