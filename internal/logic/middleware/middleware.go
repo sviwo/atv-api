@@ -59,15 +59,6 @@ func (s *sMiddleware) GlobalLogHandler(r *ghttp.Request) {
 	r.Middleware.Next()
 }
 
-// formatMap 将 map 转换为易读的字符串格式
-func formatMap(m map[string]interface{}) string {
-	var sb strings.Builder
-	for key, value := range m {
-		sb.WriteString(fmt.Sprintf("%s: %v", key, value))
-	}
-	return sb.String()
-}
-
 // 自定义上下文对象
 func (s *sMiddleware) CtxHandler(r *ghttp.Request) {
 	// 初始化，务必最开始执行
