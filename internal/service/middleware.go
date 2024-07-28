@@ -7,6 +7,7 @@ import (
 type (
 	IMiddleware interface {
 		CORSHandler(r *ghttp.Request)
+		GlobalLogHandler(r *ghttp.Request)
 		CtxHandler(r *ghttp.Request)
 		I18NHandler(r *ghttp.Request)
 		ResponseHandler(r *ghttp.Request)
