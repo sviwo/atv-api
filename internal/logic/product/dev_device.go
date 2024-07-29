@@ -270,7 +270,7 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 	if err = gconv.Struct(data, &out); err != nil {
 		panic(err)
 	}
-	out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.amqp.host").String()
+	out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.mqtt.host").String()
 	return
 }
 
