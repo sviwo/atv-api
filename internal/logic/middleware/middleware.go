@@ -49,6 +49,16 @@ func (s *sMiddleware) CORSHandler(r *ghttp.Request) {
 	r.Middleware.Next()
 }
 
+func (s *sMiddleware) GlobalLogHandler(r *ghttp.Request) {
+	queryParamsJSON, _ := gjson.Marshal(r.GetQueryMap())
+	formParamsJSON, _ := gjson.Marshal(r.GetFormMap())
+	g.Log().Infof(r.GetCtx(), "\n=====================REQUEST-INFO-BEGIN====================="+
+		"\nrequestUrl: %s;\nrequestMethod: %s;\nqueryParams: %s;\nformParams: %s;\n"+
+		"=====================REQUEST-INFO-END=====================",
+		r.RequestURI, r.Request.Method, queryParamsJSON, formParamsJSON)
+	r.Middleware.Next()
+}
+
 // 自定义上下文对象
 func (s *sMiddleware) CtxHandler(r *ghttp.Request) {
 	// 初始化，务必最开始执行

@@ -34,6 +34,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.Middleware(
 			service.Middleware().CORSHandler,
+			service.Middleware().GlobalLogHandler,
 			service.Middleware().CtxHandler,
 			service.Middleware().I18NHandler,
 			service.Middleware().ResponseHandler,

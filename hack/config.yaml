@@ -6,7 +6,7 @@ gfcli:
   build:
     name: "sviwo-api"
     arch: "amd64"
-    system: "linux,darwin,windows"
+    system: "linux"
     mod: ""
     cgo: 0
     packSrc: "manifest/config/config.yaml,manifest/i18n"
