@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"strings"
 	"sviwo/internal/consts"
@@ -296,9 +297,9 @@ func (s *sDevDevice) ActivationSuccess(ctx context.Context, in *model.Activation
 			return err
 		}
 		if _, err := dao.Device.Ctx(ctx).Data(
-			dao.Device.Columns().BluetoothSecretKey, in.BluetoothSecretKey,
-			dao.Device.Columns().BluetoothAddress, in.BluetoothAddress,
-			dao.Device.Columns().SimId, in.SimID,
+			dao.Device.Columns().BluetoothSecretKey, gstr.Trim(in.BluetoothSecretKey),
+			dao.Device.Columns().BluetoothAddress, gstr.Trim(in.BluetoothAddress),
+			dao.Device.Columns().SimId, gstr.Trim(in.SimID),
 			dao.Device.Columns().UpdateTime, gtime.Now(),
 		).Where(dao.Device.Columns().DeviceName, in.DeviceName).Update(); err != nil {
 			return err
