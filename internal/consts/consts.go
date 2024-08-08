@@ -14,9 +14,10 @@ const (
 	CarKeyPrefix             = "SVIWO_"           // 车钥匙邀请码前缀
 	FileMaxUploadCountMinute = 10                 // 同一用户1分钟之内最大上传数量
 
-	//登陆类型：1=密码，2=第三方
-	LoginTypePwd   = 1
-	LoginTypeThird = 2
+	//登陆类型：1=账号+密码，2=apple，3=facebook
+	LoginTypePwd      = 1
+	LoginTypeApple    = 2
+	LoginTypeFaceBook = 3
 
 	//认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败
 	UserAuthStatusNot     = 0

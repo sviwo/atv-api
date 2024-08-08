@@ -15,7 +15,7 @@ gfcli:
   # dao生成
   gen:
     dao:
-      - link: "mysql:root:gyc1993@tcp(114.115.135.233:3306)/sviwo"
+      - link: "mysql:root:1qaz2wsx3@tcp(114.115.135.233:33306)/sviwo"
         descriptionTag: true
         noModelComment: true
         withTime: true

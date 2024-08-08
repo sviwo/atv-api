@@ -7,8 +7,8 @@ import (
 
 type (
 	IUser interface {
-		Login(ctx context.Context, in model.LoginInput) *uint64
-		Register(ctx context.Context, in model.RegisterInput)
+		Login(ctx context.Context, in model.LoginInput) string
+		Register(ctx context.Context, in model.RegisterInput) int64
 		Info(ctx context.Context) (out *model.UserInfoOutput)
 		UpdatePassword(ctx context.Context, in model.UpdatePasswordInput)
 		EditInfo(ctx context.Context, in model.EditInfoInput)

@@ -7,6 +7,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
@@ -27,29 +28,54 @@ func New() *sUser {
 	return &sUser{}
 }
 
-type sUser struct{}
+type sUser struct {
+	autoRegister bool
+}
 
 /*
 Login 执行登录
 */
-func (s *sUser) Login(ctx context.Context, in model.LoginInput) *uint64 {
+func (s *sUser) Login(ctx context.Context, in model.LoginInput) string {
 	userInfo := findUserByUsername(ctx, in.Username)
-	if gutil.IsEmpty(userInfo) {
-		panic(gerror.NewCode(enums.UserNotExists))
-	}
-	if !userInfo.Enable {
-		panic(gerror.NewCode(enums.UserAcctFrozen))
-	}
-	//第三方登陆
-	if consts.LoginTypeThird == in.LoginType {
-		//todo 后面完善相关逻辑
-	} else {
+	switch in.LoginType {
+	case consts.LoginTypePwd:
+		if gutil.IsEmpty(userInfo) {
+			panic(gerror.NewCode(enums.UserNotExists))
+		}
+		if !userInfo.Enable {
+			panic(gerror.NewCode(enums.UserAcctFrozen))
+		}
+		if gutil.IsEmpty(in.Password) {
+			panic(gerror.NewCode(enums.RequestMissingParam))
+		}
+		g.Log().Infof(ctx, "====username+password login===password: %s;", in.Password)
 		encryptPassword := utility.EncryptPassword(in.Password, userInfo.PwdSalt, userInfo.PwdEncryNum)
 		if encryptPassword != userInfo.Password {
 			panic(gerror.NewCode(enums.UserLoginFailed))
 		}
+	case consts.LoginTypeApple:
+		g.Log().Infof(ctx, "====apple login===identityToken: %s;", in.IdentityToken)
+		if gutil.IsEmpty(in.IdentityToken) {
+			panic(gerror.NewCode(enums.RequestMissingParam))
+		}
+		if err := VerifyIdentityToken(in.IdentityToken, in.UserIdentifier); err != nil {
+			panic(err)
+		}
+		if gutil.IsEmpty(userInfo) {
+			s.autoRegister = true
+			userId := s.Register(ctx, model.RegisterInput{Username: in.Username, Password: grand.Letters(8)})
+			s.autoRegister = false
+			return gconv.String(userId)
+		}
+		//case consts.LoginTypeFaceBook:
+		//	g.Log().Infof(ctx, "=======facebook login======accessToken: %s;", in.AccessToken)
+		//	if gutil.IsEmpty(in.AccessToken) {
+		//		panic(gerror.NewCode(enums.RequestMissingParam))
+		//	}
+	default:
+		panic(gerror.NewCode(enums.IllegalOperation))
 	}
-	return &userInfo.UserId
+	return gconv.String(userInfo.UserId)
 }
 
 func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
@@ -65,11 +91,13 @@ func findUserByUsername(ctx context.Context, username string) (user *entity.User
 /*
 Register 用户注册
 */
-func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
+func (s *sUser) Register(ctx context.Context, in model.RegisterInput) int64 {
 	if !gutil.IsEmpty(findUserByUsername(ctx, in.Username)) {
 		panic(gerror.NewCode(enums.UserExists))
 	}
-	checkVftCode(ctx, in.Username, in.EmailVftCode)
+	if !s.autoRegister {
+		checkVftCode(ctx, in.Username, in.EmailVftCode)
+	}
 	userInfo := entity.User{
 		Username:   in.Username,
 		Enable:     true,
@@ -78,22 +106,24 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
 		LastName:   grand.Letters(3),
 	}
 	operatePwd(&userInfo, in.Password)
-
+	var userId int64
 	if err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		//插入用户数据返回用户id
-		userId, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
+		id, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
 		if err != nil {
 			panic(err)
 		}
-		userAuth := entity.UserAuth{AuthId: utility.GID.Generate().Int64(), UserId: userId, CreateTime: gtime.Now()}
+		userAuth := entity.UserAuth{AuthId: utility.GID.Generate().Int64(), UserId: id, CreateTime: gtime.Now()}
 		//初始化用户实名认证信息
 		if _, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert(); err != nil {
 			panic(err)
 		}
+		userId = id
 		return nil
 	}); err != nil {
 		panic(err)
 	}
+	return userId
 }
 
 // 检查验证码

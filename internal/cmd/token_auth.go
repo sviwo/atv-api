@@ -7,7 +7,6 @@ import (
 	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
-	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/gutil"
 	"net/http"
 	"sviwo/internal/consts"
@@ -35,17 +34,22 @@ func StartGToken(ctx context.Context) *gtoken.GfToken {
 // 自定义登录验证方法
 func loginBeforeFunc(r *ghttp.Request) (string, interface{}) {
 	username := r.Get("username").String()
-	password := r.Get("password").String()
 	loginType := r.Get("loginType").Int()
+	g.Log().Infof(r.GetCtx(), "====login username======%s;", username)
 	if gutil.IsEmpty(username) || gutil.IsEmpty(loginType) {
 		response.JsonExit(r, enums.RequestMissingParam, nil)
 	}
-	if consts.LoginTypePwd == loginType && gutil.IsEmpty(password) {
-		response.JsonExit(r, enums.RequestMissingParam, nil)
-	}
-	input := model.LoginInput{Username: username, Password: password, LoginType: loginType}
-	userId := service.User().Login(r.GetCtx(), input)
-	return gconv.String(userId), nil
+	return service.User().Login(
+		r.GetCtx(),
+		model.LoginInput{
+			LoginType:      loginType,
+			Username:       username,
+			Password:       r.Get("password").String(),
+			IdentityToken:  r.Get("identityToken").String(),
+			UserIdentifier: r.Get("userIdentifier").String(),
+			AccessToken:    r.Get("accessToken").String(),
+		},
+	), nil
 }
 
 // 自定义的登录返回方法

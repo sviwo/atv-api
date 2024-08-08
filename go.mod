@@ -14,6 +14,7 @@ require (
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.7.0
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.7.0
 	github.com/gogf/gf/v2 v2.7.0
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang-module/carbon/v2 v2.3.10
 	github.com/gorhill/cronexpr v0.0.0-20180427100037-88b0669f7d75
 	github.com/gorilla/websocket v1.5.1
