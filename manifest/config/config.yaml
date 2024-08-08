@@ -38,7 +38,7 @@ logger:
 
 database:
   default:
-    - link: "mysql:root:1qaz2wsx@tcp(server.sviwo.cn:3306)/sviwo?loc=Local&parseTime=true" #数据库url配置
+    - link: "mysql:root:1qaz2wsx@tcp(server.sviwo.cn:33306)/sviwo?loc=Local&parseTime=true" #数据库url配置
       role: "master"
       debug: true
 
