@@ -207,7 +207,7 @@ func (s *sDevDevice) BatchUpdateDeviceStatusInfo(ctx context.Context, deviceStat
 	if len(offLineDeviceKeyList) > 0 {
 		_, err = dao.Device.Ctx(ctx).
 			Data(offLineData).
-			WhereIn(dao.Device.Columns().DeviceName, onlineDeviceKeyList).
+			WhereIn(dao.Device.Columns().DeviceName, offLineDeviceKeyList).
 			Update()
 	}
 
