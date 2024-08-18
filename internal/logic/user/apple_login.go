@@ -15,12 +15,6 @@ import (
 	"sviwo/internal/consts/enums"
 )
 
-const (
-	PublicKeyReqUrl     = "https://appleid.apple.com/auth/keys"
-	AppleUrl            = "https://appleid.apple.com"
-	ApplicationClientId = "com.sviwo.atv"
-)
-
 type (
 	JwtClaims struct {
 		jwt.StandardClaims
@@ -39,7 +33,7 @@ type (
 	}
 )
 
-func VerifyIdentityToken(cliToken, cliUserID string) error {
+func verifyIdentityToken(ctx context.Context, cliToken, cliUserID string) error {
 	cliTokenArr := strings.Split(cliToken, ".")
 	if len(cliTokenArr) < 3 {
 		return gerror.NewCode(enums.IdentityTokenFormatError)
@@ -54,14 +48,16 @@ func VerifyIdentityToken(cliToken, cliUserID string) error {
 		return err
 	}
 	token, err := jwt.ParseWithClaims(cliToken, &JwtClaims{}, func(token *jwt.Token) (interface{}, error) {
-		pk := GetRSAPublicKey(jHeader.Kid)
+		pk := getRSAPublicKey(ctx, jHeader.Kid)
 		return pk, nil
 	})
 	if err != nil {
 		return err
 	}
 	if claims, ok := token.Claims.(*JwtClaims); ok && token.Valid {
-		if claims.Issuer != AppleUrl || claims.Audience != ApplicationClientId || claims.Subject != cliUserID {
+		if claims.Issuer != g.Cfg().MustGet(ctx, "appleLogin.appleUrl").String() ||
+			claims.Audience != g.Cfg().MustGet(ctx, "appleLogin.applicationClientId").String() ||
+			claims.Subject != cliUserID {
 			return gerror.NewCode(enums.IdentityTokenVerifyError)
 		}
 	} else {
@@ -70,9 +66,9 @@ func VerifyIdentityToken(cliToken, cliUserID string) error {
 	return nil
 }
 
-func GetRSAPublicKey(kid string) *rsa.PublicKey {
+func getRSAPublicKey(ctx context.Context, kid string) *rsa.PublicKey {
 	var body []byte
-	resp, err := g.Client().Get(context.Background(), PublicKeyReqUrl)
+	resp, err := g.Client().Get(ctx, g.Cfg().MustGet(ctx, "appleLogin.publicKeyReqUrl").String())
 	if err != nil {
 		panic(err)
 	}
@@ -97,14 +93,14 @@ func GetRSAPublicKey(kid string) *rsa.PublicKey {
 	for _, data := range jKeys {
 		for _, val := range data {
 			if val.Kid == kid {
-				n_bin, _ := base64.RawURLEncoding.DecodeString(val.N)
-				n_data := new(big.Int).SetBytes(n_bin)
+				nBin, _ := base64.RawURLEncoding.DecodeString(val.N)
+				nData := new(big.Int).SetBytes(nBin)
 
-				e_bin, _ := base64.RawURLEncoding.DecodeString(val.E)
-				e_data := new(big.Int).SetBytes(e_bin)
+				eBin, _ := base64.RawURLEncoding.DecodeString(val.E)
+				eData := new(big.Int).SetBytes(eBin)
 
-				pubKey.N = n_data
-				pubKey.E = int(e_data.Uint64())
+				pubKey.N = nData
+				pubKey.E = int(eData.Uint64())
 				break
 			}
 		}

@@ -18,6 +18,7 @@ const (
 	LoginTypePwd      = 1
 	LoginTypeApple    = 2
 	LoginTypeFaceBook = 3
+	LoginTypeGoogle   = 4
 
 	//认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败
 	UserAuthStatusNot     = 0

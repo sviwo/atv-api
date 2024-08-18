@@ -7,13 +7,13 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/gogf/gf/v2/util/grand"
 	"github.com/gogf/gf/v2/util/gutil"
 	"sviwo/internal/consts"
 	"sviwo/internal/consts/enums"
 	"sviwo/internal/dao"
 	"sviwo/internal/model"
+	"sviwo/internal/model/do"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
 	"sviwo/pkg/utility"
@@ -35,55 +35,117 @@ type sUser struct {
 /*
 Login 执行登录
 */
-func (s *sUser) Login(ctx context.Context, in model.LoginInput) string {
-	userInfo := findUserByUsername(ctx, in.Username)
+func (s *sUser) Login(ctx context.Context, in model.LoginInput) int64 {
 	switch in.LoginType {
 	case consts.LoginTypePwd:
+		userInfo := findUserByIdOrUsername(ctx, nil, in.Username)
 		if gutil.IsEmpty(userInfo) {
 			panic(gerror.NewCode(enums.UserNotExists))
-		}
-		if !userInfo.Enable {
-			panic(gerror.NewCode(enums.UserAcctFrozen))
 		}
 		if gutil.IsEmpty(in.Password) {
 			panic(gerror.NewCode(enums.RequestMissingParam))
 		}
-		g.Log().Infof(ctx, "====username+password login===password: %s;", in.Password)
 		encryptPassword := utility.EncryptPassword(in.Password, userInfo.PwdSalt, userInfo.PwdEncryNum)
 		if encryptPassword != userInfo.Password {
 			panic(gerror.NewCode(enums.UserLoginFailed))
 		}
+		return userInfo.UserId
 	case consts.LoginTypeApple:
-		g.Log().Infof(ctx, "====apple login===identityToken: %s;", in.IdentityToken)
-		if gutil.IsEmpty(in.IdentityToken) {
+		if gutil.IsEmpty(in.IdentityToken) || gutil.IsEmpty(in.UserIdentifier) {
 			panic(gerror.NewCode(enums.RequestMissingParam))
 		}
-		if err := VerifyIdentityToken(in.IdentityToken, in.UserIdentifier); err != nil {
+		if err := verifyIdentityToken(ctx, in.IdentityToken, in.UserIdentifier); err != nil {
 			panic(err)
 		}
-		if gutil.IsEmpty(userInfo) {
-			s.autoRegister = true
-			userId := s.Register(ctx, model.RegisterInput{Username: in.Username, Password: grand.Letters(8)})
-			s.autoRegister = false
-			return gconv.String(userId)
+		return s.thirdActUserRegister(ctx, in, consts.LoginTypeApple)
+	case consts.LoginTypeFaceBook:
+		if gutil.IsEmpty(in.AccessToken) || gutil.IsEmpty(in.UserIdentifier) {
+			panic(gerror.NewCode(enums.RequestMissingParam))
 		}
-		//case consts.LoginTypeFaceBook:
-		//	g.Log().Infof(ctx, "=======facebook login======accessToken: %s;", in.AccessToken)
-		//	if gutil.IsEmpty(in.AccessToken) {
-		//		panic(gerror.NewCode(enums.RequestMissingParam))
-		//	}
+		if err := verifyFacebookToken(ctx, in.AccessToken); err != nil {
+			panic(err)
+		}
+		return s.thirdActUserRegister(ctx, in, consts.LoginTypeFaceBook)
 	default:
 		panic(gerror.NewCode(enums.IllegalOperation))
 	}
-	return gconv.String(userInfo.UserId)
+	return 0
 }
 
-func findUserByUsername(ctx context.Context, username string) (user *entity.User) {
-	if err := dao.User.Ctx(ctx).
-		Where(dao.User.Columns().Username, username).
-		Where(dao.User.Columns().IsDelete, consts.DeleteOn).
-		Scan(&user); err != nil {
+func (s *sUser) thirdActUserRegister(ctx context.Context, in model.LoginInput, providerType int) (userId int64) {
+	one, err := dao.UserThirdAccount.Ctx(ctx).
+		Where(dao.UserThirdAccount.Columns().ThirdUserId, in.UserIdentifier).
+		One()
+	if err != nil {
 		panic(err)
+	}
+	if !one.IsEmpty() {
+		return one.GMap().GetVar("userId").Int64()
+	}
+	if !gutil.IsEmpty(in.Username) {
+		userInfo := findUserByIdOrUsername(ctx, nil, in.Username)
+		if !gutil.IsEmpty(userInfo) {
+			thirdAccount := entity.UserThirdAccount{
+				UserId:       userInfo.UserId,
+				ThirdUserId:  in.UserIdentifier,
+				ProviderType: providerType,
+				CreateTime:   gtime.Now(),
+			}
+			if _, err = dao.UserThirdAccount.Ctx(ctx).Data(thirdAccount).Insert(); err != nil {
+				panic(err)
+			}
+			return userInfo.UserId
+		}
+	}
+	if err = g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
+		newUser := entity.User{
+			Username:   in.UserIdentifier,
+			Password:   grand.Letters(8),
+			Enable:     true,
+			CreateTime: gtime.Now(),
+			FirstName:  grand.Letters(3),
+			LastName:   grand.Letters(3),
+		}
+		if !gutil.IsEmpty(in.Username) {
+			newUser.Username = in.Username
+		}
+		//插入用户数据返回用户id
+		newUserId, err := dao.User.Ctx(ctx).Data(newUser).InsertAndGetId()
+		if err != nil {
+			panic(err)
+		}
+		newTUser := &entity.UserThirdAccount{
+			UserId:       newUserId,
+			ThirdUserId:  in.UserIdentifier,
+			ProviderType: consts.LoginTypeApple,
+			CreateTime:   gtime.Now(),
+		}
+		if _, err = dao.UserThirdAccount.Ctx(ctx).Data(newTUser).Insert(); err != nil {
+			panic(err)
+		}
+		userAuth := entity.UserAuth{AuthId: utility.GID.Generate().Int64(), UserId: newUserId, CreateTime: gtime.Now()}
+		//初始化用户实名认证信息
+		if _, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert(); err != nil {
+			panic(err)
+		}
+		userId = newUserId
+		return nil
+	}); err != nil {
+		panic(err)
+	}
+	return
+}
+
+func findUserByIdOrUsername(ctx context.Context, userId, username any) (user *entity.User) {
+	if err := dao.User.Ctx(ctx).Where(do.User{
+		UserId:   userId,
+		Username: username,
+		IsDelete: consts.DeleteOn,
+	}).Scan(&user); err != nil {
+		panic(err)
+	}
+	if user != nil && !user.Enable {
+		panic(gerror.NewCode(enums.UserAcctFrozen))
 	}
 	return
 }
@@ -91,13 +153,11 @@ func findUserByUsername(ctx context.Context, username string) (user *entity.User
 /*
 Register 用户注册
 */
-func (s *sUser) Register(ctx context.Context, in model.RegisterInput) int64 {
-	if !gutil.IsEmpty(findUserByUsername(ctx, in.Username)) {
+func (s *sUser) Register(ctx context.Context, in model.RegisterInput) {
+	if !gutil.IsEmpty(findUserByIdOrUsername(ctx, nil, in.Username)) {
 		panic(gerror.NewCode(enums.UserExists))
 	}
-	if !s.autoRegister {
-		checkVftCode(ctx, in.Username, in.EmailVftCode)
-	}
+	checkVftCode(ctx, in.Username, in.EmailVftCode)
 	userInfo := entity.User{
 		Username:   in.Username,
 		Enable:     true,
@@ -106,24 +166,21 @@ func (s *sUser) Register(ctx context.Context, in model.RegisterInput) int64 {
 		LastName:   grand.Letters(3),
 	}
 	operatePwd(&userInfo, in.Password)
-	var userId int64
 	if err := g.DB().Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		//插入用户数据返回用户id
-		id, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
+		userId, err := dao.User.Ctx(ctx).Data(userInfo).InsertAndGetId()
 		if err != nil {
 			panic(err)
 		}
-		userAuth := entity.UserAuth{AuthId: utility.GID.Generate().Int64(), UserId: id, CreateTime: gtime.Now()}
+		userAuth := entity.UserAuth{AuthId: utility.GID.Generate().Int64(), UserId: userId, CreateTime: gtime.Now()}
 		//初始化用户实名认证信息
 		if _, err = dao.UserAuth.Ctx(ctx).Data(userAuth).Insert(); err != nil {
 			panic(err)
 		}
-		userId = id
 		return nil
 	}); err != nil {
 		panic(err)
 	}
-	return userId
 }
 
 // 检查验证码
@@ -156,7 +213,7 @@ func operatePwd(userInfo *entity.User, password string) {
 UpdatePassword 修改密码
 */
 func (s *sUser) UpdatePassword(ctx context.Context, in model.UpdatePasswordInput) {
-	userInfo := findUserByUsername(ctx, in.Username)
+	userInfo := findUserByIdOrUsername(ctx, nil, in.Username)
 	if gutil.IsEmpty(userInfo) {
 		panic(gerror.NewCode(enums.UserNotExists))
 	}

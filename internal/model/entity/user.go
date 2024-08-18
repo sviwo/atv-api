@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-06-08 20:37:43
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2024-08-18 15:58:51
 // =================================================================================
 
 package entity
@@ -10,7 +10,7 @@ import (
 
 // User is the golang structure for table user.
 type User struct {
-	UserId      uint64      `json:"userId"      orm:"user_id"       description:""`
+	UserId      int64       `json:"userId"      orm:"user_id"       description:""`
 	Username    string      `json:"username"    orm:"username"      description:""`
 	Password    string      `json:"password"    orm:"password"      description:""`
 	PwdSalt     string      `json:"pwdSalt"     orm:"pwd_salt"      description:"密码盐值"`

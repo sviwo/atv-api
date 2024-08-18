@@ -13,7 +13,7 @@ type UserInfoBase struct {
 type LoginInput struct {
 	Username       string `json:"username"       dc:"用户名"`
 	Password       string `json:"password"       dc:"密码"`
-	UserIdentifier string `json:"userIdentifier" dc:"苹果的cliUserID"`
+	UserIdentifier string `json:"userIdentifier" dc:"第三方登录的UserID"`
 	IdentityToken  string `json:"identityToken"  dc:"苹果的token"`
 	AccessToken    string `json:"accessToken"    dc:"facebook的token"`
 	LoginType      int    `json:"loginType"      dc:"登陆类型：1=账号+密码，2=apple，3=facebook"`
