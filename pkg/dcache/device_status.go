@@ -23,7 +23,7 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 	}
 	if timeout == 0 {
 		//设备默认超时时间 后期从配置里面取
-		timeout = gconv.Int(30)
+		timeout = gconv.Int(120)
 	}
 	deviceStatus := GetDeviceStatus(ctx, device.DeviceName)
 
@@ -44,7 +44,7 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 		}
 		//添加延时下线消息判断
 		go func(deviceKey string, timeOutSecond time.Duration) {
-			if err := online(ctx, device); err != nil {
+			if err := Online(ctx, device); err != nil {
 				g.Log().Debug(ctx, device.DeviceName, "设备上线处理失败")
 			}
 			for {
@@ -55,7 +55,7 @@ func UpdateStatus(ctx context.Context, device *model.DeviceOutput) {
 				time.Sleep(timeOutSecond * time.Second)
 			}
 			//设备下线
-			err := offline(ctx, device)
+			err := Offline(ctx, device)
 			if err != nil {
 				return
 			}
@@ -77,7 +77,7 @@ func pushDeviceStatus(deviceKey string, status int) {
 }
 
 // online 设备上线
-func online(ctx context.Context, device *model.DeviceOutput) (err error) {
+func Online(ctx context.Context, device *model.DeviceOutput) (err error) {
 	//插入设备上线日志
 	InertDeviceLog(ctx, consts.MsgTypeOnline, device.DeviceName, iotModel.DeviceOnlineMessage{
 		Timestamp: time.Now().UnixMilli(),
@@ -108,12 +108,12 @@ func online(ctx context.Context, device *model.DeviceOutput) (err error) {
 }
 
 // offline 设备下线
-func offline(ctx context.Context, device *model.DeviceOutput) (err error) {
+func Offline(ctx context.Context, device *model.DeviceOutput) (err error) {
 	InertDeviceLog(ctx, consts.MsgTypeOffline, device.DeviceName, iotModel.DeviceOfflineMessage{
 		Timestamp: time.Now().UnixMilli(),
 		Desc:      "",
 	})
-	pushDeviceStatus(device.DeviceName, 1)
+	pushDeviceStatus(device.DeviceName, consts.DeviceStatueOffline)
 
 	// 离线告警提醒
 	data := iotModel.ReportStatusData{
