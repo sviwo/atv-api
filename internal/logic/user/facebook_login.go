@@ -43,7 +43,12 @@ func verifyFacebookToken(ctx context.Context, userAccessToken string) error {
 		appToken,
 	)
 	// 使用 gclient 发送请求
-	resp, err := g.Client().Get(ctx, fbTokenUrl)
+	client := g.Client()
+	clientProxy := g.Cfg().MustGet(ctx, "clientProxy")
+	if !clientProxy.IsEmpty() {
+		client.Proxy(clientProxy.String())
+	}
+	resp, err := client.Get(ctx, fbTokenUrl)
 	if err != nil {
 		return err
 	}
