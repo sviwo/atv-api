@@ -158,3 +158,5 @@ facebookLogin:
   keyReqUrl: "https://graph.facebook.com/debug_token"
   appID: "476116921703658"
   appSecret: "d64210e15f0b89a1c19c58f91e9d5006"
+
+clientProxy: "http://192.168.1.105:7890"

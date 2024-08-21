@@ -80,7 +80,7 @@ func (s *sUser) thirdActUserRegister(ctx context.Context, in model.LoginInput, p
 		panic(err)
 	}
 	if !one.IsEmpty() {
-		return one.GMap().GetVar("userId").Int64()
+		return one.GMap().GetVar(dao.UserThirdAccount.Columns().UserId).Int64()
 	}
 	if !gutil.IsEmpty(in.Username) {
 		userInfo := findUserByIdOrUsername(ctx, nil, in.Username)
@@ -233,14 +233,13 @@ func (s *sUser) Info(ctx context.Context) (out *model.UserInfoOutput) {
 		Scan(&out); err != nil {
 		panic(err)
 	}
-	if result, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
+	userAuth, err := dao.UserAuth.Ctx(ctx).Fields(dao.UserAuth.Columns().AuthStatus).
 		Where(dao.UserAuth.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
-		One(); err != nil {
+		One()
+	if err != nil {
 		panic(err)
-	} else {
-		out.AuthStatus = result.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
 	}
-
+	out.AuthStatus = userAuth.GMap().GetVar(dao.UserAuth.Columns().AuthStatus).Int()
 	result, err := dao.UserDevice.Ctx(ctx).Fields(dao.UserDevice.Columns().DeviceId).
 		Where(dao.UserDevice.Columns().UserId, userId).
 		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).One()
