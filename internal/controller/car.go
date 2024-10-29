@@ -19,8 +19,12 @@ func (c cCar) CarCleanBind(ctx context.Context, req *v1.CarCleanBindReq) (res []
 }
 
 func (c cCar) GetCarList(ctx context.Context, req *v1.GetCarInfoReq) (res []*v1.GetCarListRes, err error) {
-	if err = gconv.Structs(service.Car().GetCarList(ctx), &res); err != nil {
-		panic(err)
+	if out := service.Car().GetCarList(ctx); out == nil {
+		res = make([]*v1.GetCarListRes, 0)
+	} else {
+		if err = gconv.Structs(out, &res); err != nil {
+			panic(err)
+		}
 	}
 	return
 }

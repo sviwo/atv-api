@@ -55,7 +55,7 @@ func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
 		panic(err)
 	}
 	if out == nil {
-		return make([]*model.QueryCarOutput, 0)
+		return
 	}
 	keys := make([]string, 0)
 	keys = append(keys, consts.MileageStr)
