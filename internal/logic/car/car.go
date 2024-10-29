@@ -54,6 +54,9 @@ func (s sCar) GetCarList(ctx context.Context) (out []*model.QueryCarOutput) {
 		OrderDesc(udCls.IsSelect).Scan(&out); err != nil {
 		panic(err)
 	}
+	if out == nil {
+		return make([]*model.QueryCarOutput, 0)
+	}
 	keys := make([]string, 0)
 	keys = append(keys, consts.MileageStr)
 	for _, ot := range out {
