@@ -15,6 +15,12 @@ type VftCodeReq struct {
 	Email  string `json:"email"    dc:"请输入邮箱（标准邮箱格式）" v:"required|email"`
 }
 
+type SendEmailReq struct {
+	g.Meta  `path:"/common/sendEmail" method:"get" tags:"公共接口" sm:"获取验证码" dc:"此接口限制60秒访问一次"`
+	Email   string `json:"email"    dc:"Email cannot be empty" v:"required|email"`
+	Content string `json:"content"    dc:"content cannot be empty" v:"required"`
+}
+
 type ImgUploadReq struct {
 	g.Meta `path:"/common/img/upload" method:"post" mime:"multipart/form-data" tags:"公共接口" sm:"上传图片"`
 	File   *ghttp.UploadFile `json:"file" type:"file" v:"required"   dc:"请选择上传文件（最大10MB）"`

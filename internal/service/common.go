@@ -11,6 +11,11 @@ type (
 		*/
 		GetVftCode(ctx context.Context, email string)
 
+		/*
+			发送邮箱信息
+		*/
+		SendEmail(ctx context.Context, ip, email, content string)
+
 		GetEccPublicKey(ctx context.Context) (publicKey, publicCode string)
 	}
 )

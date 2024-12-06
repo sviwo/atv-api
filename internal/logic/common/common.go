@@ -37,6 +37,20 @@ func (s *sCommon) GetVftCode(ctx context.Context, email string) {
 	}
 }
 
+func (s *sCommon) SendEmail(ctx context.Context, ip, email, content string) {
+	utility.MethodReqLimit(ctx, "SendEmail", ip, 30)
+	content = fmt.Sprintf("Contact Email: %s   Content: %s", email, content)
+	receiveEmail := g.Cfg().MustGet(context.TODO(), "email.username").String()
+	vftCodeErr := utility.SendEmail("Inquiry Email", content, receiveEmail)
+	//验证码发送失败则取消接口频繁访问限制
+	if vftCodeErr != nil {
+		if _, err := g.Redis().Del(ctx, fmt.Sprintf(consts.RedisMethodReqLimit+"SendEmail", ip)); err != nil {
+			panic(err)
+		}
+		panic(vftCodeErr)
+	}
+}
+
 func (s *sCommon) GetEccPublicKey(ctx context.Context) (publicKey, publicCode string) {
 	key, err := ecc2.GenerateEccKeyHex()
 	if err != nil {

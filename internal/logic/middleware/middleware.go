@@ -31,6 +31,7 @@ import (
 	"sviwo/internal/service"
 	"sviwo/pkg/utility"
 	"sviwo/pkg/utility/encrypt"
+	utils "sviwo/pkg/utility/ip"
 	"sviwo/pkg/utility/response"
 )
 
@@ -70,6 +71,7 @@ func (s *sMiddleware) CtxHandler(r *ghttp.Request) {
 			m.Set(consts.ContextKeyUserId, utility.GfTokenDecryptToken(r.GetCtx(), authorization))
 		}
 	}
+	m.Set(consts.ClientIp, utils.GetClientIp(r))
 	customCtx := &model.Context{
 		Data: m,
 	}

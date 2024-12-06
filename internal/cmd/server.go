@@ -45,6 +45,7 @@ func RunServer(ctx context.Context, stopSignal chan os.Signal) {
 		//不需要登录的路由组绑定
 		group.Bind(
 			controller.Common.GetVftCode,
+			controller.Common.SendEmail,
 			controller.Common.GetEccPublicKey,
 			controller.User.Register,
 			controller.User.UpdatePassword,

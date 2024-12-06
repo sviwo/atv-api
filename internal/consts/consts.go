@@ -11,6 +11,7 @@ const (
 	CaptchaName              = "UserVftCode"      // 验证码存储空间名称
 	ContextKey               = "ContextKey"       // 上下文变量存储键名，前后端系统共享
 	ContextKeyUserId         = "ContextKeyUserId" // 上下文变量存储键名，前后端系统共享
+	ClientIp                 = "ClientIp"         // 上下文变量存储键名，当前ip地址
 	CarKeyPrefix             = "SVIWO_"           // 车钥匙邀请码前缀
 	FileMaxUploadCountMinute = 10                 // 同一用户1分钟之内最大上传数量
 
