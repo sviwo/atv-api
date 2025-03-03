@@ -125,6 +125,7 @@ aliyun:
       host: "iot.cn-shanghai.aliyuncs.com"
     mqtt:
       host: "iot-060aapw2.mqtt.iothub.aliyuncs.com"
+
 #缓存
 cache:
   prefix: "SviwoIot_Sys:" #缓存前缀

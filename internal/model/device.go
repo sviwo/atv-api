@@ -21,5 +21,5 @@ type ActivationSuccessInput struct {
 	DeviceName         string `json:"deviceName"          dc:"设备的唯一标识(车架号)" v:"required"`
 	BluetoothAddress   string `json:"bluetoothAddress"    dc:"蓝牙地址"             v:"required"`
 	BluetoothSecretKey string `json:"bluetoothSecretKey"  dc:"蓝牙握手密钥"          v:"required"`
-	SimID              string `json:"simID"               dc:"simID"               v:"required"`
+	SimID              string `json:"simID"               dc:"simID（暂时取消4g，取消必传校验）"`
 }

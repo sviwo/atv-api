@@ -82,6 +82,10 @@ func (am *AmqpManager) generateReceiverWithRetry(ctx context.Context) error {
 				duration *= 2
 			}
 			fmt.Println("amqp connect retry,times:", times, ",duration:", duration)
+			//因为取消了4g，临时修改成只重链11次。
+			if times == 11 {
+				return err
+			}
 			times++
 		} else {
 			fmt.Println("amqp connect init success")

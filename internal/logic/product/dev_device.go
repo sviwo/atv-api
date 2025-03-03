@@ -17,7 +17,6 @@ import (
 	"sviwo/internal/model"
 	"sviwo/internal/model/entity"
 	"sviwo/internal/service"
-	"sviwo/pkg/aliyun"
 	"sviwo/pkg/cache"
 	"sviwo/pkg/dcache"
 	"sviwo/pkg/iotModel"
@@ -247,7 +246,7 @@ func (s *sDevDevice) checkDeviceInfo(ctx context.Context, deviceName string) (de
 func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 	out *model.DeviceSecretOutput) {
 	device := s.checkDeviceInfo(ctx, deviceName)
-	if device.Status != consts.DeviceStatueDisable {
+	/*if device.Status != consts.DeviceStatueDisable {
 		if err := gconv.Struct(device, &out); err != nil {
 			panic(err)
 		}
@@ -267,8 +266,14 @@ func (s *sDevDevice) GetDeviceSecret(ctx context.Context, deviceName string) (
 			err = e
 		}
 		panic(err)
+	}*/
+	if err := gconv.Struct(device, &out); err != nil {
+		panic(err)
 	}
-	if err = gconv.Struct(data, &out); err != nil {
+	if _, err := dao.Device.Ctx(ctx).
+		Data(dao.Device.Columns().RegistryTime, gtime.Now(),
+			dao.Device.Columns().Status, consts.DeviceStatueOffline,
+		).Where(dao.Device.Columns().DeviceId, device.DeviceId).Update(); err != nil {
 		panic(err)
 	}
 	out.MqttHostUrl = g.Cfg().MustGet(ctx, "aliyun.iot.mqtt.host").String()
@@ -299,7 +304,7 @@ func (s *sDevDevice) ActivationSuccess(ctx context.Context, in *model.Activation
 		if _, err := dao.Device.Ctx(ctx).Data(
 			dao.Device.Columns().BluetoothSecretKey, gstr.Trim(in.BluetoothSecretKey),
 			dao.Device.Columns().BluetoothAddress, gstr.Trim(in.BluetoothAddress),
-			dao.Device.Columns().SimId, gstr.Trim(in.SimID),
+			//dao.Device.Columns().SimId, gstr.Trim(in.SimID),
 			dao.Device.Columns().UpdateTime, gtime.Now(),
 		).Where(dao.Device.Columns().DeviceName, in.DeviceName).Update(); err != nil {
 			return err
