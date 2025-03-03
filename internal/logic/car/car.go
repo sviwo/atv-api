@@ -376,7 +376,7 @@ func (s sCar) findDeviceInfo(ctx context.Context, deviceId *int64) (device *enti
 func (s sCar) CtlSwitchDT(ctx context.Context, in model.CtlSwitchDTInput) {
 	if _, err := dao.UserDevice.Ctx(ctx).
 		Data(
-			dao.UserDevice.Columns().DrivingMode, in.DrivingModeType,
+			dao.UserDevice.Columns().DrivingModeType, in.DrivingModeType,
 			dao.UserDevice.Columns().UpdateTime, gtime.Now(),
 		).Where(dao.UserDevice.Columns().UserId, service.BizCtx().Get(ctx).Data.Get(consts.ContextKeyUserId)).
 		Where(dao.UserDevice.Columns().IsSelect, consts.CarSelectYes).

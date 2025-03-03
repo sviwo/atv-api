@@ -11,7 +11,7 @@ type HomeDataOutput struct {
 	AuthStatus         int                    `json:"authStatus"          dc:"认证状态：0=未认证，1=认证中，2=认证成功，3=认证失败"`
 	MobileKey          *bool                  `json:"mobileKey"           dc:"手机钥匙开关：false=关，true=开"`
 	SpeedLimit         *bool                  `json:"speedLimit"          dc:"速度限制开关：false=关，true=开"`
-	DrivingMode        int                    `json:"drivingMode"         dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
+	DrivingModeType    int                    `json:"drivingModeType"     dc:"驾驶模式：0=ECO模式，1=运动模式，2=狂暴模式"`
 	EnergyRecovery     int                    `json:"energyRecovery"      dc:"动能回收类型：0=无，1=中，2=强"`
 	ServicePhone       string                 `json:"servicePhone"        dc:"服务电话号码"`
 	BluetoothAddress   string                 `json:"bluetoothAddress"    dc:"蓝牙地址"`
